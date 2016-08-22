@@ -1,0 +1,4 @@
+reference/.*
+reference/ucsc*
+fastq2vcf_v15
+modules
