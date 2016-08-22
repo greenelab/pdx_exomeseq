@@ -1,7 +1,6 @@
 # Gregory Way
 # Modified from @jietan of bitbucket.org/greenelab
 
-
 import sys
 import argparse
 from subprocess import call

@@ -1,9 +1,9 @@
 # Whole Exome Sequencing Pipeline for JAX PDX models of Pancreatic Cancer
 
-**Gregory Way<sup>a</sup>, Casey Greene<sup>a</sup>, Yolanda Sanchez<sup>b</sup>**
+**Gregory Way<sup>1</sup>, Casey Greene<sup>1</sup>, Yolanda Sanchez<sup>2</sup>**
 
-a. University of Pennsylvania
-b. Geisel School of Medicine at Dartmouth
+1. University of Pennsylvania
+2. Geisel School of Medicine at Dartmouth
 
 ## Summary
 
