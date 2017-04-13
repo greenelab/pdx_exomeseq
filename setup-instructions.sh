@@ -6,6 +6,7 @@
 m load python/3.5-Anaconda
 
 # Step 2: activate the conda environment
+conda env create --force --file environment.yml
 source activate pdx-exomeseq
 
 # Step 3: Unload the anaconda module
