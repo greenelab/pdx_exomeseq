@@ -1,3 +1,5 @@
 reference
 modules
 logs
+*.gz
+*.zip
