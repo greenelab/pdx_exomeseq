@@ -3,3 +3,4 @@ dependencies:
 - pandas=0.18.0
 - pip:
   - pysam==0.11
+  - multiqc==0.9
