@@ -30,7 +30,7 @@ class PBSJob:
         if command is None:
             sys.stderr.write('A command is REQUIRED')
             return None
-        self.command = "module load python/3.5.0\n" + command
+        self.command = command
 
     def set_command(self, command):
         self.command = command
