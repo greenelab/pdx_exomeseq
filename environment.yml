@@ -1,0 +1,5 @@
+name: pdx-exomeseq
+dependencies:
+- pandas=0.18.0
+- pip:
+  - pysam==0.11
