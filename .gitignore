@@ -3,3 +3,5 @@ modules
 logs
 *.gz
 *.zip
+lib
+tools

@@ -1,0 +1,11 @@
+PASS	Basic Statistics	005-primary_S6_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	005-primary_S6_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	005-primary_S6_L002_R1_001.fastq.gz
+FAIL	Per base sequence content	005-primary_S6_L002_R1_001.fastq.gz
+FAIL	Per base GC content	005-primary_S6_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	005-primary_S6_L002_R1_001.fastq.gz
+PASS	Per base N content	005-primary_S6_L002_R1_001.fastq.gz
+WARN	Sequence Length Distribution	005-primary_S6_L002_R1_001.fastq.gz
+WARN	Sequence Duplication Levels	005-primary_S6_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	005-primary_S6_L002_R1_001.fastq.gz
+WARN	Kmer Content	005-primary_S6_L002_R1_001.fastq.gz
