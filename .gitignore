@@ -5,3 +5,4 @@ logs
 *.zip
 lib
 tools
+*trimming_report.txt
