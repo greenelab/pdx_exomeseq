@@ -1,0 +1,11 @@
+PASS	Basic Statistics	004-primary_S1_L001_R1_001_trimmed.fq.gz
+PASS	Per base sequence quality	004-primary_S1_L001_R1_001_trimmed.fq.gz
+PASS	Per sequence quality scores	004-primary_S1_L001_R1_001_trimmed.fq.gz
+PASS	Per base sequence content	004-primary_S1_L001_R1_001_trimmed.fq.gz
+PASS	Per base GC content	004-primary_S1_L001_R1_001_trimmed.fq.gz
+PASS	Per sequence GC content	004-primary_S1_L001_R1_001_trimmed.fq.gz
+PASS	Per base N content	004-primary_S1_L001_R1_001_trimmed.fq.gz
+WARN	Sequence Length Distribution	004-primary_S1_L001_R1_001_trimmed.fq.gz
+WARN	Sequence Duplication Levels	004-primary_S1_L001_R1_001_trimmed.fq.gz
+PASS	Overrepresented sequences	004-primary_S1_L001_R1_001_trimmed.fq.gz
+WARN	Kmer Content	004-primary_S1_L001_R1_001_trimmed.fq.gz

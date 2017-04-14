@@ -1,0 +1,11 @@
+PASS	Basic Statistics	008-F5_S2_L004_R1_001_trimmed.fq.gz
+PASS	Per base sequence quality	008-F5_S2_L004_R1_001_trimmed.fq.gz
+PASS	Per sequence quality scores	008-F5_S2_L004_R1_001_trimmed.fq.gz
+PASS	Per base sequence content	008-F5_S2_L004_R1_001_trimmed.fq.gz
+PASS	Per base GC content	008-F5_S2_L004_R1_001_trimmed.fq.gz
+WARN	Per sequence GC content	008-F5_S2_L004_R1_001_trimmed.fq.gz
+PASS	Per base N content	008-F5_S2_L004_R1_001_trimmed.fq.gz
+WARN	Sequence Length Distribution	008-F5_S2_L004_R1_001_trimmed.fq.gz
+WARN	Sequence Duplication Levels	008-F5_S2_L004_R1_001_trimmed.fq.gz
+PASS	Overrepresented sequences	008-F5_S2_L004_R1_001_trimmed.fq.gz
+WARN	Kmer Content	008-F5_S2_L004_R1_001_trimmed.fq.gz
