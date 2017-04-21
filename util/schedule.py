@@ -62,15 +62,19 @@ parser.add_argument('-c', '--command', help='what command to submit to cluster')
 parser.add_argument('-n', '--name', help='the name of the command to call')
 parser.add_argument('-w', '--walltime', help='the amount of time alloted to the script')
 parser.add_argument('-f', '--filename', help='what file name to save the PBS script')
+parser.add_argument('-o', '--nodes', default=1, help='the number of nodes to allocate')
+parser.add_argument('-r', '--cores', default=1, help='the number of cores to allocate per node')
 
 args = parser.parse_args()
 COMMAND = args.command
 NAME = args.name
 WALLTIME = args.walltime
 FILENAME = args.filename
+NODES = args.nodes
+CORES = args.cores
 
 # Generate the script and run the command
-job = PBSJob(command=COMMAND, name=NAME, walltime=WALLTIME)
+job = PBSJob(command=COMMAND, name=NAME, walltime=WALLTIME, nodes=NODES, ppn=CORES)
 job.write(FILENAME)
 call(['qsub', FILENAME])
 
