@@ -1,6 +1,15 @@
 name: pdx-exomeseq
+channels:
+- r
+- bioconda
+- conda-forge
 dependencies:
 - pandas=0.18.0
+- r::r-tidyverse=1.1.1
+- r::r-devtools=1.13.3
+- bioconda::bioconductor-rsamtools=1.28.0
+- bioconda::bioconductor-genomicranges=1.28.6
+- bioconda::bioconductor-genomicalignments=1.10.0
 - pip:
   - pysam==0.11
   - multiqc==0.9
