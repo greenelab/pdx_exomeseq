@@ -10,6 +10,7 @@ dependencies:
 - bioconda::bioconductor-rsamtools=1.28.0
 - bioconda::bioconductor-genomicranges=1.28.6
 - bioconda::bioconductor-genomicalignments=1.10.0
+- bioconda::gatk=3.8
 - pip:
   - pysam==0.11
   - multiqc==0.9

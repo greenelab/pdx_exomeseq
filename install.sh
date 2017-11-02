@@ -40,6 +40,11 @@ python util/schedule.py --command 'modules/bwa-0.7.5a/bwa index -a bwtsw "refere
 
 # DEPENDENCIES
 
+# GATK
+# NOTE: GATK is included in the anaconda environment, but requires a license agreement to actually use.
+# MANUAL STEP: Download Gatk3.8-0 https://software.broadinstitute.org/gatk/download/ and move it to `modules` then run:
+# gatk-register modules/GenomeAnalysisTK-3.8-0.tar.bz2
+
 # FastQC
 wget --directory-prefix modules/ http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.10.1.zip
 unzip modules/fastqc_v0.10.1.zip -d modules/
