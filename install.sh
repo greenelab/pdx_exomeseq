@@ -25,8 +25,11 @@ cd ..
 wget --directory-prefix reference ftp://ftp.ncbi.nlm.nih.gov/1000genomes/ftp/technical/reference/human_g1k_v37.fasta.gz
 gzip --decompress reference/human_g1k_v37.fasta.gz
 
+# Create combined mouse/human blast database
 cp reference/human_g1k_v37.fasta reference/combined_g1k_v37_mm9.fasta
 cat reference/mm9.fa | sed 's/chr/mchr/' >> reference/combined_g1k_v37_mm9.fasta
+module load blast+/2.6.0
+makeblastdb -in reference/combined_g1k_v37_mm9.fasta -parse_seqids -dbtype nucl
 
 # Install Burrows Wheeler Aligner and make hg19 index files
 wget --directory-prefix modules/ https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.5a.tar.bz2 
