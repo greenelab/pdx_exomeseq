@@ -4,4 +4,6 @@ directory: /lorax/sanchezlab/shared/pdx_exomeseq
 fastqc: /ihome/gway/.conda/envs/pdx-exomeseq/bin/fastqc
 bwa: /ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa
 samtools: /ihome/gway/.conda/envs/pdx-exomeseq/bin/samtools
+picard: /ihome/gway/.conda/envs/pdx-exomeseq/bin/picard
+gatk: /ihome/gway/.conda/envs/pdx-exomeseq/bin/gatk
 
