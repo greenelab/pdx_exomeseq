@@ -45,21 +45,14 @@ python util/schedule.py --command 'modules/bwa-0.7.5a/bwa index -a bwtsw "refere
 # MANUAL STEP: Download Gatk3.8-0 https://software.broadinstitute.org/gatk/download/ and move it to `modules` then run:
 # gatk-register modules/GenomeAnalysisTK-3.8-0.tar.bz2
 
+# SAMTOOLS
+# Included in the conda environment
+
 # FastQC
-wget --directory-prefix modules/ http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.10.1.zip
-unzip modules/fastqc_v0.10.1.zip -d modules/
-chmod +x modules/FastQC/fastqc
+# Included in the conda environment
 
 # picard
-wget --directory-prefix modules/ https://sourceforge.net/projects/picard/files/picard-tools-1.105.zip
-unzip modules/picard-tools-1.105.zip -d modules/
-
-# SAM tools
-wget --directory-prefix modules/ https://sourceforge.net/projects/samtools/files/samtools-0.1.19.tar.bz2
-tar -vxjf modules/samtools-0.1.19.tar.bz2 -C modules/ && make --directory modules/samtools-0.1.19
-
-# GATK
-wget --directory-prefix modules/ https://software.broadinstitute.org/gatk/download/auth?package=GATK-archive&version=2.8-1-g932cd3a
+# included in the conda environment
 
 # vcftools
 wget --directory-prefix modules/ http://pkgs.fedoraproject.org/repo/pkgs/vcftools/vcftools_0.1.11.tar.gz/ddb49e9fa2bfedae36b4dce163adfaa8/vcftools_0.1.11.tar.gz
