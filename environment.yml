@@ -11,6 +11,8 @@ dependencies:
 - bioconda::bioconductor-rsamtools=1.28.0
 - bioconda::bioconductor-genomicranges=1.28.6
 - bioconda::bioconductor-genomicalignments=1.10.0
+- bioconda::trim-galore=0.4.4
+- bioconda::cutadapt=1.14
 - bioconda::bwa=0.7.16
 - bioconda::samtools=0.1.16
 - bioconda::picard=2.14.0
