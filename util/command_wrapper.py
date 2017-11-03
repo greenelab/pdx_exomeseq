@@ -46,14 +46,14 @@ with open(config, 'r') as stream:
     config = yaml.load(stream)
 
 # Load constants
-base_dir = os.path.join('lorax', 'sanchezlab', 'shared', 'pdx_exomeseq')
+base_dir = config['directory']
 bwa = config['bwa']
 samtools = config['samtools']
 hg_ref = config['hg_reference']
 python = config['python']
-schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
 
-sample_basename = base_dir + 'data/bwa/' + sample_1.replace('_R1_', '_')
+schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
+sample_basename = os.path.join(base_dir, 'data', 'bwa', sample_1.replace('_R1_', '_'))
 
 # Output files
 sample_1_sai = sample_basename + '_1.sai'
@@ -62,8 +62,8 @@ sample_sam = sample_basename + '_aln.sam'
 sample_sorted_bam = sample_basename + '_sorted.bam'
 
 # Generate the command calls
-bwa_1_hg_com = [bwa, 'aln', hg_ref, sample_1, '>', sample_1_sai]
-bwa_2_hg_com = [bwa, 'aln', hg_ref, sample_2, '>', sample_2_sai]
+bwa_1_hg_com = [bwa, 'mem', hg_ref, sample_1, '>', sample_1_sai]
+bwa_2_hg_com = [bwa, 'mem', hg_ref, sample_2, '>', sample_2_sai]
 
 bwa_paired_com = [bwa, 'sampe', hg_ref, sample_1_sai, sample_2_sai,
                   sample_1, sample_2, '>', sample_sam]
@@ -76,6 +76,6 @@ if command == 'mem':
     schedule_job(command=bwa_1_hg_com, name=schedule_name, python=python)
     schedule_job(command=bwa_2_hg_com, name=schedule_name, python=python)
 elif command == 'sampe':
-    schedule_job(bwa_paired_com, name=schedule_name, python=python)
+    schedule_job(command=bwa_paired_com, name=schedule_name, python=python)
 elif command == 'sort':
-    schedule_job(samtools_sort_bam_com, name=schedule_name, python=python)
+    schedule_job(command=samtools_sort_bam_com, name=schedule_name, python=python)
