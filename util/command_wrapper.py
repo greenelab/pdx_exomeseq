@@ -56,6 +56,8 @@ base_dir = config['directory']
 fasqc = config['fastqc']
 bwa = config['bwa']
 samtools = config['samtools']
+picard = config['picard']
+gatk = config['gatk']
 hg_ref = config['hg_reference']
 
 schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
