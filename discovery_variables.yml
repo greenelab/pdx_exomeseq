@@ -2,6 +2,7 @@ name: discovery_variables
 python: /ihome/gway/.conda/envs/pdx-exomeseq/bin/python
 directory: /lorax/sanchezlab/shared/pdx_exomeseq
 fastqc: /ihome/gway/.conda/envs/pdx-exomeseq/bin/fastqc
+cutadapt: /ihome/gway/.conda/envs/pdx-exomeseq/bin/cutadapt
 bwa: /ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa
 samtools: /ihome/gway/.conda/envs/pdx-exomeseq/bin/samtools
 picard: /ihome/gway/.conda/envs/pdx-exomeseq/bin/picard
