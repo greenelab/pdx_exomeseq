@@ -5,6 +5,7 @@ channels:
 - conda-forge
 dependencies:
 - pandas=0.18.0
+- pyyaml=3.12
 - r::r-tidyverse=1.1.1
 - r::r-devtools=1.13.3
 - bioconda::bioconductor-rsamtools=1.28.0
