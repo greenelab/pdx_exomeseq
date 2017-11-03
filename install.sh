@@ -72,3 +72,7 @@ tar -vxjf modules/tabix-0.2.6.tar.bz2 -C modules/ && make --directory modules/ta
 # SNVer
 wget --directory-prefix modules/ https://sourceforge.net/projects/snver/files/SNVer-0.5.3.tar.gz
 tar -xvf modules/SNVer-0.5.3.tar.gz -C modules/
+
+# MAPEXR
+wget --directory-prefix modules/ https://bitbucket.org/bmannakee/mapexr/get/da36687d4585.zip
+Rscript util/install_mapexr.R
