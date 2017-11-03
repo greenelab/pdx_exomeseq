@@ -12,13 +12,17 @@ import argparse
 import subprocess
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-a', '--sample_1',
-                    help='Sample for paired end read 1')
+parser.add_argument('-a', '--sample',
+                    help='First sample of interest')
 parser.add_argument('-b', '--sample_2',
-                    help='Sample for paired end read 2')
+                    help='Second sample of interest',
+                    default=None)
 parser.add_argument('-c', '--command',
                     help='which command to run. Can be one of: \
-                         ["mem", "sampe", "sort"]')
+                         ["fastqc", "mem", "sampe", "sort"]',
+                    default='fastqc')
+parser.add_argument('-o', '--output_directory',
+                    help='the location to save the output files')
 parser.add_argument('-y', '--config_yaml',
                     help='Configuration variables for input',
                     default='discovery_variables.yml')
@@ -36,9 +40,10 @@ def schedule_job(command, name, python, nodes=1, cores=4, walltime='04:00:00'):
     return subprocess.call(output_com)
 
 # Load command arguments
-sample_1 = args.sample_1
+sample_1 = args.sample
 sample_2 = args.sample_2
 command = args.command
+output_dir = args.output_directory
 config = args.config_yaml
 
 # Load configuration
@@ -46,14 +51,15 @@ with open(config, 'r') as stream:
     config = yaml.load(stream)
 
 # Load constants
+python = config['python']
 base_dir = config['directory']
+fasqc = config['fastqc']
 bwa = config['bwa']
 samtools = config['samtools']
 hg_ref = config['hg_reference']
-python = config['python']
 
 schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
-sample_basename = os.path.join(base_dir, 'data', 'bwa', sample_1.replace('_R1_', '_'))
+sample_basename = os.path.join(base_dir, output_dir, sample_1.replace('_R1_', '_'))
 
 # Output files
 sample_1_sai = sample_basename + '_1.sai'
@@ -62,6 +68,7 @@ sample_sam = sample_basename + '_aln.sam'
 sample_sorted_bam = sample_basename + '_sorted.bam'
 
 # Generate the command calls
+fastqc_command = [fastqc, sample_1, '-o', output_dir]
 bwa_1_hg_com = [bwa, 'mem', hg_ref, sample_1, '>', sample_1_sai]
 bwa_2_hg_com = [bwa, 'mem', hg_ref, sample_2, '>', sample_2_sai]
 
@@ -72,7 +79,9 @@ samtools_sort_bam_com = [samtools, 'view', '-bS', sample_sam, '|',
                          samtools, 'sort', '-', sample_sorted_bam]
 
 # Schedule a job based on the input command
-if command == 'mem':
+if command == 'fastqc':
+    schedule_job(command=fastqc_command, name=schedule_name, python=python)
+elif command == 'mem':
     schedule_job(command=bwa_1_hg_com, name=schedule_name, python=python)
     schedule_job(command=bwa_2_hg_com, name=schedule_name, python=python)
 elif command == 'sampe':
