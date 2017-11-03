@@ -1,2 +1,2 @@
 name: discovery_variables
-bwa: 
+bwa: /ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa
