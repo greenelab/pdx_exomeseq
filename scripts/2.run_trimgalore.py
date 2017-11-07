@@ -14,16 +14,11 @@ for path, subdirs, files in os.walk('data'):
         if 'fastq.gz' in name:
             wes_files.append(os.path.join(path, name))
 
+command_util = os.path.join('util', 'command_wrapper.py')
 for data_file in wes_files:
     base_name = os.path.basename(data_file)
-
-    command = ['python', os.path.join('util', 'schedule.py'),
-               '--command',
-               'modules/TrimGalore-0.4.3/trim_galore ' + data_file + ' ' +
-               '--path_to_cutadapt /ihome/gway/.conda/envs/pdx-exomeseq/bin/cutadapt ' +
-               '--output_dir data/trimmed/ --three_prime_clip_R1 5 --clip_R1 20',
-               '--name', 'logs/trimgalore_' + base_name,
-               '--walltime', '01:30:00',
-               '--filename', 'logs/trimgalore_' + base_name + '.pbs']
+    command = ['python', command_util,
+               '--sample', data_file,
+               '--command', 'trimgalore',
+               '--output_dir', os.path.join('data', 'trimmed')]
     subprocess.call(command)
-
