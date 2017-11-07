@@ -30,6 +30,5 @@ for data_file in wes_files:
     base_name = os.path.basename(data_file)
     command = ['python', command_util, '--sample', base_name,
                '--command' 'fastqc',
-               '--output_directory', out_dir]]
+               '--output_directory', out_dir]
     subprocess.call(command)
-
