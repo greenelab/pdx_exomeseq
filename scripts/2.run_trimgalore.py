@@ -11,9 +11,9 @@ import subprocess
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--data_dir',
-                    help='Location to search for files eligible for QC')
+                    help='Location of input data')
 parser.add_arguemtn('-o', '--output_dir',
-                    help='Location to save fastqc reports')
+                    help='Location to save output data')
 parser.add_argument('-y', '--config_yaml',
                     help='Configuration variables for input',
                     default='discovery_variables.yml')
