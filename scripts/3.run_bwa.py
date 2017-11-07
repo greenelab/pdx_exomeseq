@@ -13,7 +13,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--data_dir',
                     help='Location of input data')
 parser.add_argument('-o', '--output_dir',
-                    help='Location to save output data')
+                    help='Location to save output data',
+                    default='.')
 parser.add_argument('-c', '--command',
                     help='One of the bwa commands')
 parser.add_argument('-y', '--config_yaml',
