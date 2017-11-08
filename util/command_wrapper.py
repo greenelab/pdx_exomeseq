@@ -14,24 +14,21 @@ import subprocess
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', '--sample',
                     help='First sample of interest')
-parser.add_argument('-b', '--sample_2',
-                    help='Second sample of interest',
-                    default=None)
+parser.add_argument('-b', '--sample_2', default=None,
+                    help='Second sample of interest')
 parser.add_argument('-c', '--command',
                     help='which command to run. Can be one of: \
                          ["fastqc", "trimgalore", "mem", "sampe", "sort", \
-                          "markdup"]',
-                    default='fastqc')
+                          "markdup"]')
 parser.add_argument('-o', '--output_directory',
                     help='the location to save the output files')
-parser.add_argument('-y', '--config_yaml',
-                    help='Configuration variables for input',
-                    default='discovery_variables.yml')
-parser.add_argument('-w', '--walltime',
+parser.add_argument('-y', '--config_yaml', default='discovery_variables.yml',
+                    help='Configuration variables for input')
+parser.add_argument('-w', '--walltime', default='04:00:00',
                     help='the amount of time alloted to the script')
 parser.add_argument('-o', '--nodes', default=1,
                     help='the number of nodes to allocate')
-parser.add_argument('-r', '--cores', default=1,
+parser.add_argument('-r', '--cores', default=4,
                     help='the number of cores to allocate per node')
 args = parser.parse_args()
 
