@@ -25,9 +25,13 @@ cat reference/mm9.fa | sed 's/chr/mchr/' >> reference/combined_g1k_v37_mm9.fasta
 module load blast+/2.6.0
 makeblastdb -in reference/combined_g1k_v37_mm9.fasta -parse_seqids -dbtype nucl
 
-# Install Burrows Wheeler Aligner and make hg19 index files
-python util/schedule.py --command '/ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa index -a bwtsw "reference/human_g1k_v37.fasta"' --name 'hg19-bwa' --walltime '02:00:00' --filename 'bwa-hg19-index.pbs'
-python util/schedule.py --command '/ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa index -a bwtsw "reference/mm9.fa"' --name 'mm9-bwa' --walltime '02:00:00' --filename 'bwa-mm9-index.pbs'
+# Install Burrows Wheeler Aligner and make hg19 and mm9 index files
+python util/schedule.py \
+        --command '/ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa index -a bwtsw "reference/human_g1k_v37.fasta"' \
+        --name 'hg19-bwa' --walltime '06:00:00' --filename 'bwa-hg19-index.pbs'
+python util/schedule.py \
+        --command '/ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa index -a bwtsw "reference/mm9.fa"' \
+        --name 'mm9-bwa' --walltime '06:00:00' --filename 'bwa-mm9-index.pbs'
 
 # DEPENDENCIES
 
