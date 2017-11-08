@@ -17,11 +17,11 @@ parser.add_argument('-o', '--output_dir',
 parser.add_argument('-y', '--config_yaml',
                     help='Configuration variables for input',
                     default='discovery_variables.yml')
-parser.add_argument('-w', '--walltime',
+parser.add_argument('-w', '--walltime', default='04:00:00',
                     help='the amount of time alloted to the script')
 parser.add_argument('-n', '--nodes', default=1,
                     help='the number of nodes to allocate')
-parser.add_argument('-r', '--cores', default=1,
+parser.add_argument('-r', '--cores', default=4,
                     help='the number of cores to allocate per node')
 args = parser.parse_args()
 
@@ -40,9 +40,12 @@ for path, subdirs, files in os.walk(data_dir):
 
 command_util = os.path.join('util', 'command_wrapper.py')
 for data_file in wes_files:
-    base_name = os.path.basename(data_file)
-    command = ['python', command_util, '--sample', base_name,
-               '--command' 'fastqc', '--output_directory', out_dir,
-               '--config_yaml', config, '--walltime', walltime,
-               '--nodes', nodes, '--cores', cores]
+    command = ['python', command_util,
+               '--sample', data_file,
+               '--command', 'fastqc',
+               '--output_directory', out_dir,
+               '--config_yaml', config,
+               '--walltime', walltime,
+               '--nodes', nodes,
+               '--cores', cores]
     subprocess.call(command)
