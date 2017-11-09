@@ -75,9 +75,7 @@ schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
 sample_base = os.path.join(base_dir, output_dir, sample_1.replace('_R1_', '_'))
 
 # Output files
-sample_1_sai = sample_base + '_1.sai'
-sample_2_sai = sample_base + '_2.sai'
-sample_sam = sample_base + '_aln.sam'
+sample_sam = sample_base + '.sam'
 sample_sorted_bam = sample_base + '_sorted.bam'
 sample_sorted_fixmate_bam = sample_base + '_sorted_fixmate.bam'
 sample_sorted_positionsort_bam = sample_base + '_positionsort.bam'
@@ -106,7 +104,7 @@ trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
 
 # BWA mem
 bwa_mem_com = [bwa, 'mem', '-t', '4', hg_ref,
-               sample_1, sample_2, '>', sample_1_sai]
+               sample_1, sample_2, '>', sample_sam]
 
 # samtools sort to bam
 samtools_sort_bam_com = [samtools, 'view', '-@', '4', '-bS', sample_sam, '|',
