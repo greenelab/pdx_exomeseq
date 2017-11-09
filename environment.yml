@@ -18,6 +18,4 @@ dependencies:
 - bioconda::picard=2.14.0
 - bioconda::gatk=3.8
 - bioconda::fastqc=0.11.5
-- pip:
-  - pysam==0.11
-  - multiqc==0.9
+- bioconda::multiqc=0.9
