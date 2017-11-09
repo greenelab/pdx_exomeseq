@@ -93,7 +93,7 @@ sample_gatk_vcf = sample_base + '.GATK.vcf'
 # Generate the commands
 ############################
 # General purpose module load of pdx-exome seq conda env
-conda = ['source', 'activate', conda_env, '&&']
+conda_build = ['source', 'activate', conda_env, '&&']
 
 # FastQC
 fastqc_com = [fastqc, sample_1, '-o', output_dir]
@@ -155,8 +155,8 @@ if command == 'fastqc':
     submit_commands = [fastqc_com]
 if command == 'trimgalore':
     # Extending to ensure cutadapt is in path
-    print(conda.extend(trimgalore_com))
-    submit_commands = [conda.extend(trimgalore_com)]
+    conda_build.extend(trimgalore_com)
+    submit_commands = [conda_build]
 elif command == 'mem':
     submit_commands = [bwa_1_hg_com, bwa_2_hg_com]
 elif command == 'sampe':
