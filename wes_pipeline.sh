@@ -14,7 +14,7 @@
 # on low-quality read pairs between samples. Both pairs of the reads must have greater
 # than 20 high quality sequences between them.
 python scripts/2.run_trimgalore.py --data_dir 'data' --output_dir 'processed/trimmed' \
-        --walltime '02:00:00' --nodes 1 --cores 4
+        --walltime '04:00:00' --nodes 1 --cores 4
 
 # Run FastQC on the trimmed data
 # python scripts/1.run_fastqc.py --data_dir 'data/trimmed' --output_dir 'data/fastqc_trimmed'
