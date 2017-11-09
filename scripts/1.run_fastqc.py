@@ -12,7 +12,7 @@ import pandas as pd
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--data_dir',
-                    help='Location to search for files eligible for QC')
+                    help='Location to search fmeor files eligible for QC')
 parser.add_argument('-o', '--output_dir',
                     help='Location to save output data')
 parser.add_argument('-y', '--config_yaml',
@@ -44,10 +44,10 @@ for path, subdirs, files in os.walk(data_dir):
     for name in files:
         if 'fasta.gz' in name or 'fq.gz' in name or 'fastq.gz' in name:
             full_name = os.path.join(path, name)
-            fastqc_name = os.path.join(out_dir, '{}_fastqc.html'.format(name))
-            if fastqc_name not in existing_files:
-                wes_files.append(fastqc_name)
-print(wes_files)
+            fastqc_id = '{}_fastqc.html'.format(name.strip('fastq.gz'))
+            if fastqc_id not in existing_files:
+                wes_files.append(full_name)
+
 command_util = os.path.join('util', 'command_wrapper.py')
 for data_file in wes_files:
     command = ['python', command_util,
