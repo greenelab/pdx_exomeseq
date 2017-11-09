@@ -110,7 +110,7 @@ bwa_mem_com = [bwa, 'mem', '-t', '4', hg_ref,
 
 # samtools sort to bam
 samtools_sort_bam_com = [samtools, 'view', '-@', '4', '-bS', sample_sam, '|',
-                         samtools, 'sort', '-n', '-@','4', '-',
+                         samtools, 'sort', '-n', '-@', '4', '-',
                          '-o', sample_sorted_bam]
 
 samtools_fixmate_com = [samtools, 'fixmate', '-m', sample_sorted_bam,
@@ -158,8 +158,6 @@ if command == 'trimgalore':
     submit_commands = [conda_build]
 elif command == 'mem':
     submit_commands = [bwa_mem_com]
-elif command == 'sampe':
-    submit_commands = [bwa_paired_com]
 elif command == 'sort_name':
     submit_commands = [samtools_sort_bam_com]
 elif command == 'fixmate':
