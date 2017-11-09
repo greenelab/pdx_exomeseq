@@ -93,7 +93,8 @@ sample_gatk_vcf = sample_base + '.GATK.vcf'
 # Generate the commands
 ############################
 # General purpose module load of pdx-exome seq conda env
-conda_build = ['source', 'activate', conda_env, '&&']
+conda_build = ['m', 'load', 'python/3.5-Anaconda', '&&',
+               'source', 'activate', conda_env, '&&']
 
 # FastQC
 fastqc_com = [fastqc, sample_1, '-o', output_dir]
@@ -104,8 +105,8 @@ trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
                   '--fastqc_args', '"--outdir results/fastqc_trimmed/"']
 
 # BWA mem
-bwa_1_hg_com = [bwa, 'mem', hg_ref, sample_1, '>', sample_1_sai]
-bwa_2_hg_com = [bwa, 'mem', hg_ref, sample_2, '>', sample_2_sai]
+bwa_mem_com = [bwa, 'mem', '-t', '4', hg_ref,
+               sample_1, sample_2, '>', sample_1_sai]
 
 bwa_paired_com = [bwa, 'sampe', hg_ref, sample_1_sai, sample_2_sai,
                   sample_1, sample_2, '>', sample_sam]
@@ -158,7 +159,7 @@ if command == 'trimgalore':
     conda_build.extend(trimgalore_com)
     submit_commands = [conda_build]
 elif command == 'mem':
-    submit_commands = [bwa_1_hg_com, bwa_2_hg_com]
+    submit_commands = [bwa_mem_com]
 elif command == 'sampe':
     submit_commands = [bwa_paired_com]
 elif command == 'sort_name':
