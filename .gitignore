@@ -7,4 +7,6 @@ logs_bwa/
 lib
 tools
 *trimming_report.txt
+*.e*
+*.o*
 
