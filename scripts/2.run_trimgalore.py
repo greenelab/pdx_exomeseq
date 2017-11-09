@@ -29,8 +29,8 @@ data_dir = args.data_dir
 out_dir = args.output_dir
 config = args.config_yaml
 walltime = args.walltime
-nodes = args.nodes
-cores = args.cores
+nodes = str(args.nodes)
+cores = str(args.cores)
 
 wes_files = []
 for path, subdirs, files in os.walk(data_dir):
@@ -38,11 +38,12 @@ for path, subdirs, files in os.walk(data_dir):
         if 'fastq.gz' in name:
             wes_files.append(os.path.join(path, name))
 
+wes_files = wes_files[0:2]
 paired_reads = []
 for name in wes_files:
-    if '_R1_' in name:
+    if '_R2_' in name:
         read_1 = name
-        read_2 = name.replace('_R1_', '_R2_')
+        read_2 = name.replace('_R2_', '_R1_')
         paired_reads.append([read_1, read_2])
 
 command_util = os.path.join('util', 'command_wrapper.py')
