@@ -60,6 +60,7 @@ with open(config, 'r') as stream:
 # Load constants
 python = config['python']
 java = config['java']
+conda_env = config['condaenv']
 base_dir = config['directory']
 fastqc = config['fastqc']
 trimgalore = config['trimgalore']
@@ -88,11 +89,21 @@ sample_gatk_bam = sample_base + '.GATK.bam'
 sample_gatk_bai = sample_base + '.GATK.bam.bai'
 sample_gatk_vcf = sample_base + '.GATK.vcf'
 
-# Generate the command calls
+############################
+# Generate the commands
+############################
+# General purpose module load of pdx-exome seq conda env
+conda = ['source', 'activate', conda_env, '&&']
+
+# FastQC
 fastqc_com = [fastqc, sample_1, '-o', output_dir]
-trimgalore_com = [trimgalore, sample_1, '--path_to_cutadapt', cutadapt,
-                  '--output_dir', output_dir, 'three_prime_clip_R1', 5,
-                  '--clip_R1', 20]
+
+# TrimGalore
+trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
+                  '--output_dir', output_dir,
+                  '--fastqc_args', '"--outdir results/fastqc_trimmed/"']
+
+# BWA mem
 bwa_1_hg_com = [bwa, 'mem', hg_ref, sample_1, '>', sample_1_sai]
 bwa_2_hg_com = [bwa, 'mem', hg_ref, sample_2, '>', sample_2_sai]
 
@@ -143,7 +154,9 @@ gatk_variant_call = [java, '-Xmx50g', '-jar', gatk, '-T', 'HaplotypeCaller',
 if command == 'fastqc':
     submit_commands = [fastqc_com]
 if command == 'trimgalore':
-    submit_commands = [trimgalore_com]
+    # Extending to ensure cutadapt is in path
+    print(conda.extend(trimgalore_com))
+    submit_commands = [conda.extend(trimgalore_com)]
 elif command == 'mem':
     submit_commands = [bwa_1_hg_com, bwa_2_hg_com]
 elif command == 'sampe':
