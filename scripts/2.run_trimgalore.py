@@ -38,10 +38,18 @@ for path, subdirs, files in os.walk(data_dir):
         if 'fastq.gz' in name:
             wes_files.append(os.path.join(path, name))
 
+paired_reads = []
+for name in wes_files:
+    if '_R1_' in name:
+        read_1 = name
+        read_2 = name.replace('_R1_', '_R2_')
+        paired_reads.append([read_1, read_2])
+
 command_util = os.path.join('util', 'command_wrapper.py')
-for data_file in wes_files:
-    command = ['python', command_util, '--sample', data_file, '--command',
-               'trimgalore', '--output_dir', out_dir,
+for sample_1, sample_2 in paired_reads:
+    command = ['python', command_util,
+               '--sample', sample_1, '--sample_2', sample_2,
+               '--command', 'trimgalore', '--output_dir', out_dir,
                '--config_yaml', config, '--walltime', walltime,
                '--nodes', nodes, '--cores', cores]
     subprocess.call(command)
