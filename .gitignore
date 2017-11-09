@@ -9,4 +9,6 @@ tools
 *trimming_report.txt
 *.e*
 *.o*
+results/fastqc_raw/
+results/fastqc_trimmed/
 
