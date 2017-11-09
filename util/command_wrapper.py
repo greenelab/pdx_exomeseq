@@ -26,7 +26,7 @@ parser.add_argument('-y', '--config_yaml', default='discovery_variables.yml',
                     help='Configuration variables for input')
 parser.add_argument('-w', '--walltime', default='04:00:00',
                     help='the amount of time alloted to the script')
-parser.add_argument('-o', '--nodes', default=1,
+parser.add_argument('-n', '--nodes', default=1,
                     help='the number of nodes to allocate')
 parser.add_argument('-r', '--cores', default=4,
                     help='the number of cores to allocate per node')
@@ -35,7 +35,7 @@ args = parser.parse_args()
 
 def schedule_job(command, name, python, nodes=1, cores=4, walltime='04:00:00'):
     output_com = [python, os.path.join('util', 'schedule.py'),
-                  '--command', command,
+                  '--command', ' '.join(str(x) for x in command),
                   '--name', name,
                   '--walltime', walltime,
                   '--nodes', str(nodes),
@@ -68,7 +68,7 @@ bwa = config['bwa']
 samtools = config['samtools']
 picard = config['picard']
 gatk = config['gatk']
-hg_ref = config['hg_reference']
+hg_ref = config['hgreference']
 
 schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
 sample_base = os.path.join(base_dir, output_dir, sample_1.replace('_R1_', '_'))
