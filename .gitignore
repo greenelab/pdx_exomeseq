@@ -1,8 +1,10 @@
 reference
 modules
-logs
+logs/
+logs_bwa/
 *.gz
 *.zip
 lib
 tools
 *trimming_report.txt
+
