@@ -35,9 +35,11 @@ cores = str(args.cores)
 wes_files = []
 for path, subdirs, files in os.walk(data_dir):
     for name in files:
-        if 'fastq.gz' in name:
-            wes_files.append(os.path.join(path, name))
-
+        if name in ['032-F5_S3_L002_R1_001.fastq.gz', '032-F5_S3_L004_R1_001.fastq.gz',
+                    '032-F5_S3_L001_R1_001.fastq.gz', '032-F5_S3_L003_R1_001.fastq.gz']:
+            if 'fastq.gz' in name:
+                wes_files.append(os.path.join(path, name))
+print(wes_files)
 paired_reads = []
 for name in wes_files:
     if '_R1_' in name:
