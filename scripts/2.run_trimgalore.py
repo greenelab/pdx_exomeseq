@@ -38,12 +38,11 @@ for path, subdirs, files in os.walk(data_dir):
         if 'fastq.gz' in name:
             wes_files.append(os.path.join(path, name))
 
-wes_files = wes_files[0:2]
 paired_reads = []
 for name in wes_files:
-    if '_R2_' in name:
+    if '_R1_' in name:
         read_1 = name
-        read_2 = name.replace('_R2_', '_R1_')
+        read_2 = name.replace('_R1_', '_R2_')
         paired_reads.append([read_1, read_2])
 
 command_util = os.path.join('util', 'command_wrapper.py')
