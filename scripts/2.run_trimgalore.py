@@ -21,7 +21,7 @@ parser.add_argument('-w', '--walltime',
                     help='the amount of time alloted to the script')
 parser.add_argument('-n', '--nodes', default=1,
                     help='the number of nodes to allocate')
-parser.add_argument('-r', '--cores', default=1,
+parser.add_argument('-r', '--cores', default=4,
                     help='the number of cores to allocate per node')
 args = parser.parse_args()
 
