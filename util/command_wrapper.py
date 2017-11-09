@@ -108,11 +108,9 @@ trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
 bwa_mem_com = [bwa, 'mem', '-t', '4', hg_ref,
                sample_1, sample_2, '>', sample_1_sai]
 
-bwa_paired_com = [bwa, 'sampe', hg_ref, sample_1_sai, sample_2_sai,
-                  sample_1, sample_2, '>', sample_sam]
-
-samtools_sort_bam_com = [samtools, 'view', '-@', 4, '-bS', sample_sam, '|',
-                         samtools, 'sort', '-n', '-@', 4, '-',
+# samtools sort to bam
+samtools_sort_bam_com = [samtools, 'view', '-@', '4', '-bS', sample_sam, '|',
+                         samtools, 'sort', '-n', '-@','4', '-',
                          '-o', sample_sorted_bam]
 
 samtools_fixmate_com = [samtools, 'fixmate', '-m', sample_sorted_bam,
