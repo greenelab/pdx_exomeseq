@@ -10,7 +10,11 @@
 # multiqc results/fastqc_raw/ --force
 
 # Run TrimGalore to cut adapters and filter low quality reads
-python scripts/2.run_trimgalore.py --data_dir 'data' --output_dir 'processed/trimmed' --walltime '01:00:00' --nodes 1 --cores 4
+# TrimGalore is run in `--paired` mode, which performs an additional filtering step
+# on low-quality read pairs between samples. Both pairs of the reads must have greater
+# than 20 high quality sequences between them.
+python scripts/2.run_trimgalore.py --data_dir 'data' --output_dir 'processed/trimmed' \
+        --walltime '02:00:00' --nodes 1 --cores 4
 
 # Run FastQC on the trimmed data
 # python scripts/1.run_fastqc.py --data_dir 'data/trimmed' --output_dir 'data/fastqc_trimmed'
