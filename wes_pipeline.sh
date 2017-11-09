@@ -7,7 +7,7 @@ python scripts/1.run_fastqc.py --data_dir 'data' --output_dir 'results/fastqc_ra
         --walltime '01:30:00' --nodes 1 --cores 4
 
 # Run MultiQC on FastQC results
-# multiqc results/fastqc_raw
+multiqc results/fastqc_raw/ --force
 
 # Run TrimGalore to cut adapters and filter low quality reads
 # python scripts/2.run_trimgalore.py --data_dir 'data' --output_dir 'data/trimmed'
