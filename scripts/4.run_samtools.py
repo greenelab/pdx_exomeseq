@@ -33,8 +33,8 @@ out_dir = args.output_dir
 command = args.command
 config = args.config_yaml
 walltime = args.walltime
-nodes = args.nodes
-cores = args.cores
+nodes = str(args.nodes)
+cores = str(args.cores)
 
 sam_files = []
 for path, subdirs, files in os.walk(data_dir):
@@ -44,7 +44,8 @@ for path, subdirs, files in os.walk(data_dir):
 
 command_util = os.path.join('util', 'command_wrapper.py')
 for sample_1 in sam_files:
-    command = ['python', command_util, '--sample_1', sample_1,
-               '--command', command, '--config_yaml', config,
-               '--walltime', walltime, '--nodes', nodes, '--cores', cores]
-    subprocess.call(command)
+    com = ['python', command_util, '--sample', sample_1,
+           '--command', command, '--output_directory', out_dir,
+           '--config_yaml', config, '--walltime', walltime,
+           '--nodes', nodes, '--cores', cores]
+    subprocess.call(com)
