@@ -72,7 +72,8 @@ gatk = config['gatk']
 hg_ref = config['hgreference']
 
 schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
-sample_base = os.path.join(base_dir, output_dir, sample_1.replace('_R1_', '_'))
+sample_base = sample_1.replace('_R1_', '_').replace('_val_1', '')
+sample_base = os.path.join(base_dir, output_dir, sample_base)
 
 # Output files
 sample_sam = sample_base + '.sam'
@@ -103,8 +104,9 @@ trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
                   '--fastqc_args', '"--outdir results/fastqc_trimmed/"']
 
 # BWA mem
-bwa_mem_com = [bwa, 'mem', '-t', '4', hg_ref,
-               sample_1, sample_2, '>', sample_sam]
+bwa_mem_com = [bwa, 'mem', '-t', '8', hg_ref,
+               os.path.join('processed', 'trimmed', sample_1),
+               os.path.join('processed', 'trimmed', sample_2), '>', sample_sam]
 
 # samtools sort to bam
 samtools_sort_bam_com = [samtools, 'view', '-@', '4', '-bS', sample_sam, '|',
@@ -155,7 +157,8 @@ if command == 'trimgalore':
     conda_build.extend(trimgalore_com)
     submit_commands = [conda_build]
 elif command == 'mem':
-    submit_commands = [bwa_mem_com]
+    conda_build.extend(bwa_mem_com)
+    submit_commands = [conda_build]
 elif command == 'sort_name':
     submit_commands = [samtools_sort_bam_com]
 elif command == 'fixmate':
@@ -179,5 +182,6 @@ elif command == 'variant_call_gatk':
 
 if __name__ == '__main__':
     for com in submit_commands:
-        schedule_job(command=com, name=schedule_name, python=python,
-                     nodes=nodes, cores=cores, walltime=walltime)
+       schedule_job(command=com, name=schedule_name, python=python,
+                    nodes=nodes, cores=cores, walltime=walltime)
+
