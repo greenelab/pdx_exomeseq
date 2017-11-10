@@ -36,8 +36,8 @@
 # STEP 4
 ###################
 # Sort SAM and convert to BAM
-python scripts/4.run_samtools.py --data_dir 'processed/sam' --output_dir 'processed/bam' \
-        --walltime '02:00:00' --nodes 2 --cores 12
+python scripts/4.run_samtools.py --command 'sort_name' --data_dir 'processed/sam' \
+        --output_dir 'processed/bam' --walltime '02:00:00' --nodes 2 --cores 12
 
 # Prep to remove duplicate reads
 # python scripts/4.run_samtools.py --data_dir 'data/trimmed' --command 'fixmate'
