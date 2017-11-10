@@ -72,8 +72,8 @@ gatk = config['gatk']
 hg_ref = config['hgreference']
 
 schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
-sample_base = sample_1.replace('_R1_', '_').replace('_val_1', '')
-sample_base = os.path.join(base_dir, output_dir, sample_base)
+sample_name = sample_1.replace('_R1_', '_').replace('_val_1', '')
+sample_base = os.path.join(base_dir, output_dir, sample_name)
 
 # Output files
 sample_sam = sample_base + '.sam'
@@ -109,7 +109,8 @@ bwa_mem_com = [bwa, 'mem', '-t', '8', hg_ref,
                os.path.join('processed', 'trimmed', sample_2), '>', sample_sam]
 
 # samtools sort to bam
-samtools_sort_bam_com = [samtools, 'view', '-@', '4', '-bS', sample_sam, '|',
+# `-n` sorts by name, which is required for fixmate
+samtools_sort_bam_com = [samtools, 'view', '-@', '4', '-bS', sample_1, '|',
                          samtools, 'sort', '-n', '-@', '4', '-',
                          '-o', sample_sorted_bam]
 
@@ -160,7 +161,8 @@ elif command == 'mem':
     conda_build.extend(bwa_mem_com)
     submit_commands = [conda_build]
 elif command == 'sort_name':
-    submit_commands = [samtools_sort_bam_com]
+    conda_build.extend(samtools_sort_bam_com)
+    submit_commands = [conda_build]
 elif command == 'fixmate':
     submit_commands = [samtools_fixmate_com]
 elif command == 'sort_position':
@@ -184,4 +186,3 @@ if __name__ == '__main__':
     for com in submit_commands:
        schedule_job(command=com, name=schedule_name, python=python,
                     nodes=nodes, cores=cores, walltime=walltime)
-
