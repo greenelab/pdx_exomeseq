@@ -33,13 +33,13 @@ out_dir = args.output_dir
 command = args.command
 config = args.config_yaml
 walltime = args.walltime
-nodes = args.nodes
-cores = args.cores
+nodes = str(args.nodes)
+cores = str(args.cores)
 
 all_files = []
 for path, subdirs, files in os.walk(data_dir):
     for name in files:
-        if 'trimmed.fq.gz' in name:
+        if 'fq.gz' in name:
             all_files.append(name)
 
 paired_reads = []
@@ -47,13 +47,14 @@ for name in all_files:
     if '_R1_' in name:
         read_1 = name
         read_2 = name.replace('_R1_', '_R2_')
-        paired_reads.append([os.path.join(data_dir, read_1),
-                             os.path.join(data_dir, read_2)])
+        read_2 = read_2.replace('val_1', 'val_2')
+        paired_reads.append([read_1, read_2])
 
 command_util = os.path.join('util', 'command_wrapper.py')
 for sample_1, sample_2 in paired_reads:
-    command = ['python', command_util, '--sample_1', sample_1,
-               '--sample_2', sample_2, '--command', command,
-               '--config_yaml', config, '--walltime', walltime,
-               '--nodes', nodes, '--cores', cores]
-    subprocess.call(command)
+    bwa_command = ['python', command_util, '--output_directory', out_dir,
+                   '--sample', sample_1, '--sample_2', sample_2,
+                   '--command', command, '--config_yaml', config,
+                   '--walltime', walltime, '--nodes', nodes,
+                   '--cores', cores]
+    subprocess.call(bwa_command)
