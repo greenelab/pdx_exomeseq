@@ -76,7 +76,7 @@ sample_base = os.path.join(base_dir, output_dir, sample_name)
 
 # Output files
 sample_sam = sample_base + '.sam'
-sample_sorted_bam = sample_base + '_sorted.bam'
+sample_sorted_bam = sample_base + '_sorted'
 sample_sorted_fixmate_bam = sample_base + '_sorted_fixmate.bam'
 sample_sorted_positionsort_bam = sample_base + '_positionsort.bam'
 sample_markdup_bam = sample_base + '_markdup.bam'
@@ -103,16 +103,17 @@ trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
                   '--fastqc_args', '"--outdir results/fastqc_trimmed/"']
 
 # BWA mem
-bwa_mem_com = [bwa, 'mem', '-t', '8', hg_ref,
-               os.path.join('processed', 'trimmed', sample_1),
-               os.path.join('processed', 'trimmed', sample_2), '>', sample_sam]
+if command == 'bwa':
+    bwa_mem_com = [bwa, 'mem', '-t', '8', hg_ref,
+                   os.path.join('processed', 'trimmed', sample_1),
+                   os.path.join('processed', 'trimmed', sample_2), '>', sample_sam]
 
 # samtools sort to bam
 # `-n` sorts by name, which is required for fixmate
-samtools_sort_bam_com = [samtools, 'view', '-@', '4', '-bS', sample_1, '|',
-                         samtools, 'sort', '-n', '-@', '4', '-',
-                         '-o', sample_sorted_bam]
+samtools_sort_bam_com = [samtools, 'view', '-bS', os.path.join('processed', 'sam', sample_1),
+                         '|', samtools, 'sort', '-n', '-', sample_sorted_bam]
 
+# samtools create fixmate bam
 samtools_fixmate_com = [samtools, 'fixmate', '-m', sample_sorted_bam,
                         sample_sorted_fixmate_bam]
 samtools_positionsort_com = [samtools, 'sort', '-o',
