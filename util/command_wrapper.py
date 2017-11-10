@@ -18,8 +18,7 @@ parser.add_argument('-b', '--sample_2', default=None,
                     help='Second sample of interest')
 parser.add_argument('-c', '--command',
                     help='which command to run. Can be one of: \
-                         ["fastqc", "trimgalore", "mem", "sampe", "sort", \
-                          "markdup"]')
+                         ["fastqc", "trimgalore", "mem", "sort", "markdup"]')
 parser.add_argument('-o', '--output_directory',
                     help='the location to save the output files')
 parser.add_argument('-y', '--config_yaml', default='discovery_variables.yml',
