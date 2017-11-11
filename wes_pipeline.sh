@@ -36,14 +36,16 @@
 # STEP 4
 ###################
 # Sort SAM and convert to BAM
-python scripts/4.run_samtools.py --command 'sort_name' --data_dir 'processed/sam' \
-        --output_dir 'processed/bam' --walltime '02:00:00' --nodes 2 --cores 12
+# python scripts/4.run_samtools.py --command 'sort_name' --data_dir 'processed/sam' \
+#        --output_dir 'processed/bam' --walltime '06:00:00' --nodes 2 --cores 12
 
-# Prep to remove duplicate reads
-# python scripts/4.run_samtools.py --data_dir 'data/trimmed' --command 'fixmate'
+# Prep for duplicate removal by cleaning up readpair tags
+# python scripts/4.run_samtools.py --command 'fixmate' --data_dir 'processed/bam' \
+#        --output_dir 'processed/bam_fixmate' --walltime '02:30:00' --nodes 2 --cores 4
 
-# Prep to remove duplicate reads
-# python scripts/4.run_samtools.py --data_dir 'data/trimmed' --command 'sort_order'
+# Prep for duplicate removal by sorting tagged bam files by position
+python scripts/4.run_samtools.py --command 'sort_position' --data_dir 'processed/bam_fixmate' \
+        --output_dir 'processed/bam_sort_position' --walltime '2:30:00' --nodes 2 cores 8
 
 # Remove duplicate reads
 # python scripts/4.run_samtools.py --data_dir 'data/trimmed' --command 'markdup'

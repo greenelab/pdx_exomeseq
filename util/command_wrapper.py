@@ -114,10 +114,9 @@ samtools_sort_bam_com = [samtools, 'view', '-bS', os.path.join('processed', 'sam
                          '|', samtools, 'sort', '-n', '-', sample_sorted_bam]
 
 # samtools create fixmate bam
-samtools_fixmate_com = [samtools, 'fixmate', '-m', sample_sorted_bam,
+samtools_fixmate_com = [samtools, 'fixmate', os.path.join('processed', 'bam', sample_1),
                         sample_sorted_fixmate_bam]
-samtools_positionsort_com = [samtools, 'sort', '-o',
-                             sample_sorted_positionsort_bam,
+samtools_positionsort_com = [samtools, 'sort', os.path.join('processed', 'bam_fixmate', sample_1),
                              sample_sorted_fixmate_bam]
 samtools_markdup_com = [samtools, 'markdup', sample_sorted_positionsort_bam,
                         sample_markdup_bam]
@@ -164,9 +163,11 @@ elif command == 'sort_name':
     conda_build.extend(samtools_sort_bam_com)
     submit_commands = [conda_build]
 elif command == 'fixmate':
-    submit_commands = [samtools_fixmate_com]
+    conda_build.extend(samtools_fixmate_com)
+    submit_commands = [conda_build]
 elif command == 'sort_position':
-    submit_commands = [samtools_positionsort_com]
+    conda_build.extend(samtools_positionsort_com)
+    submit_commands = [conda_build]
 elif command == 'markdup':
     submit_commands = [samtools_markdup_com]
 elif command == 'index_bam':
