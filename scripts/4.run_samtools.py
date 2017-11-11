@@ -39,7 +39,7 @@ cores = str(args.cores)
 sam_files = []
 for path, subdirs, files in os.walk(data_dir):
     for name in files:
-        if 'fq.gz.sam' in name:
+        if 'fq.gz.sam' in name or '.sam_sorted.bam' in name:
             sam_files.append(name)
 
 command_util = os.path.join('util', 'command_wrapper.py')
@@ -49,3 +49,4 @@ for sample_1 in sam_files:
            '--config_yaml', config, '--walltime', walltime,
            '--nodes', nodes, '--cores', cores]
     subprocess.call(com)
+
