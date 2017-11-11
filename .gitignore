@@ -11,4 +11,5 @@ tools
 *.o*
 results/fastqc_raw/
 results/fastqc_trimmed/
+processed/
 
