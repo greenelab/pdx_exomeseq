@@ -45,7 +45,7 @@
 
 # Prep for duplicate removal by sorting tagged bam files by position
 python scripts/4.run_samtools.py --command 'sort_position' --data_dir 'processed/bam_fixmate' \
-        --output_dir 'processed/bam_sort_position' --walltime '2:30:00' --nodes 2 cores 8
+        --output_dir 'processed/bam_sort_position' --walltime '2:30:00' --nodes 2 cores 6
 
 # Remove duplicate reads
 # python scripts/4.run_samtools.py --data_dir 'data/trimmed' --command 'markdup'
