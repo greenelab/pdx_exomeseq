@@ -44,11 +44,11 @@
 #        --output_dir 'processed/bam_fixmate' --walltime '02:30:00' --nodes 2 --cores 4
 
 # Prep for duplicate removal by sorting tagged bam files by position
-python scripts/4.run_samtools.py --command 'sort_position' --data_dir 'processed/bam_fixmate' \
-        --output_dir 'processed/bam_sort_position' --walltime '03:30:00' --nodes 2 --cores 8
+# python scripts/4.run_samtools.py --command 'sort_position' --data_dir 'processed/bam_fixmate' \
+#        --output_dir 'processed/bam_sort_position' --walltime '04:30:00' --nodes 2 --cores 8
 
 # Remove duplicate reads
-# python scripts/4.run_samtools.py --data_dir 'data/trimmed' --command 'markdup'
+python scripts/4.run_samtools.py --data_dir 'data/trimmed' --command 'markdup'
 
 # Adding read groups with picard
 # python scripts/5.run_picard.py --data_dir 'data/trimmed' --command 'addreadgroups'
