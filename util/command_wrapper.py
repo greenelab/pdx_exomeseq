@@ -118,12 +118,15 @@ samtools_fixmate_com = [samtools, 'fixmate', os.path.join('processed', 'bam', sa
                         sample_sorted_fixmate_bam]
 
 # samtools sort fixmated bam by position
-samtools_positionsort_com = [samtools, 'sort', os.path.join('processed', 'bam_fixmate', sample_1),
-                             '-o', sample_sorted_positionsort_bam]
+samtools_positionsort_com = [samtools, 'sort', 
+                             os.path.join('processed', 'bam_fixmate', sample_1),
+                             sample_sorted_positionsort_bam]
 
-# samtools mark duplicates
+# samtools remove duplicated reads
 samtools_markdup_com = [samtools, 'markdup', sample_sorted_positionsort_bam,
                         sample_markdup_bam]
+
+# samtools create bai indexing in preparation for variant calling
 samtools_baiindex_com = [samtools, 'index', sample_sorted_positionsort_bam,
                          '-b', sample_markdup_bai]
 
