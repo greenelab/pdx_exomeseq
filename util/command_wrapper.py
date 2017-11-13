@@ -164,7 +164,7 @@ picard_addreadgroup_com = [picard, 'AddOrReplaceReadGroups',
 
 # call variants using GATK haplotypecaller
 gatk_variant_call = [gatk, '-T', 'HaplotypeCaller',
-                     '-I', os.path.join('processed', 'bam_rmdup', sample_1),
+                     '-I', os.path.join('lorax', 'sanchezlab', 'shared', 'pdx_exomeseq', 'processed', 'bam_rmdup', sample_1),
                      '-o', sample_gatk_vcf, '--dbsnp', dbsnp,
                      '-R', hg_ref]
 

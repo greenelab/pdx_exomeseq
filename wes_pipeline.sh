@@ -70,10 +70,10 @@
 # python scripts/5.variant_calling.py --command 'add_read_groups' --data_dir 'processed/bam_rmdup' \
 #        --output_dir 'processed/gatk_bam' --walltime '02:00:00' --nodes 1 --cores 8
 
-# Create index for read groups
-python scripts/5.run_samtools.py --command 'index_bam_gatk' --data_dir 'processed/gatk_bam' \
-        --output_dir 'processed/gatk_bam' --walltime '3:00:00' --nodes 1 --cores 4
+# Create index for read group files
+# python scripts/5.variant_calling.py --command 'index_bam_gatk' --data_dir 'processed/gatk_bam' \
+#        --output_dir 'processed/gatk_bam' --walltime '2:00:00' --nodes 1 --cores 4
 
 # Haplotype caller but exclude dbSNP vcf
-# python scripts/5.variant_calling.py --command 'haplotype_caller' --data_dir 'processed/gatk_bam' \
-#        --output_dir 'results/gatk_vcf' --walltime '03:00:00' --nodes 1 --cores 8
+python scripts/5.variant_calling.py --command 'haplotype_caller' --data_dir 'processed/gatk_bam' \
+        --output_dir 'results/gatk_vcf' --walltime '03:00:00' --nodes 1 --cores 8
