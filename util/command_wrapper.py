@@ -132,8 +132,7 @@ samtools_rmdup_com = [samtools, 'rmdup',
                       sample_markdup_bam]
 
 # indel realignment - create indel targets
-gatk_realigner_com = [java, '-Xmx50g', '-jar', gatk, '-T',
-                      'RealignerTargetCreator', '-R', hg_ref,
+gatk_realigner_com = [gatk, '-T', 'RealignerTargetCreator', '-R', hg_ref,
                       '-I', os.path.join('processed', 'bam_rmdup', sample_1),
                       '-o', sample_indel_target]
 
