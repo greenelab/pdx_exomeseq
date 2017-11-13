@@ -81,7 +81,7 @@ sample_sorted_fixmate_bam = sample_base + '_sorted_fixmate.bam'
 sample_sorted_positionsort_bam = sample_base + '_positionsort.bam'
 sample_markdup_bam = sample_base + '_rmdup.bam'
 sample_markdup_bai = sample_base + '.bai'
-sample_indel_target = sample_base + '.intervals'
+sample_indel_intervals = sample_base + '.intervals'
 sample_indel_realign = sample_base + 'realigned.bam'
 sample_gatk_bam = sample_base + '.GATK.bam'
 sample_gatk_bai = sample_base + '.GATK.bam.bai'
@@ -134,34 +134,20 @@ samtools_rmdup_com = [samtools, 'rmdup',
 # indel realignment - create indel targets
 gatk_realigner_com = [gatk, '-T', 'RealignerTargetCreator', '-R', hg_ref,
                       '-I', os.path.join('processed', 'bam_rmdup', sample_1),
-                      '-o', sample_indel_target]
+                      '-o', sample_indel_intervals]
 
 # samtools create bai indexing in preparation for variant calling
 samtools_baiindex_com = [samtools, 'index',
                          os.path.join('processed', 'bam_rmdup', sample_1),
                          sample_markdup_bai]
 
-picard_readgroups_com = [java, '-Xmx50g', '-jar',
-                         picard, 'AddOrReplaceReadGroups',
-                         'I={}'.format(sample_markdup_bam),
-                         'O={}'.format(sample_readgroup_bam),
-                         'SORT_ORDER=coordinate',
-                         'RGID={}'.format(sample_markdup_bam),
-                         'RGLB=bwa-mem', 'RGPL=illumina',
-                         'RGSM={}'.format(sample_markdup_bam),
-                         'CREATE_INDEX=true', 'RGPU=RGPU',
-                         'VALIDATION_STRINGENCY=SILENT']
+#gatk_realignindels_com = [java, '-Xmx50g', '-jar',
+#                          gatk, '-allowPotentiallyMisencodedQuals',
+#                          '-T', 'IndelRealigner', '-R', hg_ref,
+#                          '-targetIntervals', sample_gatk_intervals,
+#                          '-I', sample_markdup_bam,
+#                          '-O', sample_gatk_bam]
 
-gatk_localrealign_com = [java, '-Xmx50g', '-jar',
-                         gatk, '-T', 'RealignerTargetCreator',
-                         '-R', hg_ref, '-I', sample_readgroup_bam,
-                         '-O', sample_gatk_intervals]
-gatk_realignindels_com = [java, '-Xmx50g', '-jar',
-                          gatk, '-allowPotentiallyMisencodedQuals',
-                          '-T', 'IndelRealigner', '-R', hg_ref,
-                          '-targetIntervals', sample_gatk_intervals,
-                          '-I', sample_markdup_bam,
-                          '-O', sample_gatk_bam]
 gatk_bam_index = [samtools, 'index', sample_gatk_bam, '-b', sample_gatk_bai]
 gatk_variant_call = [java, '-Xmx50g', '-jar', gatk, '-T', 'HaplotypeCaller',
                      '-I', sample_gatk_bam, '-o', sample_gatk_vcf,
@@ -192,7 +178,7 @@ elif command == 'rmdup':
 elif command == 'index_bam':
     conda_build.extend(samtools_baiindex_com)
     submit_commands = [conda_build]
-elif command == 'target_realign':
+elif command == 'target_intervals':
     conda_build.extend(gatk_realigner_com)
     submit_commands = [conda_build]
 elif command == 'realign_indels':
