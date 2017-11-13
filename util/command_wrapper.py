@@ -143,8 +143,9 @@ samtools_baiindex_com = [samtools, 'index',
                          sample_markdup_bai]
 
 # call variants using GATK haplotypecaller
-gatk_variant_call = [java, '-Xmx50g', '-jar', gatk, '-T', 'HaplotypeCaller',
-                     '-I', sample_gatk_bam, '-o', sample_gatk_vcf, '--dbsnp', dbsnp,
+gatk_variant_call = [gatk, '-T', 'HaplotypeCaller',
+                     '-I', os.path.join('processed', 'bam_rmdup', sample_1),
+                     '-o', sample_gatk_vcf, '--dbsnp', dbsnp,
                      '-R', hg_ref, '--stand_call_conf', 30, '-mmq', 40]
 
 # Schedule a job based on the input command
@@ -175,14 +176,11 @@ elif command == 'index_bam':
 elif command == 'target_intervals':
     conda_build.extend(gatk_realigner_com)
     submit_commands = [conda_build]
-elif command == 'realign_indels':
-    submit_commands = [gatk_realignindels_com]
-elif command == 'index_gatk':
-    submit_commands = [gatk_bam_index]
-elif command == 'variant_call_gatk':
-    submit_commands = [gatk_variant_call]
+elif command == 'haplotype_caller':
+    conda_build.extend(gatk_variant_call)
+    submit_commands = [conda_build]
 
 if __name__ == '__main__':
     for com in submit_commands:
-       schedule_job(command=com, name=schedule_name, python=python,
-                    nodes=nodes, cores=cores, walltime=walltime)
+        schedule_job(command=com, name=schedule_name, python=python,
+                     nodes=nodes, cores=cores, walltime=walltime)
