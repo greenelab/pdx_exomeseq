@@ -40,6 +40,7 @@ python util/schedule.py \
 # MANUAL STEP: Download Gatk3.8-0 https://software.broadinstitute.org/gatk/download/ and move it to `modules` then run:
 # gatk-register modules/GenomeAnalysisTK-3.8-0.tar.bz2
 
+wget --directory-prefix reference ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh37p13/VCF/GATK/All_20170710.vcf.gz
 # SAMTOOLS
 # Included in the conda environment
 
