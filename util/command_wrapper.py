@@ -79,8 +79,8 @@ sample_sam = sample_base + '.sam'
 sample_sorted_bam = sample_base + '_sorted'
 sample_sorted_fixmate_bam = sample_base + '_sorted_fixmate.bam'
 sample_sorted_positionsort_bam = sample_base + '_positionsort.bam'
-sample_markdup_bam = sample_base + '_markdup.bam'
-sample_markdup_bai = sample_base + '_markdup.bam.bai'
+sample_markdup_bam = sample_base + '_rmdup.bam'
+sample_markdup_bai = sample_base + '.bai'
 sample_readgroup_bam = sample_base + '_markdup.rg.bam'
 sample_gatk_intervals = sample_base + '.intervals'
 sample_gatk_bam = sample_base + '.GATK.bam'
@@ -123,12 +123,14 @@ samtools_positionsort_com = [samtools, 'sort',
                              sample_sorted_positionsort_bam]
 
 # samtools remove duplicated reads
-samtools_markdup_com = [samtools, 'markdup', sample_sorted_positionsort_bam,
-                        sample_markdup_bam]
+samtools_rmdup_com = [samtools, 'rmdup',
+                      os.path.join('processed', 'bam_sort_position', sample_1),
+                      sample_markdup_bam]
 
 # samtools create bai indexing in preparation for variant calling
-samtools_baiindex_com = [samtools, 'index', sample_sorted_positionsort_bam,
-                         '-b', sample_markdup_bai]
+samtools_baiindex_com = [samtools, 'index',
+                         os.path.join('processed', 'bam_rmdup', sample_1),
+                         sample_markdup_bai]
 
 picard_readgroups_com = [java, '-Xmx50g', '-jar',
                          picard, 'AddOrReplaceReadGroups',
@@ -175,12 +177,12 @@ elif command == 'fixmate':
 elif command == 'sort_position':
     conda_build.extend(samtools_positionsort_com)
     submit_commands = [conda_build]
-elif command == 'markdup':
-    submit_commands = [samtools_markdup_com]
+elif command == 'rmdup':
+    conda_build.extend(samtools_rmdup_com)
+    submit_commands = [conda_build]
 elif command == 'index_bam':
-    submit_commands = [samtools_baiindex_com]
-elif command == 'addreadgroups':
-    submit_commands = [picard_readgroups_com]
+    conda_build.extend(samtools_baiindex_com)
+    submit_commands = [conda_build]
 elif command == 'local_realign':
     submit_commands = [gatk_localrealign_com]
 elif command == 'realign_indels':
