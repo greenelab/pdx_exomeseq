@@ -55,5 +55,14 @@
 ###################
 # STEP 4 - Variant Calling
 ###################
-python scripts/5.variant_calling.py --command 'target_intervals' --data_dir 'processed/bam_rmdup' \
-        --output_dir 'processed/bam_indel_realign' --walltime '03:00:00' --nodes 1 --cores 8
+# NOTE: These next two steps were NOT performed. They are legacy functions that are no longer best-practices
+# for GATK HaplotypeCaller (see https://software.broadinstitute.org/gatk/blog?id=7847)
+# Create fasta index for hg reference
+# python util/schedule.py --command 'm load python/3.5-Anaconda && source activate pdx-exomeseq && samtools faidx /lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.fasta' --name 'faindex_hg19' --walltime '03:00:00' --nodes 1 --cores 8 --filename 'logs/faindex_hg19.pbs'
+
+# python scripts/5.variant_calling.py --command 'target_intervals' --data_dir 'processed/bam_rmdup' \
+#        --output_dir 'processed/bam_indel_realign' --walltime '03:00:00' --nodes 1 --cores 8
+
+# Haplotype caller but exclude dbSNP vcf
+python scripts/5.variant_calling.py --command 'haplotype_caller' --data_dir 'processed/bam_rmdup' \
+        --output_dir 'results/gatk_vcf' --walltime '03:00:00' --nodes 1 --cores 8
