@@ -85,7 +85,7 @@ sample_markdup_bai = sample_base + '.bai'
 sample_indel_intervals = sample_base + '.intervals'
 sample_indel_realign = sample_base + 'realigned.bam'
 sample_addreadgroup = sample_base + '.rg.bam'
-sample_gatk_bai = sample_base + '.bai'
+sample_bamindex_gatk = sample_base + '.bai'
 sample_gatk_vcf = sample_base + '.GATK.vcf'
 
 ############################
