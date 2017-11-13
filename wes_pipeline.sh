@@ -48,7 +48,14 @@
 #        --output_dir 'processed/bam_sort_position' --walltime '04:30:00' --nodes 2 --cores 8
 
 # Remove duplicate reads
-python scripts/4.run_samtools.py --data_dir 'data/trimmed' --command 'markdup'
+# python scripts/4.run_samtools.py --command 'rmdup' --data_dir 'processed/bam_sort_position' \
+#       --output_dir 'processed/bam_rmdup' --walltime '02:30:00' --nodes 1 --cores 8
+
+# Create BAM index for duplicate removal
+python scripts/4.run_samtools.py --command 'index_bam' --data_dir 'processed/bam_rmdup' \
+        --output_dir 'processed/bam_rmdup' --walltime '02:30:00' --nodes 1 --cores 8
+
+
 
 # Adding read groups with picard
 # python scripts/5.run_picard.py --data_dir 'data/trimmed' --command 'addreadgroups'
