@@ -84,8 +84,8 @@ sample_markdup_bam = sample_base + '_rmdup.bam'
 sample_markdup_bai = sample_base + '.bai'
 sample_indel_intervals = sample_base + '.intervals'
 sample_indel_realign = sample_base + 'realigned.bam'
-sample_gatk_bam = sample_base + '.GATK.bam'
-sample_gatk_bai = sample_base + '.GATK.bam.bai'
+sample_addreadgroup = sample_base + '.rg.bam'
+sample_gatk_bai = sample_base + '.bai'
 sample_gatk_vcf = sample_base + '.GATK.vcf'
 
 ############################
@@ -138,15 +138,35 @@ gatk_realigner_com = [gatk, '-T', 'RealignerTargetCreator', '-R', hg_ref,
                       '-o', sample_indel_intervals]
 
 # samtools create bai indexing in preparation for variant calling
-samtools_baiindex_com = [samtools, 'index',
-                         os.path.join('processed', 'bam_rmdup', sample_1),
-                         sample_markdup_bai]
+if command == 'index_bam':
+    sample_1_file = os.path.join('processed', 'bam_rmdup', sample_1)
+    sample_bai_out_file = sample_markdup_bai
+elif command == 'index_bam_gatk':
+    sample_1_file = os.path.join('processed', 'gatk_bam', sample_1)
+    sample_bai_out_file = sample_bamindex_gatk
+else:
+    sample_1_file = sample_1
+    sample_bai_out_file = 'none'
+
+samtools_baiindex_com = [samtools, 'index', sample_1_file, sample_bai_out_file]
+
+# picard add read groups - required for variant calling
+picard_addreadgroup_com = [picard, 'AddOrReplaceReadGroups',
+                           'I={}'.format(os.path.join('processed', 'bam_rmdup', sample_1)),
+                           'O={}'.format(sample_addreadgroup),
+                           'RGID={}'.format(sample_1),
+                           'RGLB=bwa-mem',
+                           'RGPL=illumina',
+                           'RGSM={}'.format(sample_1),
+                           'RGPU={}'.format(sample_1),
+                           'CREATE_INDEX=true',
+                           'VALIDATION_STRINGENCY=SILENT']
 
 # call variants using GATK haplotypecaller
 gatk_variant_call = [gatk, '-T', 'HaplotypeCaller',
                      '-I', os.path.join('processed', 'bam_rmdup', sample_1),
                      '-o', sample_gatk_vcf, '--dbsnp', dbsnp,
-                     '-R', hg_ref, '--stand_call_conf', 30, '-mmq', 40]
+                     '-R', hg_ref]
 
 # Schedule a job based on the input command
 if command == 'fastqc':
@@ -170,11 +190,14 @@ elif command == 'sort_position':
 elif command == 'rmdup':
     conda_build.extend(samtools_rmdup_com)
     submit_commands = [conda_build]
-elif command == 'index_bam':
+elif command == 'index_bam' or command == 'index_bam_gatk':
     conda_build.extend(samtools_baiindex_com)
     submit_commands = [conda_build]
 elif command == 'target_intervals':
     conda_build.extend(gatk_realigner_com)
+    submit_commands = [conda_build]
+elif command == 'add_read_groups':
+    conda_build.extend(picard_addreadgroup_com)
     submit_commands = [conda_build]
 elif command == 'haplotype_caller':
     conda_build.extend(gatk_variant_call)
