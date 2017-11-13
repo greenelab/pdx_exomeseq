@@ -55,5 +55,5 @@
 ###################
 # STEP 4 - Variant Calling
 ###################
-python scripts/5.variant_calling.py --command 'target_realign' --data_dir 'processed/bam_rmdup' \
+python scripts/5.variant_calling.py --command 'target_intervals' --data_dir 'processed/bam_rmdup' \
         --output_dir 'processed/bam_indel_realign' --walltime '03:00:00' --nodes 1 --cores 8
