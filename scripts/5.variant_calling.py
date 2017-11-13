@@ -36,14 +36,14 @@ walltime = args.walltime
 nodes = str(args.nodes)
 cores = str(args.cores)
 
-sam_files = []
+bam_files = []
 for path, subdirs, files in os.walk(data_dir):
     for name in files:
-        if 'fq.gz.sam' in name or '.sam_sorted.bam' in name:
-            sam_files.append(name)
+        if 'bam.bam_rmdup.bam' in name and 'bam_rmdup.bam.bai' not in name:
+            bam_files.append(name)
 
 command_util = os.path.join('util', 'command_wrapper.py')
-for sample_1 in sam_files:
+for sample_1 in bam_files:
     com = ['python', command_util, '--sample', sample_1,
            '--command', command, '--output_directory', out_dir,
            '--config_yaml', config, '--walltime', walltime,
