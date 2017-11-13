@@ -69,6 +69,7 @@ samtools = config['samtools']
 picard = config['picard']
 gatk = config['gatk']
 hg_ref = config['hgreference']
+dbsnp = config['dbsnp']
 
 schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
 sample_name = sample_1.replace('_R1_', '_').replace('_val_1', '')
@@ -141,16 +142,9 @@ samtools_baiindex_com = [samtools, 'index',
                          os.path.join('processed', 'bam_rmdup', sample_1),
                          sample_markdup_bai]
 
-#gatk_realignindels_com = [java, '-Xmx50g', '-jar',
-#                          gatk, '-allowPotentiallyMisencodedQuals',
-#                          '-T', 'IndelRealigner', '-R', hg_ref,
-#                          '-targetIntervals', sample_gatk_intervals,
-#                          '-I', sample_markdup_bam,
-#                          '-O', sample_gatk_bam]
-
-gatk_bam_index = [samtools, 'index', sample_gatk_bam, '-b', sample_gatk_bai]
+# call variants using GATK haplotypecaller
 gatk_variant_call = [java, '-Xmx50g', '-jar', gatk, '-T', 'HaplotypeCaller',
-                     '-I', sample_gatk_bam, '-o', sample_gatk_vcf,
+                     '-I', sample_gatk_bam, '-o', sample_gatk_vcf, '--dbsnp', dbsnp,
                      '-R', hg_ref, '--stand_call_conf', 30, '-mmq', 40]
 
 # Schedule a job based on the input command
