@@ -55,23 +55,24 @@
 ###################
 # STEP 4 - Variant Calling
 ###################
-# NOTE: These next two steps were NOT performed. They are legacy functions that are no longer best-practices
-# for GATK HaplotypeCaller (see https://software.broadinstitute.org/gatk/blog?id=7847)
 # Create fasta index for hg reference
 # python util/schedule.py --command 'm load python/3.5-Anaconda && source activate pdx-exomeseq && samtools faidx /lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.fasta' --name 'faindex_hg19' --walltime '03:00:00' --nodes 1 --cores 8 --filename 'logs/faindex_hg19.pbs'
 
 # python util/schedule.py --command 'm load python/3.5-Anaconda && source activate pdx-exomeseq && picard CreateSequenceDictionary R=/lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.fasta O=/lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.dict' --name 'fastadict_hg19' --walltime '3:00:00' --nodes 2 --cores 12 --filename 'logs/fastadict_hg19.pbs'
 
+# NOTE: Realigning around indels was NOT performed. They are legacy functions that are no longer best-practices
+# for GATK HaplotypeCaller (see https://software.broadinstitute.org/gatk/blog?id=7847)
+
 # python scripts/5.variant_calling.py --command 'target_intervals' --data_dir 'processed/bam_rmdup' \
 #        --output_dir 'processed/bam_indel_realign' --walltime '03:00:00' --nodes 1 --cores 8
 
 # Assign read groups
-python scripts/5.variant_calling.py --command 'add_read_groups' --data_dir 'processed/bam_rmdup' \
-        --output_dir 'processed/gatk_bam' --walltime '02:00:00' --nodes 1 --cores 8
+# python scripts/5.variant_calling.py --command 'add_read_groups' --data_dir 'processed/bam_rmdup' \
+#        --output_dir 'processed/gatk_bam' --walltime '02:00:00' --nodes 1 --cores 8
 
 # Create index for read groups
-#python scripts/5.run_samtools.py --command 'index_bam_gatk' --data_dir 'processed/gatk_bam' \
-#        --output_dir 'processed/gatk_bam' --walltime '3:00:00' --nodes 1 --cores 8
+python scripts/5.run_samtools.py --command 'index_bam_gatk' --data_dir 'processed/gatk_bam' \
+        --output_dir 'processed/gatk_bam' --walltime '3:00:00' --nodes 1 --cores 4
 
 # Haplotype caller but exclude dbSNP vcf
 # python scripts/5.variant_calling.py --command 'haplotype_caller' --data_dir 'processed/gatk_bam' \
