@@ -3,7 +3,7 @@ python: /ihome/gway/.conda/envs/pdx-exomeseq/bin/python
 java: /opt/java/jdk1.7.0_79/bin/java
 condaenv: pdx-exomeseq
 hgreference: /lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.fasta
-dbsnp: /lorax/sanchezlab/shared/pdx_exomeseq/reference/All_20170710.vcv.gz
+dbsnp: /lorax/sanchezlab/shared/pdx_exomeseq/reference/All_20170710.vcf.gz
 directory: /lorax/sanchezlab/shared/pdx_exomeseq
 fastqc: /ihome/gway/.conda/envs/pdx-exomeseq/bin/fastqc
 cutadapt: /ihome/gway/.conda/envs/pdx-exomeseq/bin/cutadapt
