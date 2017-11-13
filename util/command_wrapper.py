@@ -81,8 +81,8 @@ sample_sorted_fixmate_bam = sample_base + '_sorted_fixmate.bam'
 sample_sorted_positionsort_bam = sample_base + '_positionsort.bam'
 sample_markdup_bam = sample_base + '_rmdup.bam'
 sample_markdup_bai = sample_base + '.bai'
-sample_readgroup_bam = sample_base + '_markdup.rg.bam'
-sample_gatk_intervals = sample_base + '.intervals'
+sample_indel_target = sample_base + '.intervals'
+sample_indel_realign = sample_base + 'realigned.bam'
 sample_gatk_bam = sample_base + '.GATK.bam'
 sample_gatk_bai = sample_base + '.GATK.bam.bai'
 sample_gatk_vcf = sample_base + '.GATK.vcf'
@@ -106,26 +106,36 @@ trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
 if command == 'bwa':
     bwa_mem_com = [bwa, 'mem', '-t', '8', hg_ref,
                    os.path.join('processed', 'trimmed', sample_1),
-                   os.path.join('processed', 'trimmed', sample_2), '>', sample_sam]
+                   os.path.join('processed', 'trimmed', sample_2), '>',
+                   sample_sam]
 
 # samtools sort to bam
 # `-n` sorts by name, which is required for fixmate
-samtools_sort_bam_com = [samtools, 'view', '-bS', os.path.join('processed', 'sam', sample_1),
+samtools_sort_bam_com = [samtools, 'view', '-bS',
+                         os.path.join('processed', 'sam', sample_1),
                          '|', samtools, 'sort', '-n', '-', sample_sorted_bam]
 
 # samtools create fixmate bam
-samtools_fixmate_com = [samtools, 'fixmate', os.path.join('processed', 'bam', sample_1),
+samtools_fixmate_com = [samtools, 'fixmate',
+                        os.path.join('processed', 'bam', sample_1),
                         sample_sorted_fixmate_bam]
 
 # samtools sort fixmated bam by position
-samtools_positionsort_com = [samtools, 'sort', 
-                             os.path.join('processed', 'bam_fixmate', sample_1),
+samtools_positionsort_com = [samtools, 'sort',
+                             os.path.join('processed', 'bam_fixmate',
+                                          sample_1),
                              sample_sorted_positionsort_bam]
 
 # samtools remove duplicated reads
 samtools_rmdup_com = [samtools, 'rmdup',
                       os.path.join('processed', 'bam_sort_position', sample_1),
                       sample_markdup_bam]
+
+# indel realignment - create indel targets
+gatk_realigner_com = [java, '-Xmx50g', '-jar', gatk, '-T',
+                      'RealignerTargetCreator', '-R', hg_ref,
+                      '-I', os.path.join('processed', 'bam_rmdup', sample_1),
+                      '-o', sample_indel_target]
 
 # samtools create bai indexing in preparation for variant calling
 samtools_baiindex_com = [samtools, 'index',
@@ -183,8 +193,9 @@ elif command == 'rmdup':
 elif command == 'index_bam':
     conda_build.extend(samtools_baiindex_com)
     submit_commands = [conda_build]
-elif command == 'local_realign':
-    submit_commands = [gatk_localrealign_com]
+elif command == 'target_realign':
+    conda_build.extend(gatk_realigner_com)
+    submit_commands = [conda_build]
 elif command == 'realign_indels':
     submit_commands = [gatk_realignindels_com]
 elif command == 'index_gatk':
