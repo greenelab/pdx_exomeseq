@@ -56,6 +56,17 @@ blastdb <- opt$blast_db
 threads <- opt$num_threads # number of threads consumed by blastn
 mapq <- opt$mapq # this is the default for minimum mapq score
 
+print(bam)
+print(bamidx)
+print(variants)
+print(blastout)
+print(blastpath)
+print(results_output)
+print(blastdb)
+print(threads)
+print(mapq)
+
+
 results <- mapexr::run_mapex(bam_file = bam,
                              bam_idx = bamidx,
                              variant_file = variants,
@@ -65,4 +76,4 @@ results <- mapexr::run_mapex(bam_file = bam,
                              blast_threads = threads,
                              min_mapq = mapq)
 
-readr::write_csv(results, path = results_output)
+write.table(results, results_output, sep='\t')
