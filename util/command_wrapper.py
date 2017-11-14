@@ -111,7 +111,7 @@ sample_mapex_out = sample_base + '.tsv'
 conda_build = ['m', 'load', 'python/3.5-Anaconda', '&&',
                'source', 'activate', conda_env, '&&']
 
-mapex_build = ['m', 'load', 'blast+/2.6.0']
+mapex_build = ['m', 'load', 'blast+/2.6.0', '&&']
 
 # FastQC
 fastqc_com = [fastqc, sample_1, '-o', output_dir]
@@ -239,7 +239,7 @@ elif command == 'mutect2':
     submit_commands = [conda_build]
 elif command == 'mapex':
     mapex_build.extend(conda_build)
-    mapex_build.extend(gatk_variant_call)
+    mapex_build.extend(mapex_remove_mouse_com)
     submit_commands = [mapex_build]
 
 if __name__ == '__main__':
