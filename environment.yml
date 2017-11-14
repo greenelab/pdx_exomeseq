@@ -8,6 +8,7 @@ dependencies:
 - pyyaml=3.12
 - r::r-tidyverse=1.1.1
 - r::r-devtools=1.13.3
+- conda-forge::r-optparse=1.4.4
 - bioconda::bioconductor-rsamtools=1.28.0
 - bioconda::bioconductor-genomicranges=1.28.6
 - bioconda::bioconductor-genomicalignments=1.10.0
