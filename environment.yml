@@ -11,7 +11,7 @@ dependencies:
 - conda-forge::r-optparse=1.4.4
 - bioconda::bioconductor-rsamtools=1.28.0
 - bioconda::bioconductor-genomicranges=1.28.6
-- bioconda::bioconductor-genomicalignments=1.10.0
+- bioconda::bioconductor-genomicalignments=1.14.0
 - bioconda::trim-galore=0.4.4
 - bioconda::cutadapt=1.14
 - bioconda::bwa=0.7.16
