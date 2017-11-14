@@ -1,8 +1,8 @@
 """
 Gregory Way 2017
-scripts/4.rum_samtools.py
+scripts/5.variant_calling.py
 
-Will submit jobs to run `samtools` on all samples
+Will submit jobs to run variant calling scripts on input bam files
 """
 
 import os
