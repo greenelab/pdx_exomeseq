@@ -102,6 +102,7 @@ sample_indel_realign = sample_base + 'realigned.bam'
 sample_addreadgroup = sample_base + '.rg.bam'
 sample_bamindex_gatk = sample_base + '.bai'
 sample_gatk_vcf = sample_base + '.GATK.vcf'
+sample_mapex_out = sample_base + '.tsv'
 
 ############################
 # Generate the commands
@@ -197,6 +198,7 @@ mapex_remove_mouse_com = [rscript, 'util/mapex_wrapper.R',
                           '--path_to_vcf', mapex_vcf,
                           '--blast_output', mapex_blast_out,
                           '--blast', mapex_blast,
+                          '--results_output', sample_mapex_out,
                           '--blast_db', combined_ref,
                           '--num_threads', 4,
                           '--mapq', 1]
