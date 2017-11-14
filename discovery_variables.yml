@@ -1,8 +1,10 @@
 name: discovery_variables
 python: /ihome/gway/.conda/envs/pdx-exomeseq/bin/python
 java: /opt/java/jdk1.7.0_79/bin/java
+r: /ihome/gway/.conda/envs/pdx-exomeseq/bin/R
 condaenv: pdx-exomeseq
 hgreference: /lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.fasta
+combinedref: /lorax/sanchezlab/shared/pdx_exomeseq/reference/combined_g1k_v37_mm9.fasta
 dbsnp: /lorax/sanchezlab/shared/pdx_exomeseq/reference/dbsnp_138.b37.vcf
 directory: /lorax/sanchezlab/shared/pdx_exomeseq
 fastqc: /ihome/gway/.conda/envs/pdx-exomeseq/bin/fastqc
@@ -12,3 +14,4 @@ bwa: /ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa
 samtools: /ihome/gway/.conda/envs/pdx-exomeseq/bin/samtools
 picard: /ihome/gway/.conda/envs/pdx-exomeseq/bin/picard
 gatk: /ihome/gway/.conda/envs/pdx-exomeseq/bin/gatk
+mapexblast: blastn
