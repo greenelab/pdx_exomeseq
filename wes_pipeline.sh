@@ -74,11 +74,12 @@
 # python scripts/5.variant_calling.py --command 'index_bam_gatk' --data_dir 'processed/gatk_bam' \
 #        --output_dir 'processed/gatk_bam' --walltime '2:00:00' --nodes 1 --cores 4
 
-# Haplotype caller but exclude dbSNP vcf
-python scripts/5.variant_calling.py --command 'mutect2' --data_dir 'processed/gatk_bam' \
-        --output_dir 'results/gatk_vcf' --walltime '05:00:00' --nodes 1 --cores 8 
+# Call variants with MuTect2
+# python scripts/5.variant_calling.py --command 'mutect2' --data_dir 'processed/gatk_bam' \
+#        --output_dir 'results/gatk_vcf' --walltime '05:00:00' --nodes 1 --cores 8 
 
 ###################
 # Step 5 - Filter Mouse Reads from VCF
 ###################
-
+python scripts/6.run_mapex.py --data_dir 'processed/gatk_bam' --output_dir 'results/mapex_vcf' \
+        --vcf_dir 'results/gatk_vcf' --walltime '05:00:00' --nodes 1 --cores 8
