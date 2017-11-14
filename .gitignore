@@ -12,4 +12,4 @@ tools
 results/fastqc_raw/
 results/fastqc_trimmed/
 processed/
-
+.Rhistory
