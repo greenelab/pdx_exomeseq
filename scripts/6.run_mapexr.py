@@ -34,6 +34,7 @@ parser.add_argument('-r', '--cores', default=1,
                     help='the number of cores to allocate per node')
 args = parser.parse_args()
 
+# Load command arguments
 data_dir = args.data_dir
 out_dir = args.output_dir
 vcf_dir = args.vcf_dir
@@ -43,22 +44,32 @@ walltime = args.walltime
 nodes = str(args.nodes)
 cores = str(args.cores)
 
-bam_files = []
+# Set important suffixes
+bam_suffix = '.fq.gz.sam_sorted.bam_sorted_fixmate.bam_positionsort.bam' \
+             '.bam_rmdup.bam.rg.bam'
+bai_suffix = '{}.bai'.format(bam_suffix)
+vcf_suffix = '{}.GATK.vcf'.format(bam_suffix)
+
+# sample_files will have entry format [base, bam, bai, vcf]
+
+sample_files = []
 for path, subdirs, files in os.walk(data_dir):
     for name in files:
-        if 'bam.bam_rmdup.bam' in name and '.bam.bai' not in name:
-            bam_files.append(name)
-
-# sample_files = [sample_base, sample_bam, sample_bai, sample_vcf]
-
+        if 'bam.rg.bam.bai' not in name:
+            base = name.split('.')[0]
+            samp_bam = os.path.join(data_dir, '{}{}'.format(base, bam_suffix))
+            samp_bai = os.path.join(data_dir, '{}{}'.format(base, bai_suffix))
+            samp_vcf = os.path.join(vcf_dir, '{}{}'.format(base, vcf_suffix))
+            sample_files.append([base, samp_bam, samp_bai, samp_vcf])
 
 command_util = os.path.join('util', 'command_wrapper.py')
-for sample_1 in bam_files:
+for sample_base, sample_bam, sample_bai, sample_vcf in sample_files:
     com = ['python', command_util,
-           '--sample', sample_1,
+           '--sample', sample_base,
            '--command', 'mapex',
-           '--mapex_path_to_bam_index', data_dir,
-           '--mapex_path_to_vcf', vcf_dir,
+           '--mapex_path_to_bam', sample_bam,
+           '--mapex_path_to_bam_index', sample_bai,
+           '--mapex_path_to_vcf', sample_vcf,
            '--mapex_path_to_blast_output', blast_out_dir,
            '--output_directory', out_dir,
            '--config_yaml', config,
