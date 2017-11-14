@@ -40,6 +40,8 @@ walltime = args.walltime
 nodes = str(args.nodes)
 cores = str(args.cores)
 
+base_dir = '/lorax/sanchezlab/shared/pdx_exomeseq'
+
 # Set important suffixes
 bam_suffix = '.fq.gz.sam_sorted.bam_sorted_fixmate.bam_positionsort.bam' \
              '.bam_rmdup.bam.rg.bam'
@@ -53,20 +55,21 @@ for path, subdirs, files in os.walk(data_dir):
     for name in files:
         if 'bam.rg.bam.bai' not in name:
             base = name.split('.')[0]
-            samp_bam = os.path.join(data_dir, '{}{}'.format(base, bam_suffix))
-            samp_bai = os.path.join(data_dir, '{}{}'.format(base, bai_suffix))
-            samp_vcf = os.path.join(vcf_dir, '{}{}'.format(base, vcf_suffix))
-            sample_files.append([base, samp_bam, samp_bai, samp_vcf])
+            samp_bam = os.path.join(base_dir, data_dir, '{}{}'.format(base, bam_suffix))
+            samp_bai = os.path.join(base_dir, data_dir, '{}{}'.format(base, bai_suffix))
+            samp_vcf = os.path.join(base_dir, vcf_dir, '{}{}'.format(base, vcf_suffix))
+            samp_blast = os.path.join(base_dir, blast_out_dir, '{}_blast.txt'.format(base))
+            sample_files.append([base, samp_bam, samp_bai, samp_vcf, samp_blast])
 sample_files = sample_files[0:2]
 command_util = os.path.join('util', 'command_wrapper.py')
-for sample_base, sample_bam, sample_bai, sample_vcf in sample_files:
+for sample_base, sample_bam, sample_bai, sample_vcf, sample_blast in sample_files:
     com = ['python', command_util,
            '--sample', sample_base,
            '--command', 'mapex',
            '--mapex_path_to_bam', sample_bam,
            '--mapex_path_to_bam_index', sample_bai,
            '--mapex_path_to_vcf', sample_vcf,
-           '--mapex_path_to_blast_output', blast_out_dir,
+           '--mapex_path_to_blast_output', sample_blast,
            '--output_directory', out_dir,
            '--config_yaml', config,
            '--walltime', walltime,
