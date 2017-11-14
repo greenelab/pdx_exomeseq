@@ -12,10 +12,6 @@ import subprocess
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--data_dir',
                     help='Location of input data')
-parser.add_argument('-i', '--mapex_path_to_bam_index',
-                    help='location of the BAM file index to use for mapex')
-parser.add_argument('-v', '--mapex_path_to_vcf',
-                    help='location of the VCF file to use for mapex')
 parser.add_argument('-o', '--output_dir',
                     help='Location to save output data',
                     default='.')
@@ -61,7 +57,7 @@ for path, subdirs, files in os.walk(data_dir):
             samp_bai = os.path.join(data_dir, '{}{}'.format(base, bai_suffix))
             samp_vcf = os.path.join(vcf_dir, '{}{}'.format(base, vcf_suffix))
             sample_files.append([base, samp_bam, samp_bai, samp_vcf])
-
+sample_files = sample_files[0:2]
 command_util = os.path.join('util', 'command_wrapper.py')
 for sample_base, sample_bam, sample_bai, sample_vcf in sample_files:
     com = ['python', command_util,
