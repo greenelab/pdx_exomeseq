@@ -192,7 +192,7 @@ gatk_variant_call = [gatk, '-T', 'MuTect2',
                      '-R', hg_ref]
 
 # Remove mouse reads using MAPEX
-mapex_remove_mouse_com = [rscript, '--no-save', '<', 'util/mapex_wrapper.R',
+mapex_remove_mouse_com = [rscript, '--vanilla', 'util/mapex_wrapper.R',
                           '--path_to_bam', mapex_bam,
                           '--path_to_bam_index', mapex_bam_bai,
                           '--path_to_vcf', mapex_vcf,
