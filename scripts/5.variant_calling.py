@@ -49,4 +49,3 @@ for sample_1 in bam_files:
            '--config_yaml', config, '--walltime', walltime,
            '--nodes', nodes, '--cores', cores]
     subprocess.call(com)
-
