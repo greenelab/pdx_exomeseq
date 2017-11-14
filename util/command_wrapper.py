@@ -163,9 +163,12 @@ picard_addreadgroup_com = [picard, 'AddOrReplaceReadGroups',
                            'VALIDATION_STRINGENCY=SILENT']
 
 # call variants using GATK haplotypecaller
-gatk_variant_call = [gatk, '-T', 'HaplotypeCaller',
-                     '-I', os.path.join('lorax', 'sanchezlab', 'shared', 'pdx_exomeseq', 'processed', 'bam_rmdup', sample_1),
-                     '-o', sample_gatk_vcf, '--dbsnp', dbsnp,
+gatk_variant_call = [gatk, '-T', 'MuTect2',
+                     '--num_cpu_threads_per_data_thread', '8',
+                     '--standard_min_confidence_threshold_for_calling', '20',
+                     '--min_base_quality_score', '20',
+                     '-I:tumor', os.path.join('processed', 'gatk_bam', sample_1),
+                     '-o', sample_gatk_vcf, 
                      '-R', hg_ref]
 
 # Schedule a job based on the input command
@@ -199,7 +202,7 @@ elif command == 'target_intervals':
 elif command == 'add_read_groups':
     conda_build.extend(picard_addreadgroup_com)
     submit_commands = [conda_build]
-elif command == 'haplotype_caller':
+elif command == 'mutect2':
     conda_build.extend(gatk_variant_call)
     submit_commands = [conda_build]
 
