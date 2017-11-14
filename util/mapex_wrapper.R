@@ -5,10 +5,6 @@
 
 library(optparse)
 library(mapexr)
-library(tidyverse)
-library(Rsamtools)
-library(GenomicRanges)
-library(GenomicAlignments)
 
 # Load command arguments
 
