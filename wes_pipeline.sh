@@ -54,15 +54,15 @@
 #        --walltime '06:00:00' --nodes 2 --cores 12
 
 # Also need to sort SAM and convert to BAM for mouse
-python scripts/4.run_samtools.py --command 'sort_name' --genome 'mm' \
-        --data_dir 'processed/sam_mouse' --output_dir 'processed/bam_mouse' \
-        --walltime '03:00:00' --nodes 2 --cores 8
+# python scripts/4.run_samtools.py --command 'sort_name' --genome 'mm' \
+#        --data_dir 'processed/sam_mouse' --output_dir 'processed/bam_mouse' \
+#        --walltime '03:00:00' --nodes 2 --cores 8
 
-# Here, we need to consider adding a disambiguate step.
-# python scripts/6.disambiguate_species.py --command 'disambiguate' \
-#        --human_dir 'processed/bam' --mouse_dir 'processed/bam_mouse' \
-#        --output_dir 'processed/bam_disambiguate' \
-#        --walltime '06:00:00' --nodes 2 --cores 8
+# Use ngs_disambiguate to identify high confidence human-based reads
+python scripts/6.disambiguate_species.py \
+        --human_dir 'processed/bam' --mouse_dir 'processed/bam_mouse' \
+        --output_dir 'processed/bam_disambiguate' \
+        --walltime '06:00:00' --nodes 2 --cores 8
 
 # Prep for duplicate removal by cleaning up readpair tags
 # python scripts/4.run_samtools.py --command 'fixmate' \
