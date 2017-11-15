@@ -22,6 +22,8 @@ parser.add_argument('-c', '--command',
                           "sort_position", "fixmate", "rmdup", "index_bam", \
                           "index_bam_gatk", "add_read_groups", \
                           "mutect2", "mapex"]')
+parser.add_argument('-g', '--genome', default='hg',
+                    help='name of the reference genome')
 parser.add_argument('-o', '--output_directory',
                     help='the location to save the output files')
 parser.add_argument('-y', '--config_yaml', default='discovery_variables.yml',
@@ -57,6 +59,7 @@ def schedule_job(command, name, python, nodes=1, cores=4, walltime='04:00:00'):
 sample_1 = args.sample
 sample_2 = args.sample_2
 command = args.command
+genome = args.genome
 output_dir = args.output_directory
 config = args.config_yaml
 walltime = args.walltime
@@ -76,7 +79,10 @@ python = config['python']
 java = config['java']
 rscript = config['r']
 conda_env = config['condaenv']
-hg_ref = config['hgreference']
+if genome == 'hg':
+    genome_ref = config['hgreference']
+elif genome == 'mm':
+    genome_ref = config['mmreference']
 combined_ref = config['combinedref']
 dbsnp = config['dbsnp']
 base_dir = config['directory']
@@ -127,7 +133,7 @@ if command == 'trimgalore':
 
 # BWA mem
 if command == 'mem':
-    bwa_mem_com = [bwa, 'mem', '-t', '8', hg_ref,
+    bwa_mem_com = [bwa, 'mem', '-t', '8', genome_ref,
                    os.path.join('processed', 'trimmed', sample_1),
                    os.path.join('processed', 'trimmed', sample_2), '>',
                    sample_sam]
@@ -201,7 +207,7 @@ if command == 'mutect2':
                         '-I:tumor', os.path.join('processed', 'gatk_bam',
                                                  sample_1),
                          '-o', sample_gatk_vcf,
-                         '-R', hg_ref]
+                         '-R', genome_ref]
     conda_build.extend(gatk_variant_com)
 
 # Remove mouse reads using MAPEX
