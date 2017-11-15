@@ -54,9 +54,9 @@
 #        --walltime '06:00:00' --nodes 2 --cores 12
 
 # Also need to sort SAM and convert to BAM for mouse
-python scripts/4.run_samtools.py --command 'sort_name' \
+python scripts/4.run_samtools.py --command 'sort_name' --genome 'mm' \
         --data_dir 'processed/sam_mouse' --output_dir 'processed/bam_mouse' \
-        --walltime '06:00:00' --nodes 2 --cores 8
+        --walltime '03:00:00' --nodes 2 --cores 8
 
 # Here, we need to consider adding a disambiguate step.
 # python scripts/6.disambiguate_species.py --command 'disambiguate' \
