@@ -34,6 +34,10 @@ parser.add_argument('-n', '--nodes', default=1,
                     help='the number of nodes to allocate')
 parser.add_argument('-r', '--cores', default=4,
                     help='the number of cores to allocate per node')
+parser.add_argument('-h', '--disambiguate_human', default='.',
+                    help='location of the human files to disambiguate')
+parser.add_argument('-m', '--disambiguate_mouse', default='.',
+                    help='location of the mouse files to disambiguate')
 args = parser.parse_args()
 
 
@@ -55,8 +59,10 @@ genome = args.genome
 output_dir = args.output_directory
 config = args.config_yaml
 walltime = args.walltime
-nodes = args.nodes
-cores = args.cores
+nodes = str(args.nodes)
+cores = str(args.cores)
+disambiguate_human = args.disambiguate_human
+disambiguate_mouse = args.disambiguate_mouse
 
 # Load configuration
 with open(config, 'r') as stream:
@@ -133,6 +139,15 @@ if command == 'sort_name':
                              samtools, 'sort', '-n', '-', sample_sorted_bam]
     conda_build.extend(samtools_sort_bam_com)
 
+# Remove mouse reads using ngs_disambiguate
+if command == 'disambiguate':
+    disambiguate_com = [ngs_disambiguate,
+                        '--prefix', sample_1,
+                        '--output_dir', output_dir,
+                        '--aligner', 'bwa',
+                        disambiguate_human, disambiguate_mouse]
+    conda_build.extend(disambiguate_com)
+
 # samtools create fixmate bam
 if command == 'fixmate':
     samtools_fixmate_com = [samtools, 'fixmate',
@@ -195,20 +210,6 @@ if command == 'mutect2':
                          '-o', sample_gatk_vcf,
                          '-R', genome_ref]
     conda_build.extend(gatk_variant_com)
-
-# Remove mouse reads using MAPEX
-if command == 'disambiguate':
-    disambiguate_com = [rscript, '--vanilla', 'util/mapex_wrapper.R',
-                              '--path_to_bam', mapex_bam,
-                              '--path_to_bam_index', mapex_bam_bai,
-                              '--path_to_vcf', mapex_vcf,
-                              '--blast_output', mapex_blast_out,
-                              '--blast', mapex_blast,
-                              '--results_output', sample_mapex_out,
-                              '--blast_db', combined_ref,
-                              '--num_threads', 8,
-                              '--mapq', 1]
-    conda_build.extend(disambiguate_com)
 
 if __name__ == '__main__':
     submit_commands = [conda_build]
