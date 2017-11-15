@@ -34,14 +34,6 @@ parser.add_argument('-n', '--nodes', default=1,
                     help='the number of nodes to allocate')
 parser.add_argument('-r', '--cores', default=4,
                     help='the number of cores to allocate per node')
-parser.add_argument('-p', '--mapex_path_to_bam', default='',
-                    help='location of the BAM file to use for mapex')
-parser.add_argument('-i', '--mapex_path_to_bam_index', default='',
-                    help='location of the BAM file index to use for mapex')
-parser.add_argument('-v', '--mapex_path_to_vcf', default='',
-                    help='location of the VCF file to use for mapex')
-parser.add_argument('-l', '--mapex_path_to_blast_output', default='',
-                    help='location of the BLAST output file of mapex run')
 args = parser.parse_args()
 
 
@@ -65,10 +57,6 @@ config = args.config_yaml
 walltime = args.walltime
 nodes = args.nodes
 cores = args.cores
-mapex_bam = args.mapex_path_to_bam
-mapex_bam_bai = args.mapex_path_to_bam_index
-mapex_vcf = args.mapex_path_to_vcf
-mapex_blast_out = args.mapex_path_to_blast_output
 
 # Load configuration
 with open(config, 'r') as stream:
@@ -93,7 +81,7 @@ bwa = config['bwa']
 samtools = config['samtools']
 picard = config['picard']
 gatk = config['gatk']
-mapex_blast = config['mapexblast']
+disambiguate = config['disambiguate']
 
 schedule_name = '{}_{}'.format(os.path.basename(sample_1), command)
 sample_name = sample_1.replace('_R1_', '_').replace('_val_1', '')
@@ -109,7 +97,6 @@ sample_markdup_bai = '{}.bai'.format(sample_base)
 sample_addreadgroup = '{}.rg.bam'.format(sample_base)
 sample_bamindex_gatk = '{}.bai'.format(sample_base)
 sample_gatk_vcf = '{}.GATK.vcf'.format(sample_base)
-sample_mapex_out = '{}.tsv'.format(sample_base)
 
 ############################
 # Generate the commands
@@ -117,7 +104,6 @@ sample_mapex_out = '{}.tsv'.format(sample_base)
 # General purpose module load of pdx-exome seq conda env
 conda_build = ['m', 'load', 'python/3.5-Anaconda', '&&',
                'source', 'activate', conda_env, '&&']
-mapex_build = ['m', 'load', 'blast+/2.6.0', '&&']
 
 # FastQC
 if command == 'fastqc':
@@ -211,8 +197,8 @@ if command == 'mutect2':
     conda_build.extend(gatk_variant_com)
 
 # Remove mouse reads using MAPEX
-if command == 'mapex':
-    mapex_remove_mouse_com = [rscript, '--vanilla', 'util/mapex_wrapper.R',
+if command == 'disambiguate':
+    disambiguate_com = [rscript, '--vanilla', 'util/mapex_wrapper.R',
                               '--path_to_bam', mapex_bam,
                               '--path_to_bam_index', mapex_bam_bai,
                               '--path_to_vcf', mapex_vcf,
@@ -222,14 +208,10 @@ if command == 'mapex':
                               '--blast_db', combined_ref,
                               '--num_threads', 8,
                               '--mapq', 1]
-    mapex_build.extend(conda_build)
-    mapex_build.extend(mapex_remove_mouse_com)
+    conda_build.extend(disambiguate_com)
 
 if __name__ == '__main__':
-    if command = 'mapex':
-        submit_commands = [mapex_build]
-    else:
-        submit_commands = [conda_build]
+    submit_commands = [conda_build]
     # Submit jobs to cluster
     for com in submit_commands:
         schedule_job(command=com, name=schedule_name, python=python,
