@@ -34,7 +34,7 @@ parser.add_argument('-n', '--nodes', default=1,
                     help='the number of nodes to allocate')
 parser.add_argument('-r', '--cores', default=4,
                     help='the number of cores to allocate per node')
-parser.add_argument('-h', '--disambiguate_human', default='.',
+parser.add_argument('-x', '--disambiguate_human', default='.',
                     help='location of the human files to disambiguate')
 parser.add_argument('-m', '--disambiguate_mouse', default='.',
                     help='location of the mouse files to disambiguate')
@@ -134,8 +134,11 @@ if command == 'mem':
 # samtools sort to bam
 if command == 'sort_name':
     # `-n` sorts by name, which is required for fixmate
-    samtools_sort_bam_com = [samtools, 'view', '-bS',
-                             os.path.join('processed', 'sam', sample_1), '|',
+    if genome == 'hg':
+        input_sample = os.path.join('processed', 'sam', sample_1)
+    elif genome == 'mm':
+        input_sample = os.path.join('processed', 'sam_mouse', sample_1)
+    samtools_sort_bam_com = [samtools, 'view', '-bS', input_sample,  '|',
                              samtools, 'sort', '-n', '-', sample_sorted_bam]
     conda_build.extend(samtools_sort_bam_com)
 
