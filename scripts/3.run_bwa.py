@@ -17,10 +17,12 @@ parser.add_argument('-o', '--output_dir',
                     default='.')
 parser.add_argument('-c', '--command',
                     help='One of the bwa commands')
+parser.add_argument('-g', '--genome', default='hg',
+                    help='name of the reference genome')
 parser.add_argument('-y', '--config_yaml',
                     help='Configuration variables for input',
                     default='discovery_variables.yml')
-parser.add_argument('-w', '--walltime',
+parser.add_argument('-w', '--walltime', default='01:00:00',
                     help='the amount of time alloted to the script')
 parser.add_argument('-n', '--nodes', default=1,
                     help='the number of nodes to allocate')
@@ -31,6 +33,7 @@ args = parser.parse_args()
 data_dir = args.data_dir
 out_dir = args.output_dir
 command = args.command
+genome = args.genome
 config = args.config_yaml
 walltime = args.walltime
 nodes = str(args.nodes)
@@ -54,7 +57,7 @@ command_util = os.path.join('util', 'command_wrapper.py')
 for sample_1, sample_2 in paired_reads:
     bwa_command = ['python', command_util, '--output_directory', out_dir,
                    '--sample', sample_1, '--sample_2', sample_2,
-                   '--command', command, '--config_yaml', config,
-                   '--walltime', walltime, '--nodes', nodes,
-                   '--cores', cores]
+                   '--command', command, '--genome', genome,
+                   '--config_yaml', config, '--walltime', walltime,
+                   '--nodes', nodes, '--cores', cores]
     subprocess.call(bwa_command)
