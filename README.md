@@ -13,6 +13,9 @@ pancreatic adenocarcinoma. The PDX models and tumor samples were whole exome
 sequenced (WES) to determine how the mutations from primary tissue and metastases 
 propagate or evolve. The following repository outlines the analysis pipeline.
 
+This is a tumor-only analysis, there were no pooled or patient-matched normal
+samples available.
+
 ## Pipeline
 
 _This is a work in progress..._
