@@ -36,9 +36,14 @@
 # STEP 2 - Alignment
 ###################
 # Align reads to human reference genome (g1k_v37)
-# python scripts/3.run_bwa.py --command 'mem'
+# python scripts/3.run_bwa.py --command 'mem' \
 #        --data_dir 'processed/trimmed' --output_dir 'processed/sam' \
 #        --walltime '04:00:00' --nodes 1 --cores 8
+
+# Also need to align reads to mouse genome (mm9)
+python scripts/3.run_bwa.py --command 'mem' --reference 'mm9' \
+        --data_dir 'processed/trimmed' --output_dir 'processed/sam_mouse' \
+        --walltime '04:00:00' --nodes 1 --cores 8
 
 ###################
 # STEP 3 - Data Conversion and Processing
@@ -47,6 +52,16 @@
 # python scripts/4.run_samtools.py --command 'sort_name' \
 #        --data_dir 'processed/sam' --output_dir 'processed/bam' \
 #        --walltime '06:00:00' --nodes 2 --cores 12
+
+# Also need to sort SAM and convert to BAM for mouse
+# python scripts/4.run_samtools.py --command 'sort_name' \
+#        --data_dir 'processed/sam_mouse' --output_dir 'processed/bam_mouse' \
+#        --walltime '06:00:00' --nodes 2 --cores 12
+
+# Here, we need to consider adding a disambiguate step.
+# python scripts/6.disambiguate_species.py --command 'disambiguate' \
+#        --data_dir 'processed/bam' --output_dir 'processed/bam_disambiguate' \
+#        --walltime '06:00:00' --nodes 2 --cores 8
 
 # Prep for duplicate removal by cleaning up readpair tags
 # python scripts/4.run_samtools.py --command 'fixmate' \
