@@ -60,7 +60,8 @@ python scripts/3.run_bwa.py --command 'mem' --genome 'mm' \
 
 # Here, we need to consider adding a disambiguate step.
 # python scripts/6.disambiguate_species.py --command 'disambiguate' \
-#        --data_dir 'processed/bam' --output_dir 'processed/bam_disambiguate' \
+#        --human_dir 'processed/bam' --mouse_dir 'processed/bam_mouse' \
+#        --output_dir 'processed/bam_disambiguate' \
 #        --walltime '06:00:00' --nodes 2 --cores 8
 
 # Prep for duplicate removal by cleaning up readpair tags
