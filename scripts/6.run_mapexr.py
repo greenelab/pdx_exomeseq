@@ -55,11 +55,17 @@ for path, subdirs, files in os.walk(data_dir):
     for name in files:
         if 'bam.rg.bam.bai' not in name:
             base = name.split('.')[0]
-            samp_bam = os.path.join(base_dir, data_dir, '{}{}'.format(base, bam_suffix))
-            samp_bai = os.path.join(base_dir, data_dir, '{}{}'.format(base, bai_suffix))
-            samp_vcf = os.path.join(base_dir, vcf_dir, '{}{}'.format(base, vcf_suffix))
-            samp_blast = os.path.join(base_dir, blast_out_dir, '{}_blast.txt'.format(base))
-            sample_files.append([base, samp_bam, samp_bai, samp_vcf, samp_blast])
+            samp_bam = os.path.join(base_dir, data_dir,
+                                    '{}{}'.format(base, bam_suffix))
+            samp_bai = os.path.join(base_dir, data_dir,
+                                    '{}{}'.format(base, bai_suffix))
+            samp_vcf = os.path.join(base_dir, vcf_dir,
+                                    '{}{}'.format(base, vcf_suffix))
+            samp_blast = os.path.join(base_dir, blast_out_dir,
+                                      '{}_blast.txt'.format(base))
+            sample_files.append([base, samp_bam, samp_bai, samp_vcf,
+                                 samp_blast])
+
 sample_files = sample_files[0:2]
 command_util = os.path.join('util', 'command_wrapper.py')
 for sample_base, sample_bam, sample_bai, sample_vcf, sample_blast in sample_files:
