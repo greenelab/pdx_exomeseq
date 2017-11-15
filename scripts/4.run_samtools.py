@@ -17,6 +17,8 @@ parser.add_argument('-o', '--output_dir',
                     default='.')
 parser.add_argument('-c', '--command',
                     help='One of the samtools commands')
+parser.add_argument('-g', '--genome', default='hg',
+                    help='Specify the reference genome')
 parser.add_argument('-y', '--config_yaml',
                     help='Configuration variables for input',
                     default='discovery_variables.yml')
@@ -31,6 +33,7 @@ args = parser.parse_args()
 data_dir = args.data_dir
 out_dir = args.output_dir
 command = args.command
+genome = args.genome
 config = args.config_yaml
 walltime = args.walltime
 nodes = str(args.nodes)
@@ -44,7 +47,7 @@ for path, subdirs, files in os.walk(data_dir):
 
 command_util = os.path.join('util', 'command_wrapper.py')
 for sample_1 in sam_files:
-    com = ['python', command_util, '--sample', sample_1,
+    com = ['python', command_util, '--sample', sample_1, '--genome', genome,
            '--command', command, '--output_directory', out_dir,
            '--config_yaml', config, '--walltime', walltime,
            '--nodes', nodes, '--cores', cores]
