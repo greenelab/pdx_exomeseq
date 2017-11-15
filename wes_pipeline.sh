@@ -36,14 +36,14 @@
 # STEP 2 - Alignment
 ###################
 # Align reads to human reference genome (g1k_v37)
-# python scripts/3.run_bwa.py --command 'mem' \
+# python scripts/3.run_bwa.py --command 'mem' --genome 'hg' \
 #        --data_dir 'processed/trimmed' --output_dir 'processed/sam' \
-#        --walltime '04:00:00' --nodes 1 --cores 8
+#        --walltime '05:00:00' --nodes 1 --cores 8
 
 # Also need to align reads to mouse genome (mm9)
-python scripts/3.run_bwa.py --command 'mem' --reference 'mm9' \
+python scripts/3.run_bwa.py --command 'mem' --genome 'mm' \
         --data_dir 'processed/trimmed' --output_dir 'processed/sam_mouse' \
-        --walltime '04:00:00' --nodes 1 --cores 8
+        --walltime '05:00:00' --nodes 1 --cores 8
 
 ###################
 # STEP 3 - Data Conversion and Processing
@@ -110,7 +110,7 @@ python scripts/3.run_bwa.py --command 'mem' --reference 'mm9' \
 ###################
 # Step 5 - Filter Mouse Reads from VCF
 ###################
-python scripts/6.run_mapexr.py --data_dir 'processed/gatk_bam' \
-        --output_dir 'results/mapex_vcf' --vcf_dir 'results/gatk_vcf' \
-        --mapex_path_to_blast_output 'results/blast_out' \
-        --walltime '10:00:00' --nodes 1 --cores 8
+# python scripts/6.run_mapexr.py --data_dir 'processed/gatk_bam' \
+#        --output_dir 'results/mapex_vcf' --vcf_dir 'results/gatk_vcf' \
+#        --mapex_path_to_blast_output 'results/blast_out' \
+#        --walltime '10:00:00' --nodes 1 --cores 8
