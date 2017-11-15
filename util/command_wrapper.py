@@ -200,7 +200,7 @@ mapex_remove_mouse_com = [rscript, '--vanilla', 'util/mapex_wrapper.R',
                           '--blast', mapex_blast,
                           '--results_output', sample_mapex_out,
                           '--blast_db', combined_ref,
-                          '--num_threads', 4,
+                          '--num_threads', 8,
                           '--mapq', 1]
 
 # Schedule a job based on the input command
