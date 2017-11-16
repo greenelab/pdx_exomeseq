@@ -2,7 +2,7 @@
 Gregory Way 2017
 scripts/6.disambiguate_species.py
 
-Will submit jobs to run variant calling scripts on input bam files
+Will submit jobs to separate mouse from human reads
 """
 
 import os
