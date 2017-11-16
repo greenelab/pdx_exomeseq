@@ -18,10 +18,6 @@ source activate pdx-exomeseq
 # Download from: https://software.broadinstitute.org/gatk/download/
 gatk-register modules/GenomeAnalysisTK-3.8-0.tar.bz2
 
-# Step 4: Install custom MAPEXR build from source
-# wget --directory-prefix modules/ https://bitbucket.org/bmannakee/mapexr/get/da36687d4585.zip
-Rscript util/install_mapexr.R
-
 # NOTE: Once this script is run once, to recreate the computational environment, simply run:
 # source activate pdx-exomeseq
 # However, each time after the conda environment is updated, this script needs to be run again.
