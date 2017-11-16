@@ -144,7 +144,7 @@ if command == 'sort_name':
 
 # Remove mouse reads using ngs_disambiguate
 if command == 'disambiguate':
-    disambiguate_com = [ngs_disambiguate,
+    disambiguate_com = [disambiguate,
                         '--prefix', sample_1,
                         '--output-dir', output_dir,
                         '--aligner', 'bwa', '--',
@@ -218,5 +218,6 @@ if __name__ == '__main__':
     submit_commands = [conda_build]
     # Submit jobs to cluster
     for com in submit_commands:
+        print(com)
         schedule_job(command=com, name=schedule_name, python=python,
                      nodes=nodes, cores=cores, walltime=walltime)
