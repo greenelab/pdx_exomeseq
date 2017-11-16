@@ -154,7 +154,7 @@ if command == 'disambiguate':
 # samtools create fixmate bam
 if command == 'fixmate':
     samtools_fixmate_com = [samtools, 'fixmate',
-                            os.path.join('processed', 'bam', sample_1),
+                            os.path.join('processed', 'bam_disambiguate', sample_1),
                             sample_sorted_fixmate_bam]
     conda_build.extend(samtools_fixmate_com)
 
