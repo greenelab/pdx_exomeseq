@@ -10,7 +10,7 @@ import argparse
 import subprocess
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-h', '--human_dir',
+parser.add_argument('-d', '--human_dir',
                     help='directory where the human sam files are saved')
 parser.add_argument('-m', '--mouse_dir',
                     help='directory where the mouse sam files are saved')
@@ -37,6 +37,8 @@ walltime = args.walltime
 nodes = str(args.nodes)
 cores = str(args.cores)
 
+base_dir = '/lorax/sanchezlab/shared/pdx_exomeseq'
+
 # sample_files will have entry format [sample_id, hg_sam, mm_sam, out_prefix]
 sample_files = []
 for path, subdirs, files in os.walk(human_dir):
@@ -44,18 +46,18 @@ for path, subdirs, files in os.walk(human_dir):
         sample_id = name.split('.')[0]  # This extracts the sample ID
         human_sam = os.path.join(base_dir, human_dir, name)
         mouse_sam = os.path.join(base_dir, mouse_dir, name)
-        output_prefix = os.path.join(base_dir, out_dir, name)
-        sample_files.append([sample_id, human_sam, mouse_sam, output_prefix])
+        output_dir = os.path.join(base_dir, out_dir)
+        sample_files.append([sample_id, human_sam, mouse_sam, output_dir])
 
 sample_files = sample_files[0:2]
 command_util = os.path.join('util', 'command_wrapper.py')
-for sample_id, human_sam, mouse_sam, output_prefix in sample_files:
+for sample_id, human_sam, mouse_sam, output_dir in sample_files:
     com = ['python', command_util,
            '--sample', sample_id,
            '--command', 'disambiguate',
            '--disambiguate_human', human_sam,
            '--disambiguate_mouse', mouse_sam,
-           '--output_directory', output_prefix,
+           '--output_directory', output_dir,
            '--config_yaml', config,
            '--walltime', walltime,
            '--nodes', nodes,
