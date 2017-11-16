@@ -42,7 +42,7 @@ cores = str(args.cores)
 sam_files = []
 for path, subdirs, files in os.walk(data_dir):
     for name in files:
-        if 'fq.gz.sam' in name or '.sam_sorted.bam' in name:
+        if 'fq.gz.sam' in name or '.sam_sorted.bam' in name or '.bam_sorted_fixmate.bam' in name:
             sam_files.append(name)
         elif command == 'fixmate' and 'disambiguatedSpeciesA.bam' in name:
             sam_files.append(name)
@@ -53,4 +53,5 @@ for sample_1 in sam_files:
            '--command', command, '--output_directory', out_dir,
            '--config_yaml', config, '--walltime', walltime,
            '--nodes', nodes, '--cores', cores]
+    print(com)
     subprocess.call(com)
