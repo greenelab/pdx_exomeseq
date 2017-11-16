@@ -4,14 +4,13 @@ channels:
 - bioconda
 - conda-forge
 dependencies:
-- pandas=0.18.0
+- pandas=0.21.0
 - pyyaml=3.12
 - r::r-tidyverse=1.1.1
 - r::r-devtools=1.13.3
-- conda-forge::r-optparse=1.4.4
-- bioconda::bioconductor-rsamtools=1.28.0
-- bioconda::bioconductor-genomicranges=1.30.0
-- bioconda::bioconductor-genomicalignments=1.14.0
+- conda-forge::plotnine=0.3.0
+- bioconda::ngs-disambiguate=2016.11.10
+- bioconda::bamtools=2.4.0
 - bioconda::trim-galore=0.4.4
 - bioconda::cutadapt=1.14
 - bioconda::bwa=0.7.16
