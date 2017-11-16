@@ -66,11 +66,12 @@
 #        --walltime '06:00:00' --nodes 2 --cores 8
 
 ###################
-# STEP 4 - Data Conversion and Processing                                                                                                  
+# STEP 4 - Data Conversion and Processing
 ###################
 # Prep for duplicate removal by cleaning up readpair tags
 # python scripts/4.run_samtools.py --command 'fixmate' \
-#        --data_dir 'processed/bam_disambiguate' --output_dir 'processed/bam_fixmate' \
+#        --data_dir 'processed/bam_disambiguate' \
+#        --output_dir 'processed/bam_fixmate' \
 #        --walltime '02:30:00' --nodes 2 --cores 4
 
 # Prep for duplicate removal by sorting tagged bam files by position
@@ -91,7 +92,7 @@ python scripts/4.run_samtools.py --command 'sort_position' \
 #        --walltime '02:30:00' --nodes 1 --cores 8
 
 ###################
-# STEP 4 - Variant Calling
+# STEP 5 - Variant Calling
 ###################
 # NOTE: Realigning around indels was NOT performed. They are legacy functions
 # that are no longer best-practices for GATK HaplotypeCaller pipelines
@@ -111,11 +112,3 @@ python scripts/4.run_samtools.py --command 'sort_position' \
 # python scripts/5.variant_calling.py --command 'mutect2' \
 #        --data_dir 'processed/gatk_bam' --output_dir 'results/gatk_vcf' \
 #        --walltime '05:00:00' --nodes 1 --cores 8
-
-###################
-# Step 5 - Filter Mouse Reads from VCF
-###################
-# python scripts/6.run_mapexr.py --data_dir 'processed/gatk_bam' \
-#        --output_dir 'results/mapex_vcf' --vcf_dir 'results/gatk_vcf' \
-#        --mapex_path_to_blast_output 'results/blast_out' \
-#        --walltime '10:00:00' --nodes 1 --cores 8
