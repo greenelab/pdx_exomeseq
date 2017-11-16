@@ -44,9 +44,10 @@
 # python scripts/3.run_bwa.py --command 'mem' --genome 'mm' \
 #        --data_dir 'processed/trimmed' --output_dir 'processed/sam_mouse' \
 #        --walltime '05:00:00' --nodes 1 --cores 8
+# NOTE: to save storage space, these files are deleted after sorting and compression
 
 ###################
-# STEP 3 - Data Conversion and Processing
+# STEP 3 - Remove mouse reads with ngs-disambiguate
 ###################
 # Sort SAM and convert to BAM
 # python scripts/4.run_samtools.py --command 'sort_name' \
@@ -59,15 +60,18 @@
 #        --walltime '03:00:00' --nodes 2 --cores 8
 
 # Use ngs_disambiguate to identify high confidence human-based reads
-python scripts/6.disambiguate_species.py \
-        --human_dir 'processed/bam' --mouse_dir 'processed/bam_mouse' \
-        --output_dir 'processed/bam_disambiguate' \
-        --walltime '06:00:00' --nodes 2 --cores 8
+# python scripts/6.disambiguate_species.py \
+#        --human_dir 'processed/bam' --mouse_dir 'processed/bam_mouse' \
+#        --output_dir 'processed/bam_disambiguate' \
+#        --walltime '06:00:00' --nodes 2 --cores 8
 
+###################
+# STEP 4 - Data Conversion and Processing                                                                                                  
+###################
 # Prep for duplicate removal by cleaning up readpair tags
-# python scripts/4.run_samtools.py --command 'fixmate' \
-#        --data_dir 'processed/bam' --output_dir 'processed/bam_fixmate' \
-#        --walltime '02:30:00' --nodes 2 --cores 4
+python scripts/4.run_samtools.py --command 'fixmate' \
+        --data_dir 'processed/bam_disambiguate' --output_dir 'processed/bam_fixmate' \
+        --walltime '02:30:00' --nodes 2 --cores 4
 
 # Prep for duplicate removal by sorting tagged bam files by position
 # python scripts/4.run_samtools.py --command 'sort_position' \
