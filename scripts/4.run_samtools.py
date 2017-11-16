@@ -44,6 +44,8 @@ for path, subdirs, files in os.walk(data_dir):
     for name in files:
         if 'fq.gz.sam' in name or '.sam_sorted.bam' in name:
             sam_files.append(name)
+        elif command == 'fixmate' and 'disambiguatedSpeciesA.bam' in name:
+            sam_files.append(name)
 
 command_util = os.path.join('util', 'command_wrapper.py')
 for sample_1 in sam_files:
