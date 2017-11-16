@@ -49,7 +49,6 @@ for path, subdirs, files in os.walk(human_dir):
         output_dir = os.path.join(base_dir, out_dir)
         sample_files.append([sample_id, human_sam, mouse_sam, output_dir])
 
-sample_files = sample_files[0:2]
 command_util = os.path.join('util', 'command_wrapper.py')
 for sample_id, human_sam, mouse_sam, output_dir in sample_files:
     com = ['python', command_util,
@@ -62,5 +61,4 @@ for sample_id, human_sam, mouse_sam, output_dir in sample_files:
            '--walltime', walltime,
            '--nodes', nodes,
            '--cores', cores]
-    print(com)
     subprocess.call(com)
