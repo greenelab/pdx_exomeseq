@@ -146,8 +146,8 @@ if command == 'sort_name':
 if command == 'disambiguate':
     disambiguate_com = [ngs_disambiguate,
                         '--prefix', sample_1,
-                        '--output_dir', output_dir,
-                        '--aligner', 'bwa',
+                        '--output-dir', output_dir,
+                        '--aligner', 'bwa', '--',
                         disambiguate_human, disambiguate_mouse]
     conda_build.extend(disambiguate_com)
 
