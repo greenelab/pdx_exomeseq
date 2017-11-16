@@ -15,4 +15,4 @@ bwa: /ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa
 samtools: /ihome/gway/.conda/envs/pdx-exomeseq/bin/samtools
 picard: /ihome/gway/.conda/envs/pdx-exomeseq/bin/picard
 gatk: /ihome/gway/.conda/envs/pdx-exomeseq/bin/gatk
-disambiguate: /ihom/gway/.conda/envs/pdx-exomeseq-dis/bin/ngs_disambiguate
+disambiguate: /ihome/gway/.conda/envs/pdx-exomeseq-dis/bin/ngs_disambiguate
