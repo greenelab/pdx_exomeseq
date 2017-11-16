@@ -1,0 +1,2 @@
+sample	unique species A pairs	unique species B pairs	ambiguous pairs
+032-F5_S3_L004_001	43139879	267547	101597

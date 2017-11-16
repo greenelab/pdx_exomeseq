@@ -1,0 +1,2 @@
+sample	unique species A pairs	unique species B pairs	ambiguous pairs
+KS25_S6_L004_001	11472674	3048209	37416

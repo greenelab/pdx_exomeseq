@@ -1,0 +1,2 @@
+sample	unique species A pairs	unique species B pairs	ambiguous pairs
+018-F5_S4_L003_001	12971913	3152618	38364
