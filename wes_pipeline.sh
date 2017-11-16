@@ -69,15 +69,15 @@
 # STEP 4 - Data Conversion and Processing                                                                                                  
 ###################
 # Prep for duplicate removal by cleaning up readpair tags
-python scripts/4.run_samtools.py --command 'fixmate' \
-        --data_dir 'processed/bam_disambiguate' --output_dir 'processed/bam_fixmate' \
-        --walltime '02:30:00' --nodes 2 --cores 4
+# python scripts/4.run_samtools.py --command 'fixmate' \
+#        --data_dir 'processed/bam_disambiguate' --output_dir 'processed/bam_fixmate' \
+#        --walltime '02:30:00' --nodes 2 --cores 4
 
 # Prep for duplicate removal by sorting tagged bam files by position
-# python scripts/4.run_samtools.py --command 'sort_position' \
-#        --data_dir 'processed/bam_fixmate' \
-#        --output_dir 'processed/bam_sort_position' \
-#        --walltime '04:30:00' --nodes 2 --cores 8
+python scripts/4.run_samtools.py --command 'sort_position' \
+        --data_dir 'processed/bam_fixmate' \
+        --output_dir 'processed/bam_sort_position' \
+        --walltime '02:00:00' --nodes 2 --cores 8
 
 # Remove duplicate reads
 # python scripts/4.run_samtools.py --command 'rmdup' \
