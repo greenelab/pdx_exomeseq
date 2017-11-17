@@ -39,7 +39,7 @@ cores = str(args.cores)
 bam_files = []
 for path, subdirs, files in os.walk(data_dir):
     for name in files:
-        if 'bam.bam_rmdup.bam' in name and '.bam.bai' not in name:
+        if 'bam_rmdup.bam' in name and '.bam.bai' not in name:
             bam_files.append(name)
 
 command_util = os.path.join('util', 'command_wrapper.py')

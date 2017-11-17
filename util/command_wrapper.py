@@ -205,19 +205,18 @@ if command == 'add_read_groups':
 # call variants using GATK MuTect2
 if command == 'mutect2':
     gatk_variant_com = [gatk, '-T', 'MuTect2',
-                        '--num_cpu_threads_per_data_thread', '8',
+                        '--num_cpu_threads_per_data_thread', '6',
                         '--standard_min_confidence_threshold_for_calling', '20',
                         '--min_base_quality_score', '20',
                         '-I:tumor', os.path.join('processed', 'gatk_bam',
                                                  sample_1),
-                         '-o', sample_gatk_vcf,
-                         '-R', genome_ref]
+                        '-o', sample_gatk_vcf,
+                        '-R', genome_ref]
     conda_build.extend(gatk_variant_com)
 
 if __name__ == '__main__':
     submit_commands = [conda_build]
     # Submit jobs to cluster
     for com in submit_commands:
-        print(com)
         schedule_job(command=com, name=schedule_name, python=python,
                      nodes=nodes, cores=cores, walltime=walltime)

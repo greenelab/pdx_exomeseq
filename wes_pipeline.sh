@@ -75,21 +75,21 @@
 #        --walltime '02:30:00' --nodes 2 --cores 4
 
 # Prep for duplicate removal by sorting tagged bam files by position
-python scripts/4.run_samtools.py --command 'sort_position' \
-        --data_dir 'processed/bam_fixmate' \
-        --output_dir 'processed/bam_sort_position' \
-        --walltime '02:00:00' --nodes 2 --cores 8
+# python scripts/4.run_samtools.py --command 'sort_position' \
+#        --data_dir 'processed/bam_fixmate' \
+#        --output_dir 'processed/bam_sort_position' \
+#        --walltime '02:00:00' --nodes 2 --cores 8
 
 # Remove duplicate reads
 # python scripts/4.run_samtools.py --command 'rmdup' \
 #       --data_dir 'processed/bam_sort_position' \
 #       --output_dir 'processed/bam_rmdup' \
-#       --walltime '02:30:00' --nodes 1 --cores 8
+#       --walltime '03:30:00' --nodes 1 --cores 4
 
 # Create BAM index for duplicate removal
 # python scripts/4.run_samtools.py --command 'index_bam' \
 #        --data_dir 'processed/bam_rmdup' --output_dir 'processed/bam_rmdup' \
-#        --walltime '02:30:00' --nodes 1 --cores 8
+#        --walltime '03:30:00' --nodes 1 --cores 4 
 
 ###################
 # STEP 5 - Variant Calling
@@ -101,12 +101,12 @@ python scripts/4.run_samtools.py --command 'sort_position' \
 # Assign read groups
 # python scripts/5.variant_calling.py --command 'add_read_groups' \
 #        --data_dir 'processed/bam_rmdup' --output_dir 'processed/gatk_bam' \
-#        --walltime '02:00:00' --nodes 1 --cores 8
+#        --walltime '03:00:00' --nodes 1 --cores 8
 
 # Create index for read group files
 # python scripts/5.variant_calling.py --command 'index_bam_gatk' \
 #        --data_dir 'processed/gatk_bam' --output_dir 'processed/gatk_bam' \
-#        --walltime '2:00:00' --nodes 1 --cores 4
+#        --walltime '3:30:00' --nodes 1 --cores 4
 
 # Call variants with MuTect2
 # python scripts/5.variant_calling.py --command 'mutect2' \
