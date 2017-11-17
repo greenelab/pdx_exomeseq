@@ -112,3 +112,20 @@ python scripts/4.run_samtools.py --command 'sort_position' \
 # python scripts/5.variant_calling.py --command 'mutect2' \
 #        --data_dir 'processed/gatk_bam' --output_dir 'results/gatk_vcf' \
 #        --walltime '05:00:00' --nodes 1 --cores 8
+
+###################
+# STEP 6 - Annotate Variants
+###################
+# First, download ANNOVAR and associated databases
+# Instructions here: http://annovar.openbioinformatics.org/en/latest/user-guide/startup/
+# All documented databases here: https://github.com/WGLab/doc-ANNOVAR/blob/master/user-guide/download.md
+
+# The databases we will use are: 
+# refGene,cosmic70,gnomad_exome,dbnsfp30a
+
+# Convert MuTect2 derived VCF files to annovar compatible files
+perl convert2annovar.pl -includeinfo -format vcf4 ../../example/KS30_S4_L004_001.fq.gz.sam_sorted.bam_sorted_fixmate.bam_positionsort.bam.bam_rmdup.bam.rg.bam.GATK.vcf > testing_GATK.vcf
+
+# Add annotations as columns to converted annovar VCF
+perl table_annovar.pl testing_GATK_info.vcf humandb/ -buildver hg19 -out testing_output -otherinfo -remove -protocol refGene,cosmic70,gnomad_exome,dbnsfp30a -operation g,f,f,f -nastring . -csvout -polish
+
