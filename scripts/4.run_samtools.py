@@ -53,5 +53,4 @@ for sample_1 in sam_files:
            '--command', command, '--output_directory', out_dir,
            '--config_yaml', config, '--walltime', walltime,
            '--nodes', nodes, '--cores', cores]
-    print(com)
     subprocess.call(com)
