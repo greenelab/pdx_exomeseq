@@ -4,7 +4,7 @@
 # pdx_exomeseq
 # setup-instructions.sh
 #
-# Setting up environment
+# Setting up environment on the Dartmouth Discovery Cluster
 
 # Step 1: Load the python anaconda module
 m load python/3.5-Anaconda
