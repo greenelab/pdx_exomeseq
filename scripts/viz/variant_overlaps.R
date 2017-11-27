@@ -129,7 +129,7 @@ all_var_df[all_var_df$base_id == "KS28", "base_id"] <- "KS27_KS28"
 
 # Write out the results
 var_file <- file.path("results", "all_common_replicate_COSMIC_variants.tsv")
-write.table(all_var_df, file = var_file, sep = "\t", col.names = NA)
+write.table(all_var_df, file = var_file, sep = "\t", row.names = FALSE)
 
 # Assess consistency across sample passage
 group_venns <- list()
