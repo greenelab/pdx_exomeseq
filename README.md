@@ -36,7 +36,7 @@ environment specified in `environment.yml`.
 
 From raw sequencing reads to annotated variants, there are 3 major steps.
 
-1. Setup reproducible computational environment ([`setup_environment.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/setup_environment.sh), [`install.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/install.sh))
+#### 1. Setup reproducible computational environment ([`setup_environment.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/setup_environment.sh), [`install.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/install.sh))
 
 ```bash
 # Setup conda environment
@@ -49,7 +49,7 @@ bash setup_environment.sh
 bash install.sh
 ```
 
-2. Run data processing pipeline ([`wes_pipeline.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/wes_pipeline.sh))
+#### 2. Run data processing pipeline ([`wes_pipeline.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/wes_pipeline.sh))
 
 ```bash
 # NOTE: the commands in the following script must be run sequentially
@@ -63,7 +63,7 @@ Also note that the configuration file `discovery_variables.yml` includes absolut
 paths to each tool or resource. It is sufficient to update this file only if paths
 to current tools change.
 
-3. Visualize and summarize results
+#### 3. Visualize and summarize results
 
 We use Jupyter notebooks and R scripts to visualize and summarize results.
 
