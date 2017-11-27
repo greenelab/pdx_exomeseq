@@ -60,7 +60,7 @@
 #        --walltime '03:00:00' --nodes 2 --cores 8
 
 # Use ngs_disambiguate to identify high confidence human-based reads
-# python scripts/6.disambiguate_species.py \
+# python scripts/5.disambiguate_species.py \
 #        --human_dir 'processed/bam' --mouse_dir 'processed/bam_mouse' \
 #        --output_dir 'processed/bam_disambiguate' \
 #        --walltime '06:00:00' --nodes 2 --cores 8
@@ -99,17 +99,17 @@
 # (see https://software.broadinstitute.org/gatk/blog?id=7847)
 
 # Assign read groups
-# python scripts/5.variant_calling.py --command 'add_read_groups' \
+# python scripts/6.variant_calling.py --command 'add_read_groups' \
 #        --data_dir 'processed/bam_rmdup' --output_dir 'processed/gatk_bam' \
 #        --walltime '03:00:00' --nodes 1 --cores 8
 
 # Create index for read group files
-# python scripts/5.variant_calling.py --command 'index_bam_gatk' \
+# python scripts/6.variant_calling.py --command 'index_bam_gatk' \
 #        --data_dir 'processed/gatk_bam' --output_dir 'processed/gatk_bam' \
 #        --walltime '3:30:00' --nodes 1 --cores 4
 
 # Call variants with MuTect2
-# python scripts/5.variant_calling.py --command 'mutect2' \
+# python scripts/6.variant_calling.py --command 'mutect2' \
 #        --data_dir 'processed/gatk_bam' --output_dir 'results/gatk_vcf' \
 #        --walltime '05:00:00' --nodes 1 --cores 8
 
@@ -123,9 +123,7 @@
 # The databases we will use are: 
 # refGene,cosmic70,gnomad_exome,dbnsfp30a
 
-# Convert MuTect2 derived VCF files to annovar compatible files
-perl convert2annovar.pl -includeinfo -format vcf4 ../../example/KS30_S4_L004_001.fq.gz.sam_sorted.bam_sorted_fixmate.bam_positionsort.bam.bam_rmdup.bam.rg.bam.GATK.vcf > testing_GATK.vcf
-
-# Add annotations as columns to converted annovar VCF
-perl table_annovar.pl testing_GATK_info.vcf humandb/ -buildver hg19 -out testing_output -otherinfo -remove -protocol refGene,cosmic70,gnomad_exome,dbnsfp30a -operation g,f,f,f -nastring . -csvout -polish
+# First use `convert2annovar` to convert MuTect2 derived VCF files to annovar compatible files
+# and then, use `table_annovar` to add annotations as columns to the converted VCF
+# python scripts/7.annotate_variants.py
 
