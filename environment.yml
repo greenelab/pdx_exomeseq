@@ -4,11 +4,16 @@ channels:
 - bioconda
 - conda-forge
 dependencies:
-- pandas=0.21.0
-- pyyaml=3.12
-- r::r-tidyverse=1.1.1
-- r::r-devtools=1.13.3
+- r::r-dplyr=0.7.4
+- r::r-readr=1.1.1
+- r::r-gridextra=2.3
+- conda-forge::r-venndiagram=1.6.17
+- conda-forge::pandas=0.21.0
+- conda-forge::numpy=1.13.3
+- conda-forge::pyyaml=3.12
 - conda-forge::plotnine=0.3.0
+- conda-forge::matplotlib=2.1.0
+- conda-forge::seaborn=0.8.1
 - bioconda::ngs-disambiguate=2016.11.10
 - bioconda::bamtools=2.4.0
 - bioconda::trim-galore=0.4.4
