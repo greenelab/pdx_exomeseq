@@ -38,7 +38,7 @@ From raw sequencing reads to annotated variants, there are 3 major steps.
 
 1. Setup reproducible computational environment
 
-```
+```bash
 # Setup conda environment
 bash setup_environment.sh
 
@@ -51,7 +51,7 @@ bash install.sh
 
 2. Run data processing pipeline
 
-```
+```bash
 # NOTE: the commands in the following script must be run sequentially
 # The script will submit several jobs per specified file that can take upwards of
 # 12 hours per sample to run _for each command_. This requires the user to specify
