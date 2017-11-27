@@ -36,7 +36,7 @@ environment specified in `environment.yml`.
 
 From raw sequencing reads to annotated variants, there are 3 major steps.
 
-1. Setup reproducible computational environment
+1. Setup reproducible computational environment ([`setup_environment.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/setup_environment.sh), [`install.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/install.sh))
 
 ```bash
 # Setup conda environment
@@ -49,7 +49,7 @@ bash setup_environment.sh
 bash install.sh
 ```
 
-2. Run data processing pipeline
+2. Run data processing pipeline ([`wes_pipeline.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/wes_pipeline.sh))
 
 ```bash
 # NOTE: the commands in the following script must be run sequentially
