@@ -14,7 +14,14 @@ sequenced (WES) to determine how the mutations from primary tissue and metastase
 propagate or evolve. The following repository outlines the analysis pipeline.
 
 This is a tumor-only analysis, there were no pooled or patient-matched normal
-samples available.
+samples available. The following flowchart summarizes the analysis pipeline.
+
+![pdx wes flowchart](figures/pdx_wes_flowchart.png?raw=true)
+
+**A** describes the technical replicates and data-types available across
+tumor and mouse passages. **B** outlines our analysis pipeline from quality
+control processing raw reads, to alignment and removal of mouse reads, to
+calling and annotating variants.
 
 ## Pipeline
 
