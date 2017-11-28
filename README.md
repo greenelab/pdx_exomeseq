@@ -13,7 +13,7 @@ pancreatic adenocarcinoma. The PDX models and tumor samples were whole exome
 sequenced (WES) to determine how the mutations from primary tissue and metastases 
 propagate or evolve. The following repository outlines the analysis pipeline.
 
-This is a tumor-only analysis, there were no pooled or patient-matched normal
+This is a tumor-only analysis; there were no pooled or patient-matched normal
 samples available. The following flowchart summarizes the analysis pipeline.
 
 ![pdx wes flowchart](figures/pdx_wes_flowchart.png?raw=true)
@@ -25,16 +25,19 @@ calling and annotating variants.
 
 ## Pipeline
 
-See `wes_pipeline.sh` for our current variant-calling pipeline for tumor-only WES.
+See [`wes_pipeline.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/wes_pipeline.sh)
+for our current variant-calling pipeline for tumor-only WES.
 
 ## Compute Environment
 
 All work was performed using the Dartmouth Discovery Cluster Computer with the conda
-environment specified in `environment.yml`.
+environment specified in
+[`environment.yml`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/environment.yml).
 
 ## Steps to Reproduce
 
-From raw sequencing reads to annotated variants, there are 3 major steps.
+There are 3 major steps this repository provides to get from raw sequencing reads to
+annotated variants.
 
 #### 1. Setup reproducible computational environment ([`setup_environment.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/setup_environment.sh), [`install.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/install.sh))
 
@@ -42,7 +45,7 @@ From raw sequencing reads to annotated variants, there are 3 major steps.
 # Setup conda environment
 bash setup_environment.sh
 
-# NOTE, run `source activate pdx-exomeseq` at the beginning of each session
+# NOTE: run `source activate pdx-exomeseq` at the beginning of each session
 
 # Install dependencies and initialize files
 # This includes downloading reference genomes and generating several index files
