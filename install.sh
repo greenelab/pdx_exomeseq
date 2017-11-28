@@ -19,12 +19,6 @@ cd tools
 ./twoBitToFa ../reference/mm9.2bit ../reference/mm9.fa
 cd ..
 
-# Create combined mouse/human blast database for MAPEXR
-cp reference/human_g1k_v37.fasta reference/combined_g1k_v37_mm9.fasta
-cat reference/mm9.fa | sed 's/chr/mchr/' >> reference/combined_g1k_v37_mm9.fasta
-module load blast+/2.6.0
-makeblastdb -in reference/combined_g1k_v37_mm9.fasta -parse_seqids -dbtype nucl
-
 # Create BWA index files for hg19 and mm9
 python util/schedule.py \
         --command '/ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa index -a bwtsw "reference/human_g1k_v37.fasta"' \
@@ -42,7 +36,3 @@ python util/schedule.py \
         --command 'm load python/3.5-Anaconda && source activate pdx-exomeseq && picard CreateSequenceDictionary R=/lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.fasta O=/lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.dict' \
         --name 'fastadict_hg19' --walltime '3:00:00' --nodes 2 --cores 12 --filename 'logs/fastadict_hg19.pbs'
 
-# Other dependencies
-wget --directory-prefix reference ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/b37/dbsnp_138.b37.vcf.gz
-wget --directory-prefix reference ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/b37/dbsnp_138.b37.vcf.idx.gz
-gunzip reference/dbsnp_138.b37.vcf.idx.gz
