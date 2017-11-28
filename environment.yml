@@ -4,10 +4,10 @@ channels:
 - bioconda
 - conda-forge
 dependencies:
-- r::r-dplyr=0.7.4
+- r::r-dplyr=0.7.0
 - r::r-readr=1.1.1
-- r::r-gridextra=2.3
-- conda-forge::r-venndiagram=1.6.17
+- r::r-gridextra=2.2.1
+- conda-forge::r-venndiagram=1.6.18
 - conda-forge::pandas=0.21.0
 - conda-forge::numpy=1.13.3
 - conda-forge::pyyaml=3.12
