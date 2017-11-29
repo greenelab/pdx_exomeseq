@@ -75,3 +75,5 @@ We use Jupyter notebooks and R scripts to visualize and summarize results.
 | [`disambiguate_reads.ipynb`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/disambiguate_reads.ipynb) | separating mouse reads results |
 | [`filter_variants.ipynb`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/filter_variants.ipynb) | filtration visualization process and filtered VCFs |
 | [`scripts/viz/variant_overlaps.R`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/scripts/viz/variant_overlaps.R) | Venn diagrams of variant calling overlaps across replicates and passages |
+| [`scripts/viz/oncoprint_similarity.R`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/scripts/viz/oncoprint_similarity.R) | Oncoprint diagrams and similarity matrices |
+
