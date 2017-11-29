@@ -28,7 +28,8 @@ for (samp in unique(base_samples)) {
   select_variant_files <- variant_files[grepl(samp, variant_files)]
   sample_variant_df <- c()
   for (select_file in select_variant_files) {
-    variant_df <- readr::read_tsv(file.path(variant_dir, select_file))
+    variant_df <- suppressMessages(readr::read_tsv(file.path(variant_dir,
+                                                             select_file)))
     variant_df$replicate <- strsplit(select_file, "_")[[1]][3]
     sample_variant_df <- rbind(sample_variant_df, variant_df)
   }
@@ -94,15 +95,15 @@ for (venn_idx in 1:length(all_variant_venns)) {
     venn_ <- paste0("gTree(children = all_variant_venns[[", venn_idx, "]]),")
     venn_c <- paste0("gTree(children = cosmic_variant_venns[[", venn_idx,
                      "]]),")
-    build_all <- paste(build_arrange_all, venn_call)
-    build_cosmic <- paste(build_arrange_cosmic, venn_call_cosmic)
+    build_all <- paste(build_all, venn_)
+    build_cosmic <- paste(build_cosmic, venn_c)
   } else {
     venn_ <- paste0("gTree(children = all_variant_venns[[", venn_idx,
                     "]]), ncol=6)")
     venn_c <- paste0("gTree(children = cosmic_variant_venns[[", venn_idx,
                      "]]), ncol=6)")
-    build_all <- paste(build_arrange_all, venn_call)
-    build_cosmic <- paste(build_arrange_cosmic, venn_call_cosmic)
+    build_all <- paste(build_all, venn_)
+    build_cosmic <- paste(build_cosmic, venn_c)
   }
 }
 
