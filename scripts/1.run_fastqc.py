@@ -30,7 +30,7 @@ out_dir = args.output_dir
 config = args.config_yaml
 walltime = args.walltime
 nodes = str(args.nodes)
-cores = str*args.cores)
+cores = str(args.cores)
 
 wes_files = []
 existing_files = os.listdir(out_dir)
