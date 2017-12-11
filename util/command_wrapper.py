@@ -12,7 +12,9 @@ import arguments
 
 # Load command arguments
 args = arguments.get_args()
+print(args)
 command = args.which
+print(command)
 genome = args.genome
 input_dir = args.input_directory
 output_dir = args.output_directory
@@ -55,17 +57,16 @@ submit_commands = {}
 conda_build = ['m', 'load', 'python/3.5-Anaconda', '&&',
                'source', 'activate', conda_env, '&&']
 
+all_samples = args.func(args)
+
 # FastQC
 if command == 'fastqc':
-    all_samples = args.func(args)
-    print(all_samples)
     for sample_id in all_samples:
         fastqc_com = conda_build + [fastqc, sample_id, '-o', output_dir]
         submit_commands[sample_id] = fastqc_com
 
 # TrimGalore
 if command == 'trimgalore':
-    all_samples = args.func(args)
     for sample_1, sample_2 in all_samples:
         trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
                           '--output_dir', output_dir,
@@ -76,7 +77,6 @@ if command == 'trimgalore':
 
 # BWA mem
 if command == 'bwa':
-    all_samples = args.func(args)
     for sample_1, sample_2 in all_samples:
         sample_name = sample_1.replace('_R1_', '_').replace('_val_1', '')
         sample_base = os.path.join(base_dir, output_dir, sample_name)
@@ -94,7 +94,6 @@ if command == 'bwa':
 # samtools sort to bam
 if command == 'samtools':
     sub_command = args.sub_command
-    all_samples = args.func(args)
     for sample_id in all_samples:
         sample_name = sample_id.replace('_R1_', '_').replace('_val_1', '')
         sample_base = os.path.join(base_dir, output_dir, sample_name)
@@ -146,7 +145,6 @@ if command == 'samtools':
 
 # Remove mouse reads using ngs_disambiguate
 if command == 'disambiguate':
-    all_samples = args.func(args)
     human_dir = args.human_dir
     mouse_dir = args.mouse_dir
 
@@ -160,7 +158,6 @@ if command == 'disambiguate':
 
 # call variants using GATK MuTect2
 if command == 'variant':
-    all_samples = args.func(args)
     sub_command = args.sub_command
     num_threads = args.threads
     conf = args.min_confidence
@@ -200,6 +197,8 @@ if command == 'variant':
 
 if __name__ == '__main__':
     # Submit jobs to cluster
-    for sample_id, com in submit_commands:
-        arguments.schedule_job(command=com, name=sample_id, python=python,
-                               nodes=nodes, cores=cores, walltime=walltime)
+    for sample_id, com in submit_commands.items():
+        schedule_id = '{}_{}'.format(sample_id, command)
+        print(com)
+        #arguments.schedule_job(command=com, name=schedule_id, python=python,
+        #                       nodes=nodes, cores=cores, walltime=walltime)
