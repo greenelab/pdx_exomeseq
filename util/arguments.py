@@ -130,21 +130,11 @@ def get_samtools(args):
 
 
 def get_disambiguate(args):
-    # Load configuration
-    with open(args.config, 'r') as stream:
-        config = yaml.load(stream)
-
-    base_dir = config['directory']
-
-    # sample_files has format [sample_id, hg_sam, mm_sam, out_prefix]
     sample_files = []
     for path, subdirs, files in os.walk(args.human_dir):
         for name in files:
             sample_id = name.split('.')[0]  # This extracts the sample ID
-            human_sam = os.path.join(base_dir, args.human_dir, name)
-            mouse_sam = os.path.join(base_dir, args.mouse_dir, name)
-            output_dir = os.path.join(base_dir, args.output_directory)
-            sample_files.append([sample_id, human_sam, mouse_sam, output_dir])
+            sample_files.append(sample_id)
     return sample_files
 
 
