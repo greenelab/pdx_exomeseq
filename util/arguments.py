@@ -127,7 +127,7 @@ def get_samtools(args):
         for name in files:
             if ('fq.gz.sam' in name) or ('.sam_sorted.bam' in name) or \
              ('.bam_sorted_fixmate.bam' in name) or \
-             ('disambiguatedSpeciesA.bam' in name):
+             ('disambiguatedSpeciesA.bam' in name) or ('.bai' not in name):
                 sam_files.append(name)
     return sam_files
 
