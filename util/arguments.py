@@ -13,6 +13,7 @@ import subprocess
 def get_args():
     parser = argparse.ArgumentParser(add_help=False)
     subparsers = parser.add_subparsers(title='subparsers', dest='command')
+
     # Create universal command arguments
     parser.add_argument('-w', '--walltime', default='04:00:00',
                         help='the amount of time alloted to the script')
@@ -39,6 +40,7 @@ def get_args():
     parser_multiqc.set_defaults(func=get_fastqc, which='multiqc')
 
     parser_trimgalore = subparsers.add_parser('trimgalore', parents=[parser])
+    parser_multiqc.add_argument('--fastqc_results_dir')
     parser_trimgalore.set_defaults(func=get_trimgalore)
 
     parser_bwa = subparsers.add_parser('bwa', parents=[parser])
