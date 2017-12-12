@@ -1,8 +1,36 @@
 """
 Gregory Way 2017
-scripts/util/command_wrapper.py
+pdx_exomeseq
 
-Function that generates commands for each pipeline step
+Main function that aggregates all samples and determines which command to run
+depending on command line arguments. Then submits these commands as scheduled
+jobs to the Dartmouth Discovery cluster.
+
+Usage:
+
+Invoke via command line with specific arguments including:
+
+{'fastqc', 'multiqc', 'trimgalore', 'bwa', 'samtools', 'disambiguate',
+'variant'}
+
+Some commands may also have subcommands. E.g. with samtools, specify one of the
+following subcommands:
+
+{'sort_name', 'fixmate', 'sort_position', 'rmdup', 'index_bam',
+'index_bam_gatk'}
+
+E.g.
+
+    python pdx_exomeseq.py samtools
+            --sub_command 'sort_name' \
+            --genome 'hg' \
+            --input_directory 'processed/sam' \
+            --output_directory 'processed/bam' \
+            --walltime '06:00:00' \
+            --nodes 2 \
+            --cores 12
+
+The specific pipeline using this script is given in `wes_pipeline.sh`
 """
 
 import os
@@ -215,7 +243,6 @@ if __name__ == '__main__':
     # Submit jobs to cluster
     for sample_id, com in submit_commands.items():
         schedule_id = '{}_{}'.format(sample_id, command)
-        
+
         arguments.schedule_job(command=com, name=schedule_id, python=python,
                                nodes=nodes, cores=cores, walltime=walltime)
-
