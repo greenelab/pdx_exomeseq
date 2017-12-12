@@ -6,7 +6,6 @@ Function to facilitate argument creation - Import only
 """
 
 import os
-import yaml
 import argparse
 import subprocess
 
@@ -21,7 +20,7 @@ def get_args():
                         help='the number of nodes to allocate')
     parser.add_argument('-r', '--cores', default=4,
                         help='the number of cores to allocate per node')
-    parser.add_argument('-i', '--input_directory',
+    parser.add_argument('-i', '--input_directory', default=None,
                         help='the directory of the files to process')
     parser.add_argument('-o', '--output_directory', default='.',
                         help='the directory to save the output files')
@@ -49,10 +48,12 @@ def get_args():
     parser_samtools.add_argument('--sub_command')
     parser_samtools.set_defaults(func=get_samtools, which='samtools')
 
-    parser_disambiguate = subparsers.add_parser('disambiguate', parents=[parser])
+    parser_disambiguate = subparsers.add_parser('disambiguate',
+                                                parents=[parser])
     parser_disambiguate.add_argument('--human_dir')
     parser_disambiguate.add_argument('--mouse_dir')
-    parser_disambiguate.set_defaults(func=get_disambiguate, which='disambiguate')
+    parser_disambiguate.set_defaults(func=get_disambiguate,
+                                     which='disambiguate')
 
     parser_variant = subparsers.add_parser('variant', parents=[parser])
     parser_variant.add_argument('--sub_command')
