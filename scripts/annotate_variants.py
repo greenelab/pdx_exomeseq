@@ -1,12 +1,11 @@
 """
 Gregory Way 2017
-scripts/7.annotate_variants.py
+scripts/annotate_variants.py
 
 Use ANNOVAR to first convert a sample into annovar format and then annotate
 """
 
 import os
-import pandas as pd
 import subprocess
 
 vcf_file_dir = os.path.join('results', 'gatk_vcfs')
@@ -40,6 +39,11 @@ for annovar_file in os.listdir(annovar_file_dir):
     annotated_vcf_file = os.path.join(annotated_file_dir,
                                       '{}.annotated'.format(base_name))
     if not os.path.isfile(annotated_vcf_file):
-        file_command = 'perl {} {} modules/annovar/humandb -buildver hg19 -out {} -verbose -otherinfo -remove -protocol refGene,cosmic70,gnomad_exome,dbnsfp30a -operation g,f,f,f -nastring . -csvout -polish'.format(table_annovar, full_annov_file, annotated_vcf_file)
+        file_command = 'perl {} {} modules/annovar/humandb -buildver hg19 ' \
+                       '-out {} -verbose -otherinfo -remove -protocol ' \
+                       'refGene,cosmic70,gnomad_exome,dbnsfp30a ' \
+                       '-operation g,f,f,f -nastring . -csvout ' \
+                       '-polish'.format(table_annovar, full_annov_file,
+                                        annotated_vcf_file)
         print(file_command)
         subprocess.call(file_command, shell=True)
