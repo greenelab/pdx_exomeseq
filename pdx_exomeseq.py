@@ -8,7 +8,7 @@ Function that generates commands for each pipeline step
 import os
 import yaml
 
-import arguments
+import util.arguments as arguments
 
 # Load command arguments
 args = arguments.get_args()
@@ -86,7 +86,7 @@ if command == 'trimgalore':
                           '--fastqc_args',
                           '"--outdir {}"'.format(fastqc_results_dir)]
         trimgalore_com = conda_build + trimgalore_com
-        submit_commands[sample_id] = trimgalore_com
+        submit_commands[sample_1] = trimgalore_com
 
 # BWA mem
 if command == 'bwa':
@@ -102,7 +102,7 @@ if command == 'bwa':
                        os.path.join('processed', 'trimmed', sample_2), '>',
                        sample_sam]
         bwa_mem_com = conda_build + bwa_mem_com
-        submit_commands[sample_id] = trimgalore_com
+        submit_commands[sample_sam] = bwa_mem_com
 
 # samtools sort to bam
 if command == 'samtools':
