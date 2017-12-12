@@ -40,8 +40,8 @@ def get_args():
     parser_multiqc.set_defaults(func=get_fastqc, which='multiqc')
 
     parser_trimgalore = subparsers.add_parser('trimgalore', parents=[parser])
-    parser_multiqc.add_argument('--fastqc_results_dir')
-    parser_trimgalore.set_defaults(func=get_trimgalore)
+    parser_trimgalore.add_argument('--fastqc_results_dir')
+    parser_trimgalore.set_defaults(func=get_trimgalore, which='trimgalore')
 
     parser_bwa = subparsers.add_parser('bwa', parents=[parser])
     parser_bwa.set_defaults(func=get_bwa, which='bwa')
