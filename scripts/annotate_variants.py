@@ -8,8 +8,8 @@ Use ANNOVAR to first convert a sample into annovar format and then annotate
 import os
 import subprocess
 
-vcf_file_dir = os.path.join('results', 'gatk_vcfs')
-annovar_file_dir = os.path.join('results', 'annovar_vcfs')
+vcf_file_dir = os.path.join('pdx_exomeseq', 'results', 'gatk_vcfs')
+annovar_file_dir = os.path.join('pdx_exomeseq', 'results', 'annovar_vcfs')
 annotated_file_dir = os.path.join('results', 'annotated_vcfs')
 
 annovar_dir = os.path.join('modules', 'annovar')
@@ -30,7 +30,6 @@ for vcf_file in os.listdir(vcf_file_dir):
         if not os.path.isfile(output_vcf_file):
             file_command = '{} {} > {}'.format(conv_com, full_vcf_file,
                                                output_vcf_file)
-            print(file_command)
             subprocess.call(file_command, shell=True)
 
 for annovar_file in os.listdir(annovar_file_dir):
@@ -45,5 +44,5 @@ for annovar_file in os.listdir(annovar_file_dir):
                        '-operation g,f,f,f -nastring . -csvout ' \
                        '-polish'.format(table_annovar, full_annov_file,
                                         annotated_vcf_file)
-        print(file_command)
         subprocess.call(file_command, shell=True)
+
