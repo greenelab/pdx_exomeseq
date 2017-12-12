@@ -12,9 +12,8 @@ import arguments
 
 # Load command arguments
 args = arguments.get_args()
-print(args)
 command = args.which
-print(command)
+
 genome = args.genome
 input_dir = args.input_directory
 output_dir = args.output_directory
@@ -40,6 +39,7 @@ combined_ref = config['combinedref']
 dbsnp = config['dbsnp']
 base_dir = config['directory']
 fastqc = config['fastqc']
+multiqc = config['multiqc']
 trimgalore = config['trimgalore']
 cutadapt = config['cutadapt']
 bwa = config['bwa']
@@ -57,6 +57,7 @@ submit_commands = {}
 conda_build = ['m', 'load', 'python/3.5-Anaconda', '&&',
                'source', 'activate', conda_env, '&&']
 
+# Obtain samples to process
 all_samples = args.func(args)
 
 # FastQC
@@ -65,13 +66,25 @@ if command == 'fastqc':
         fastqc_com = conda_build + [fastqc, sample_id, '-o', output_dir]
         submit_commands[sample_id] = fastqc_com
 
+# MultiQC
+if command == 'multiqc':
+    html_file = args.html_file
+
+    multiqc_com = conda_build + [multiqc, input_dir, '--force', '--filename',
+                                 html_file]
+    submit_commands['multiqc'] = multiqc_com
+
 # TrimGalore
 if command == 'trimgalore':
+    fastqc_results_dir = args.fastqc_results_dir
+
     for sample_1, sample_2 in all_samples:
-        trimgalore_com = [trimgalore, '--paired', sample_1, sample_2,
+        # The Second output specifies which directory to perform fastqc on
+        trimgalore_com = [trimgalore,
+                          '--paired', sample_1, sample_2,
                           '--output_dir', output_dir,
                           '--fastqc_args',
-                          '"--outdir results/fastqc_trimmed/"']
+                          '"--outdir {}"'.format(fastqc_results_dir)]
         trimgalore_com = conda_build + trimgalore_com
         submit_commands[sample_id] = trimgalore_com
 
@@ -94,6 +107,7 @@ if command == 'bwa':
 # samtools sort to bam
 if command == 'samtools':
     sub_command = args.sub_command
+
     for sample_id in all_samples:
         sample_name = sample_id.replace('_R1_', '_').replace('_val_1', '')
         sample_base = os.path.join(base_dir, output_dir, sample_name)
@@ -180,6 +194,7 @@ if command == 'variant':
                            '-I:tumor', os.path.join('processed', 'gatk_bam',
                                                     sample_id),
                            '-o', sample_gatk_vcf, '-R', genome_ref]
+
         elif sub_command == 'add_read_groups':
             tumor_id = os.path.join('processed', 'bam_rmdup', sample_id)
             variant_com = [picard, 'AddOrReplaceReadGroups',
@@ -192,6 +207,7 @@ if command == 'variant':
                            'RGPU={}'.format(sample_id),
                            'CREATE_INDEX=true',
                            'VALIDATION_STRINGENCY=SILENT']
+
         variant_com = conda_build + variant_com
         submit_commands[sample_id] = variant_com
 
