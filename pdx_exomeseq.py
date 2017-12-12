@@ -215,6 +215,7 @@ if __name__ == '__main__':
     # Submit jobs to cluster
     for sample_id, com in submit_commands.items():
         schedule_id = '{}_{}'.format(sample_id, command)
-        print(com)
-        #arguments.schedule_job(command=com, name=schedule_id, python=python,
-        #                       nodes=nodes, cores=cores, walltime=walltime)
+        
+        arguments.schedule_job(command=com, name=schedule_id, python=python,
+                               nodes=nodes, cores=cores, walltime=walltime)
+
