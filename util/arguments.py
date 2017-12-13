@@ -6,6 +6,7 @@ Function to facilitate argument creation - Import only
 """
 
 import os
+import re
 import argparse
 import subprocess
 
@@ -82,7 +83,7 @@ def get_fastqc(args):
     wes_files = []
     for path, subdirs, files in os.walk(args.input_directory):
         for name in files:
-            if 'fasta.gz' in name or 'fq.gz' in name or 'fastq.gz' in name:
+            if re.match(r'(fasta|fq|fastq)\.gz$', name):
                 full_name = os.path.join(path, name)
                 wes_files.append(full_name)
     return wes_files
@@ -122,12 +123,12 @@ def get_bwa(args):
 
 
 def get_samtools(args):
+    check_suffix = ['fq.gz.sam', '.sam_sorted.bam', '.bam_sorted_fixmate.bam',
+                    'disambiguatedSpeciesA.bam']
     sam_files = []
     for path, subdirs, files in os.walk(args.input_directory):
         for name in files:
-            if (('fq.gz.sam' in name) or ('.sam_sorted.bam' in name) or
-               ('.bam_sorted_fixmate.bam' in name) or
-               ('disambiguatedSpeciesA.bam' in name)) and ('.bai' not in name):
+            if (name in check_suffix) and ('.bai' not in name):
                 sam_files.append(name)
     return sam_files
 
