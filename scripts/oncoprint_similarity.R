@@ -27,20 +27,37 @@ replicate_sim_out <- file.path("figures", "cosmic_similarity_replicates.pdf")
 consensus_sim_out <- file.path("figures", "cosmic_similarity_consensus.pdf")
 
 # Define Constants and Functions
-col = c("MUT" = "#008000", "AMP" = "red", "HOMDEL" = "blue")
+col <- c("MUT" = "#008000", "AMP" = "red", "HOMDEL" = "blue")
 
 process_oncoprint <- function(onco_file) {
-  mat <- read.table(onco_file, header = TRUE, stringsAsFactors = FALSE,
-                    sep = "\t")
-  mat[is.na(mat)] = ""
-  rownames(mat) = mat[, 1]
-  mat = mat[, -1]
-  mat = mat[, -ncol(mat)]
-  mat = t(as.matrix(mat))
-  return(mat)
+  # Read in oncoprint file and process it in the form required for the
+  # Oncoprint ComplexHeatmap function.
+  #
+  # Input:
+  #     onco_file - file path pointing to oncoprint tab separated file
+  #
+  # Output:
+  #     onco_matrix - file format ready for ComplexHeatmap
+
+  onco_matrix <- read.table(onco_file, header = TRUE, stringsAsFactors = FALSE,
+                            sep = "\t")
+  onco_matrix[is.na(onco_matrix)] = ""
+  rownames(onco_matrix) = onco_matrix[, 1]
+  onco_matrix = onco_matrix[, -1]
+  onco_matrix = onco_matrix[, -ncol(onco_matrix)]
+  onco_matrix = t(as.matrix(onco_matrix))
+  return(onco_matrix)
 }
 
 process_similarity <- function(sim_file) {
+  # Read in gene by sample mutation matrix and get sample by sample correlation
+  #
+  # Input:
+  #     sim_file - file path pointing to gene by sample mutations
+  #
+  # Output:
+  #     correlation matrix for heatmap plotting
+
   cosmic_sim_df <- readr::read_tsv(sim_file)
   cosmic_dist_df <- data.matrix(dist(cosmic_sim_df, diag = TRUE, upper = TRUE))
   cosmic_dist_df <- data.matrix(cor(t(cosmic_sim_df[, 2:ncol(cosmic_sim_df)])))
@@ -48,6 +65,9 @@ process_similarity <- function(sim_file) {
   return(cosmic_dist_df)
 }
 
+# This list of functions is taken in by the oncoPrint function and specifies
+# how each of the observed alterations and the background are presented in
+# terms of size and color
 alter_fun = list(
   background = function(x, y, w, h) {
     grid.rect(x, y, w - unit(0.5, "mm"), h - unit(0.5, "mm"),
