@@ -76,8 +76,12 @@ for sample_id in set(full_variant_df['sample_id']):
 
 # Generate and save oncoprint data for consensus samples
 oncoprint_consensus_file = os.path.join('results', 'oncoprint_consensus.tsv')
-oncoprint_consensus_df = pd.DataFrame(variant_assign_consensus, index=case_id_consensus,
-                                      columns=paad_genes)
+
+oncoprint_consensus_df = (
+    pd.DataFrame(variant_assign_consensus,
+                 index=case_id_consensus,
+                 columns=paad_genes)
+    )
 oncoprint_consensus_df.index.name = 'Case.ID'
 oncoprint_consensus_df.to_csv(oncoprint_consensus_file, sep='\t')
 
@@ -123,7 +127,11 @@ for variant_file in os.listdir(variant_file_path):
 
 # Generate COSMIC id membership data (for downstream similarity matrix)
 cosmic_common_file = os.path.join('results', 'cosmic_similarity_replicates.tsv')
-cosmic_common_df = pd.DataFrame(cosmic_similarity_list, index=case_id, columns=unique_cosmic_ids)
+cosmic_common_df = (
+    pd.DataFrame(cosmic_similarity_list,
+                 index=case_id,
+                 columns=unique_cosmic_ids)
+    )
 cosmic_common_df.index.name = 'Case.ID'
 cosmic_common_df.to_csv(cosmic_common_file, sep='\t')
 

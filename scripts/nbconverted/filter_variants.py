@@ -31,11 +31,11 @@ filter_max_depth_count = 800
 
 # In[4]:
 
-# Define a class that will process all of these outputs
+# Define a class that will process all of the annotated variant outputs
 class process_variants():
     """
-    Takes as input a file name and has internal methods to process and output summary statistics
-    for annotated variant call files
+    Takes as input a file name and has internal methods to process and
+    output summary statistics for annotated variant call files
     """
     def __init__(self, variant_file, filter_min_depth=10, filter_max_depth=800,
                  filter_common_maf=0.05):
@@ -56,11 +56,15 @@ class process_variants():
     def filter_depth(self):
         # Filter min depth
         self._process_depth()
-        self.variant_df = self.variant_df[self.variant_df['depth'].astype(int) >= self.filter_min_depth]
+        self.variant_df = (
+            self.variant_df[self.variant_df['depth'].astype(int) >= self.filter_min_depth]
+            )
         self.filter_min_depth_count = self.variant_df.shape[0]
         
         # Filter max depth
-        self.variant_df = self.variant_df[self.variant_df['depth'].astype(int) <= self.filter_max_depth]
+        self.variant_df = (
+            self.variant_df[self.variant_df['depth'].astype(int) <= self.filter_max_depth]
+            )
         self.filter_max_depth_count = self.variant_df.shape[0]
         
     def filter_common_variation(self):
@@ -83,10 +87,12 @@ class process_variants():
         g = sns.distplot(self.variant_df['depth'].astype(float))
         g.set_title('Read Depth Distribution for {}'.format(self.sample_name))
     
-    def summary_statistics(self):
+    def get_summary_statistics(self):
         self.functional_counts = pd.DataFrame(self.variant_df['Func.refGene'].value_counts())
         self.functional_counts.columns = [self.sample_name]
-        self.mutational_class_counts= pd.DataFrame(self.variant_df['ExonicFunc.refGene'].value_counts())
+        self.mutational_class_counts = (
+            pd.DataFrame(self.variant_df['ExonicFunc.refGene'].value_counts())
+            )
         self.mutational_class_counts.columns = [self.sample_name]
         
         # Get number of COSMIC curated events
@@ -96,27 +102,32 @@ class process_variants():
         # Get depth summary
         self.depth_summary = pd.DataFrame(self.variant_df['depth'].astype(int).describe())
         self.depth_summary.columns = [self.sample_name]
+        
+        return self.functional_counts, self.mutational_class_counts, self.depth_summary
 
     def curate_filter_info(self):
-        filter_list = [self.sample_name, self.all_variant_count, self.filter_min_depth_count,
-                       self.filter_max_depth_count, self.filter_common_var_count, self.log_mut_count,
-                       self.cosmic_variant_counts]
+        filter_list = [
+            self.sample_name, self.all_variant_count,
+            self.filter_min_depth_count, self.filter_max_depth_count,
+            self.filter_common_var_count, self.log_mut_count,
+            self.cosmic_variant_counts
+        ]
         return filter_list
     
-    def curate_summary_info(self):
-        return self.functional_counts, self.mutational_class_counts, self.depth_summary
-    
     def output_processed_data(self, out_dir):
-        processed_out_file = os.path.join(out_dir,
-                                          '{}_processed_variants.tsv.bz2'.format(self.sample_name))
+        processed_out_file = os.path.join(
+            out_dir, '{}_processed_variants.tsv.bz2'.format(self.sample_name)
+        )
         self.variant_df.to_csv(processed_out_file, sep='\t', compression='bz2')
         
 
 
 # In[5]:
 
+# Process variant results
 variant_file_path = os.path.join('results', 'annotated_vcfs')
 processed_file_path = os.path.join('results', 'processed_vcfs')
+
 filter_info_all = []
 functional_counts_all = []
 mutational_counts_all = []
@@ -128,9 +139,9 @@ for variant_file in os.listdir(variant_file_path):
     variant_info = process_variants(full_variant_file)
     variant_info.filter_depth()
     variant_info.filter_common_variation()
-    variant_info.summary_statistics()
+
+    func_count, mut_count, depth_summary = variant_info.get_summary_statistics()
     filter_info_all.append(variant_info.curate_filter_info())
-    func_count, mut_count, depth_summary = variant_info.curate_summary_info()
     
     functional_counts_all.append(func_count)
     mutational_counts_all.append(mut_count)
@@ -148,6 +159,7 @@ for variant_file in os.listdir(variant_file_path):
 
 # In[6]:
 
+# Save read depth summary results
 depth_output_file = os.path.join('results', 'full_depth_summary.tsv')
 depth_df = pd.concat(depth_summary_all, axis=1).fillna(0).astype(int).T.sort_index()
 depth_df.to_csv(depth_output_file, sep='\t')
@@ -155,15 +167,21 @@ depth_df.to_csv(depth_output_file, sep='\t')
 
 # In[7]:
 
+# Save mutation count summary results
 mut_count_output_file = os.path.join('results', 'full_mutation_count_summary.tsv')
-mutational_counts_df = pd.concat(mutational_counts_all, axis=1).fillna(0).astype(int).T.sort_index()
+mutational_counts_df = (
+    pd.concat(mutational_counts_all, axis=1).fillna(0).astype(int).T.sort_index()
+    )
 mutational_counts_df.to_csv(mut_count_output_file, sep='\t')
 
 
 # In[8]:
 
+# Save functional genomics summary results
 func_count_output_file = os.path.join('results', 'full_functional_count_summary.tsv')
-functional_counts_df = pd.concat(functional_counts_all, axis=1).fillna(0).astype(int).T.sort_index()
+functional_counts_df = (
+    pd.concat(functional_counts_all, axis=1).fillna(0).astype(int).T.sort_index()
+    )
 functional_counts_df.to_csv(func_count_output_file, sep='\t')
 
 
@@ -192,10 +210,11 @@ filter_counts_df = filter_counts_df.assign(lane = [x[2] for x in filter_counts_d
 filter_counts_df['log_mut_count'] = round(filter_counts_df['log_mut_count'], 2)
 
 
-# In[14]:
+# In[12]:
 
 filter_melt_df = (
-    filter_counts_df.melt(id_vars=['base_sample', 'lane', 'sample_name', 'log_mut_count', 'COSMIC_count'],
+    filter_counts_df.melt(id_vars=['base_sample', 'lane', 'sample_name',
+                                   'log_mut_count', 'COSMIC_count'],
                           value_vars=['all_variant_count', 'filter_min_depth_count',
                                       'filter_max_depth_count', 'filter_common_var_count'],
                           var_name='num_variants', value_name='filtration')
@@ -206,7 +225,7 @@ filter_melt_df.head()
 
 # ## Visualize summary statistics across samples
 
-# In[15]:
+# In[13]:
 
 p = (
     gg.ggplot(filter_melt_df,
@@ -221,13 +240,13 @@ p = (
 p
 
 
-# In[16]:
+# In[14]:
 
 figure_file = os.path.join('figures', 'filtration_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 
-# In[17]:
+# In[15]:
 
 p = (
     gg.ggplot(filter_counts_df,
@@ -244,7 +263,7 @@ p = (
 p
 
 
-# In[18]:
+# In[16]:
 
 figure_file = os.path.join('figures', 'cosmic_mutcount_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
