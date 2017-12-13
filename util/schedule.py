@@ -14,7 +14,7 @@ class PBSJob:
     """
     def __init__(self, name='', queue='default', nodes=1, ppn=1,
                  walltime='01:00:00', mail='a',
-                 addr='gregway@mail.med.upenn.edu',
+                 addr='gregory.way@gmail.com',
                  cwd=True, command=None, array=None):
         self.name = name
         self.queue = queue
@@ -31,13 +31,6 @@ class PBSJob:
         if command is None:
             sys.stderr.write('A command is REQUIRED')
             return None
-        self.command = command
-
-    def set_command(self, command):
-        self.command = command
-
-    def set_name_command(self, name, command):
-        self.name = name
         self.command = command
 
     def write(self, filename):
