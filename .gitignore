@@ -1,0 +1,17 @@
+reference
+modules
+logs/
+logs_bwa/
+*.gz
+*.zip
+lib
+tools
+*trimming_report.txt
+*.e*
+*.o*
+results/fastqc_raw/
+results/fastqc_trimmed/
+processed/
+.Rhistory
+.ipynb_checkpoints/
+*.log

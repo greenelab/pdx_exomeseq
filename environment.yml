@@ -1,0 +1,26 @@
+name: pdx-exomeseq
+channels:
+- r
+- bioconda
+- conda-forge
+dependencies:
+- r::r-dplyr=0.7.0
+- r::r-readr=1.1.1
+- r::r-gridextra=2.2.1
+- conda-forge::r-venndiagram=1.6.18
+- conda-forge::pandas=0.21.0
+- conda-forge::numpy=1.13.3
+- conda-forge::pyyaml=3.12
+- conda-forge::plotnine=0.3.0
+- conda-forge::matplotlib=2.1.0
+- conda-forge::seaborn=0.8.1
+- bioconda::ngs-disambiguate=2016.11.10
+- bioconda::bamtools=2.4.0
+- bioconda::trim-galore=0.4.4
+- bioconda::cutadapt=1.14
+- bioconda::bwa=0.7.16
+- bioconda::samtools=0.1.16
+- bioconda::picard=2.14.0
+- bioconda::gatk=3.8
+- bioconda::fastqc=0.11.5
+- bioconda::multiqc=0.9

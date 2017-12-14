@@ -1,0 +1,83 @@
+
+# coding: utf-8
+
+# In[1]:
+
+import os
+import pandas as pd
+
+import plotnine as gg
+
+
+# In[2]:
+
+get_ipython().magic('pylab inline')
+
+
+# In[3]:
+
+summary_dir = os.path.join('results', 'disambiguate_summary')
+summary_files = [os.path.join(summary_dir, x) for x in os.listdir(summary_dir)]
+
+
+# In[4]:
+
+summary_list = []
+for summary_file in summary_files:
+    summary_list.append(pd.read_table(summary_file))
+
+
+# In[5]:
+
+summary_df = pd.concat(summary_list)
+summary_df.columns = ['sample', 'human', 'mouse', 'ambiguous']
+summary_df = summary_df.assign(base_sample = [x[0] for x in summary_df['sample'].str.split('_')])
+summary_df = summary_df.assign(lane = [x[2] for x in summary_df['sample'].str.split('_')])
+
+
+# In[6]:
+
+total_reads = summary_df['human'] + summary_df['mouse'] + summary_df['ambiguous']
+human_percent = (summary_df['human'] / total_reads) * 100
+summary_df = summary_df.assign(human_percent = human_percent.round(1))
+
+
+# In[7]:
+
+summary_df.to_csv(os.path.join('results', 'full_disambiguate_summary.tsv'), sep='\t')
+summary_df.head()
+
+
+# In[8]:
+
+summary_melt_df = summary_df.melt(id_vars=['base_sample', 'lane', 'sample', 'human_percent'],
+                                  value_vars=['human', 'mouse', 'ambiguous'],
+                                  var_name='species', value_name='pairs')
+summary_melt_df.head()
+
+
+# In[9]:
+
+summary_melt_df.loc[summary_melt_df['species'] != 'human', 'human_percent'] = ''
+
+
+# In[10]:
+
+p = (
+    gg.ggplot(summary_melt_df, gg.aes(x='lane', y='pairs', fill='species')) +
+    gg.geom_bar(stat='identity', position='stack') +
+    gg.geom_text(gg.aes(y=1.5e7, label='human_percent'), size=4.5) +
+    gg.facet_wrap('~ base_sample') +
+    gg.theme_bw() +
+    gg.theme(axis_text_x=gg.element_text(angle='90'),
+             axis_text=gg.element_text(size=8),
+             axis_title=gg.element_text(size=14))
+    )
+p
+
+
+# In[11]:
+
+figure_file = os.path.join('figures', 'disambiguate_results.pdf')
+gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
+

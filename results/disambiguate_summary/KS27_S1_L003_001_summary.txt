@@ -1,0 +1,2 @@
+sample	unique species A pairs	unique species B pairs	ambiguous pairs
+KS27_S1_L003_001	18460287	1409957	34527
