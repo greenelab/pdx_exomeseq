@@ -9,6 +9,7 @@ combinedref: /lorax/sanchezlab/shared/pdx_exomeseq/reference/combined_g1k_v37_mm
 dbsnp: /lorax/sanchezlab/shared/pdx_exomeseq/reference/dbsnp_138.b37.vcf
 directory: /lorax/sanchezlab/shared/pdx_exomeseq
 fastqc: /ihome/gway/.conda/envs/pdx-exomeseq/bin/fastqc
+multiqc: /ihome/gway/.conda/envs/pdx-exomeseq/bin/multiqc
 cutadapt: /ihome/gway/.conda/envs/pdx-exomeseq/bin/cutadapt
 trimgalore: /ihome/gway/.conda/envs/pdx-exomeseq/bin/trim_galore
 bwa: /ihome/gway/.conda/envs/pdx-exomeseq/bin/bwa
