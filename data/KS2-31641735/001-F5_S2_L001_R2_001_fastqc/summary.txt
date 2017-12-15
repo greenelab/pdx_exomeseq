@@ -1,0 +1,11 @@
+PASS	Basic Statistics	001-F5_S2_L001_R2_001.fastq.gz
+PASS	Per base sequence quality	001-F5_S2_L001_R2_001.fastq.gz
+PASS	Per sequence quality scores	001-F5_S2_L001_R2_001.fastq.gz
+FAIL	Per base sequence content	001-F5_S2_L001_R2_001.fastq.gz
+FAIL	Per base GC content	001-F5_S2_L001_R2_001.fastq.gz
+WARN	Per sequence GC content	001-F5_S2_L001_R2_001.fastq.gz
+PASS	Per base N content	001-F5_S2_L001_R2_001.fastq.gz
+WARN	Sequence Length Distribution	001-F5_S2_L001_R2_001.fastq.gz
+WARN	Sequence Duplication Levels	001-F5_S2_L001_R2_001.fastq.gz
+WARN	Overrepresented sequences	001-F5_S2_L001_R2_001.fastq.gz
+WARN	Kmer Content	001-F5_S2_L001_R2_001.fastq.gz

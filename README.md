@@ -25,21 +25,21 @@ calling and annotating variants.
 
 ## Pipeline
 
-See [`wes_pipeline.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/wes_pipeline.sh)
+See [`wes_pipeline.sh`](https://github.com/greenelab/pdx_exomeseq/blob/master/wes_pipeline.sh)
 for our current variant-calling pipeline for tumor-only WES.
 
 ## Compute Environment
 
 All work was performed using the Dartmouth Discovery Cluster Computer with the conda
 environment specified in
-[`environment.yml`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/environment.yml).
+[`environment.yml`](https://github.com/greenelab/pdx_exomeseq/blob/master/environment.yml).
 
 ## Steps to Reproduce
 
 There are 3 major steps this repository provides to get from raw sequencing reads to
 annotated variants.
 
-#### 1. Setup reproducible computational environment ([`setup_environment.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/setup_environment.sh), [`install.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/install.sh))
+#### 1. Setup reproducible computational environment ([`setup_environment.sh`](https://github.com/greenelab/pdx_exomeseq/blob/master/setup_environment.sh), [`install.sh`](https://github.com/greenelab/pdx_exomeseq/blob/master/install.sh))
 
 ```bash
 # Setup conda environment
@@ -52,7 +52,7 @@ bash setup_environment.sh
 bash install.sh
 ```
 
-#### 2. Run data processing pipeline ([`wes_pipeline.sh`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/wes_pipeline.sh))
+#### 2. Run data processing pipeline ([`wes_pipeline.sh`](https://github.com/greenelab/pdx_exomeseq/blob/master/wes_pipeline.sh))
 
 ```bash
 # NOTE: the commands in the following script must be run sequentially
@@ -72,8 +72,8 @@ We use Jupyter notebooks and R scripts to visualize and summarize results.
 
 | Script | Output |
 | :----- | :----- |
-| [`disambiguate_reads.ipynb`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/disambiguate_reads.ipynb) | separating mouse reads results |
-| [`filter_variants.ipynb`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/filter_variants.ipynb) | filtration visualization process and filtered VCFs |
-| [`scripts/viz/variant_overlaps.R`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/scripts/viz/variant_overlaps.R) | Venn diagrams of variant calling overlaps across replicates and passages |
-| [`scripts/viz/oncoprint_similarity.R`](https://github.com/gwaygenomics/pdx_exomeseq/blob/master/scripts/viz/oncoprint_similarity.R) | Oncoprint diagrams and similarity matrices |
+| [`disambiguate_reads.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/disambiguate_reads.ipynb) | separating mouse reads results |
+| [`filter_variants.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/filter_variants.ipynb) | filtration visualization process and filtered VCFs |
+| [`scripts/viz/variant_overlaps.R`](https://github.com/greenelab/pdx_exomeseq/blob/master/scripts/viz/variant_overlaps.R) | Venn diagrams of variant calling overlaps across replicates and passages |
+| [`scripts/viz/oncoprint_similarity.R`](https://github.com/greenelab/pdx_exomeseq/blob/master/scripts/viz/oncoprint_similarity.R) | Oncoprint diagrams and similarity matrices |
 

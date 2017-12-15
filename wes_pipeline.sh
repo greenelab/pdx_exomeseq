@@ -131,6 +131,9 @@ python pdx_exomeseq.py variant --sub_command 'mutect2' \
 # The databases we will use are: 
 # refGene,cosmic70,gnomad_exome,dbnsfp30a
 
+# First use `convert2annovar` to convert MuTect2 derived VCF files to annovar compatible files
+# and then, use `table_annovar` to add annotations as columns to the converted VCF
+# python scripts/7.annotate_variants.py
 # First use `convert2annovar` to convert MuTect2 derived VCF files to annovar
 # compatible files and then use `table_annovar` to add annotations as columns
 # to the converted VCF
