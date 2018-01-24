@@ -94,14 +94,7 @@ python pdx_exomeseq.py samtools --sub_command 'rmdup' \
 python pdx_exomeseq.py samtools --sub_command 'index_bam' \
         --input_directory 'processed/bam_rmdup' \
         --output_directory 'processed/bam_rmdup' \
-        --walltime '03:30:00' --nodes 1 --cores 4 
-
-###################
-# STEP 5 - Variant Calling
-###################
-# NOTE: Realigning around indels was NOT performed. They are legacy functions
-# that are no longer best-practices for GATK HaplotypeCaller pipelines
-# (see https://software.broadinstitute.org/gatk/blog?id=7847)
+        --walltime '03:30:00' --nodes 1 --cores 4
 
 # Assign read groups
 python pdx_exomeseq.py variant --sub_command 'add_read_groups' \
@@ -109,6 +102,14 @@ python pdx_exomeseq.py variant --sub_command 'add_read_groups' \
         --output_directory 'processed/gatk_bam' \
         --walltime '03:00:00' --nodes 1 --cores 8
 
+###################
+# STEP 5- Variant Calling
+###################
+# NOTE: Realigning around indels was NOT performed. They are legacy functions
+# that are no longer best-practices for GATK HaplotypeCaller pipelines
+# (see https://software.broadinstitute.org/gatk/blog?id=7847)
+
+# 1) Call Variants using each replicate individually
 # Create index for read group files
 python pdx_exomeseq.py samtools --sub_command 'index_bam_gatk' \
         --input_directory 'processed/gatk_bam' \
@@ -121,6 +122,12 @@ python pdx_exomeseq.py variant --sub_command 'mutect2' \
         --output_directory 'results/gatk_vcf' \
         --walltime '05:00:00' --nodes 1 --cores 8
 
+# 2) Call Variants with a merged file across replicates of the same sample
+python pdx_exomeseq.py samtools --subcommand 'merge' \
+        --input_directory 'processed/gatk_bam' \
+        --output_directory 'processed/gatk_merged_bam' \
+        --walltime '05:00:00' --nodes 1 --cores 8
+
 ###################
 # STEP 6 - Annotate Variants
 ###################
@@ -128,7 +135,7 @@ python pdx_exomeseq.py variant --sub_command 'mutect2' \
 # Guide: http://annovar.openbioinformatics.org/en/latest/user-guide/startup/
 # Db: https://github.com/WGLab/doc-ANNOVAR/blob/master/user-guide/download.md
 
-# The databases we will use are: 
+# The databases we will use are:
 # refGene,cosmic70,gnomad_exome,dbnsfp30a
 
 # First use `convert2annovar` to convert MuTect2 derived VCF files to annovar compatible files
@@ -138,4 +145,3 @@ python pdx_exomeseq.py variant --sub_command 'mutect2' \
 # compatible files and then use `table_annovar` to add annotations as columns
 # to the converted VCF
 python scripts/annotate_variants.py
-
