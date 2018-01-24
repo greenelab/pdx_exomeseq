@@ -34,6 +34,7 @@ The specific pipeline using this script is given in `wes_pipeline.sh`
 """
 
 import os
+import sys
 import yaml
 
 import util.arguments as arguments
@@ -181,6 +182,20 @@ if command == 'samtools':
             sample_file = os.path.join('processed', 'gatk_bam', sample_id)
             samtools_com = [samtools, 'index', sample_file,
                             sample_bamindex_gatk]
+
+        elif sub_command == 'merge':
+            sample_file = os.path.join('processed', 'gatk_bam', sample_id)
+            if 'L001' in sample_id:
+                output_bam = '{}.merged.bam'.format(sample_id.split('_')[0])
+                output_bam = os.path.join(output_dir, output_bam)
+
+                replicate_2 = sample_id.replace('L001', 'L002')
+                replicate_3 = sample_id.replace('L001', 'L003')
+                replicate_4 = sample_id.replace('L001', 'L004')
+                samtools_com = [samtools, 'merge', output_bam, sample_id,
+                                replicate_2, replicate_3, replicate_4]
+            else:
+                sys.exit('Do not make redundant merged files')
 
         samtools_com = conda_build + samtools_com
         submit_commands[sample_id] = samtools_com
