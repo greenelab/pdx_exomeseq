@@ -128,7 +128,7 @@ def get_samtools(args):
     sam_files = []
     for path, subdirs, files in os.walk(args.input_directory):
         for name in files:
-            if (name in check_suffix) and ('.bai' not in name):
+            if (any([x in name for x in check_suffix])) and ('.bai' not in name):
                 sam_files.append(name)
     return sam_files
 
