@@ -34,7 +34,6 @@ The specific pipeline using this script is given in `wes_pipeline.sh`
 """
 
 import os
-import sys
 import yaml
 
 import util.arguments as arguments
@@ -83,7 +82,7 @@ disambiguate = config['disambiguate']
 submit_commands = {}
 
 # General purpose module load of pdx-exome seq conda env
-conda_build = ['m', 'load', 'python/3.5-Anaconda', '&&',
+conda_build = ['m', 'load', 'python/3-Anaconda', '&&',
                'source', 'activate', conda_env, '&&']
 
 # Obtain samples to process
@@ -184,18 +183,18 @@ if command == 'samtools':
                             sample_bamindex_gatk]
 
         elif sub_command == 'merge':
-            sample_file = os.path.join('processed', 'gatk_bam', sample_id)
+            sample_file = os.path.join(input_dir, sample_id)
             if 'L001' in sample_id:
                 output_bam = '{}.merged.bam'.format(sample_id.split('_')[0])
                 output_bam = os.path.join(output_dir, output_bam)
 
-                replicate_2 = sample_id.replace('L001', 'L002')
-                replicate_3 = sample_id.replace('L001', 'L003')
-                replicate_4 = sample_id.replace('L001', 'L004')
-                samtools_com = [samtools, 'merge', output_bam, sample_id,
+                replicate_2 = sample_file.replace('L001', 'L002')
+                replicate_3 = sample_file.replace('L001', 'L003')
+                replicate_4 = sample_file.replace('L001', 'L004')
+                samtools_com = [samtools, 'merge', output_bam, sample_file,
                                 replicate_2, replicate_3, replicate_4]
             else:
-                sys.exit('Do not make redundant merged files')
+                continue
 
         samtools_com = conda_build + samtools_com
         submit_commands[sample_id] = samtools_com
@@ -258,6 +257,6 @@ if __name__ == '__main__':
     # Submit jobs to cluster
     for sample_id, com in submit_commands.items():
         schedule_id = '{}_{}'.format(sample_id, command)
-
         arguments.schedule_job(command=com, name=schedule_id, python=python,
                                nodes=nodes, cores=cores, walltime=walltime)
+
