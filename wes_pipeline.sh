@@ -123,7 +123,7 @@ python pdx_exomeseq.py variant --sub_command 'mutect2' \
         --walltime '05:00:00' --nodes 1 --cores 8
 
 # 2) Call Variants with a merged file across replicates of the same sample
-python pdx_exomeseq.py samtools --subcommand 'merge' \
+python pdx_exomeseq.py samtools --sub_command 'merge' \
         --input_directory 'processed/gatk_bam' \
         --output_directory 'processed/gatk_merged_bam' \
         --walltime '05:00:00' --nodes 1 --cores 8
