@@ -124,7 +124,7 @@ def get_bwa(args):
 
 def get_samtools(args):
     check_suffix = ['fq.gz.sam', '.sam_sorted.bam', '.bam_sorted_fixmate.bam',
-                    'disambiguatedSpeciesA.bam']
+                    'disambiguatedSpeciesA.bam', 'merged.bam']
     sam_files = []
     for path, subdirs, files in os.walk(args.input_directory):
         for name in files:
@@ -143,9 +143,10 @@ def get_disambiguate(args):
 
 
 def get_variant(args):
+    check_suffix = ['bam_rmdup.bam', 'merged.bam']
     bam_files = []
     for path, subdirs, files in os.walk(args.input_directory):
         for name in files:
-            if 'bam_rmdup.bam' in name and '.bam.bai' not in name:
+            if (any([x in name for x in check_suffix])) and ('.bai' not in name):
                 bam_files.append(name)
     return bam_files
