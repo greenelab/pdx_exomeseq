@@ -160,3 +160,6 @@ python pdx_exomeseq.py variant --sub_command 'mutect2' \
 # compatible files and then use `table_annovar` to add annotations as columns
 # to the converted VCF
 python scripts/annotate_variants.py
+
+# Annotate variants in merged vcf files
+python scripts/annotate_variants.py --merged
