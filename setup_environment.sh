@@ -7,7 +7,7 @@
 # Setting up environment on the Dartmouth Discovery Cluster
 
 # Step 1: Load the python anaconda module
-m load python/3.5-Anaconda
+m load python/3-Anaconda
 
 # Step 2: Activate the conda environment
 conda env create --force --file environment.yml

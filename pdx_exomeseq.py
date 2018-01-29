@@ -82,8 +82,9 @@ disambiguate = config['disambiguate']
 submit_commands = {}
 
 # General purpose module load of pdx-exome seq conda env
-conda_build = ['m', 'load', 'python/3.5-Anaconda', '&&',
+conda_build = ['m', 'load', 'python/3-Anaconda', '&&',
                'source', 'activate', conda_env, '&&']
+java_load = ['m', 'load', 'java/1.8', '&&']
 
 # Obtain samples to process
 all_samples = args.func(args)
@@ -178,9 +179,23 @@ if command == 'samtools':
             samtools_com = [samtools, 'index', sample_file, sample_markdup_bai]
 
         elif sub_command == 'index_bam_gatk':
-            sample_file = os.path.join('processed', 'gatk_bam', sample_id)
-            samtools_com = [samtools, 'index', sample_file,
-                            sample_bamindex_gatk]
+            sample_file = os.path.join(input_dir, sample_id)
+            sample_output_file = os.path.join(output_dir, '{}.bai'.format(sample_id))
+            samtools_com = [samtools, 'index', sample_file, sample_output_file]
+
+        elif sub_command == 'merge':
+            sample_file = os.path.join(input_dir, sample_id)
+            if 'L001' in sample_id and '.bai' not in sample_id:
+                output_bam = '{}.merged.bam'.format(sample_id.split('_')[0])
+                output_bam = os.path.join(output_dir, output_bam)
+
+                replicate_2 = sample_file.replace('L001', 'L002')
+                replicate_3 = sample_file.replace('L001', 'L003')
+                replicate_4 = sample_file.replace('L001', 'L004')
+                samtools_com = [samtools, 'merge', '-r', output_bam, sample_file,
+                                replicate_2, replicate_3, replicate_4]
+            else:
+                continue
 
         samtools_com = conda_build + samtools_com
         submit_commands[sample_id] = samtools_com
@@ -208,26 +223,27 @@ if command == 'variant':
     for sample_id in all_samples:
         sample_name = sample_id.replace('_R1_', '_').replace('_val_1', '')
         sample_base = os.path.join(base_dir, output_dir, sample_name)
-        sample_gatk_vcf = '{}.GATK.vcf'.format(sample_base)
         sample_addreadgroup = '{}.rg.bam'.format(sample_base)
 
         if sub_command == 'mutect2':
-            tumor_id = os.path.join('processed', 'gatk_bam', sample_id)
+            tumor_id = os.path.join(input_dir, sample_id)
+            output_file = os.path.join(output_dir, '{}.GATK.vcf'.format(sample_id))
 
             variant_com = [gatk, '-T', 'MuTect2',
                            '--num_cpu_threads_per_data_thread', num_threads,
                            '--standard_min_confidence_threshold_for_calling',
                            conf,
                            '--min_base_quality_score', quality,
-                           '-I:tumor', os.path.join('processed', 'gatk_bam',
-                                                    sample_id),
-                           '-o', sample_gatk_vcf, '-R', genome_ref]
+                           '-I:tumor', tumor_id, '-o', output_file,
+                           '-R', genome_ref]
 
         elif sub_command == 'add_read_groups':
-            tumor_id = os.path.join('processed', 'bam_rmdup', sample_id)
+            tumor_id = os.path.join(input_dir, sample_id)
+            output_file = os.path.join(output_dir, '{}.rg.bam'.format(sample_id))
+
             variant_com = [picard, 'AddOrReplaceReadGroups',
                            'I={}'.format(tumor_id),
-                           'O={}'.format(sample_addreadgroup),
+                           'O={}'.format(output_file),
                            'RGID={}'.format(sample_id),
                            'RGLB=bwa-mem',
                            'RGPL=illumina',
@@ -236,13 +252,13 @@ if command == 'variant':
                            'CREATE_INDEX=true',
                            'VALIDATION_STRINGENCY=SILENT']
 
-        variant_com = conda_build + variant_com
+        variant_com = conda_build + java_load + variant_com
         submit_commands[sample_id] = variant_com
 
 if __name__ == '__main__':
     # Submit jobs to cluster
     for sample_id, com in submit_commands.items():
         schedule_id = '{}_{}'.format(sample_id, command)
-
         arguments.schedule_job(command=com, name=schedule_id, python=python,
                                nodes=nodes, cores=cores, walltime=walltime)
+
