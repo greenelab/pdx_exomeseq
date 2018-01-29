@@ -6,11 +6,24 @@ Use ANNOVAR to first convert a sample into annovar format and then annotate
 """
 
 import os
+import argparse
 import subprocess
 
-vcf_file_dir = os.path.join('pdx_exomeseq', 'results', 'gatk_vcfs')
-annovar_file_dir = os.path.join('pdx_exomeseq', 'results', 'annovar_vcfs')
-annotated_file_dir = os.path.join('results', 'annotated_vcfs')
+parser = argparse.ArgumentParser()
+parser.add_argument('-m', '--merged', action='store_true',
+                    help='use directory for merged VCFs')
+args = parser.parse_args()
+
+merged = args.merged
+
+if merged:
+    vcf_file_dir = os.path.join('processed', 'gatk_merged_vcf')
+    annovar_file_dir = os.path.join('results', 'annovar_merged_vcfs')
+    annotated_file_dir = os.path.join('results', 'annotated_merged_vcfs')
+else:
+    vcf_file_dir = os.path.join('results', 'gatk_vcfs')
+    annovar_file_dir = os.path.join('results', 'annovar_vcfs')
+    annotated_file_dir = os.path.join('results', 'annotated_vcfs')
 
 annovar_dir = os.path.join('modules', 'annovar')
 humandb_dir = os.path.join(annovar_dir, 'humandb/')
@@ -21,6 +34,7 @@ table_annovar = os.path.join(annovar_dir, 'table_annovar.pl')
 conv_com = 'perl {} -format vcf4 -filter pass'.format(convert_annovar)
 anno_com = 'perl {} {} -buildver hg19'.format(table_annovar, humandb_dir)
 
+# Convert to annovar format
 for vcf_file in os.listdir(vcf_file_dir):
     if '.idx' not in vcf_file:
         base_name = vcf_file.split('.')[0]
@@ -32,6 +46,7 @@ for vcf_file in os.listdir(vcf_file_dir):
                                                output_vcf_file)
             subprocess.call(file_command, shell=True)
 
+# Annotate annovar formatted files with given databases
 for annovar_file in os.listdir(annovar_file_dir):
     base_name = annovar_file.split('.')[0]
     full_annov_file = os.path.join(annovar_file_dir, annovar_file)
@@ -45,4 +60,3 @@ for annovar_file in os.listdir(annovar_file_dir):
                        '-polish'.format(table_annovar, full_annov_file,
                                         annotated_vcf_file)
         subprocess.call(file_command, shell=True)
-
