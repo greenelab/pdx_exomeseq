@@ -124,9 +124,27 @@ python pdx_exomeseq.py variant --sub_command 'mutect2' \
 
 # 2) Call Variants with a merged file across replicates of the same sample
 python pdx_exomeseq.py samtools --sub_command 'merge' \
-        --input_directory 'processed/gatk_bam' \
+        --input_directory 'processed/bam_rmdup' \
         --output_directory 'processed/gatk_merged_bam' \
         --walltime '05:00:00' --nodes 1 --cores 8
+
+# Assign read groups to merged bam
+python pdx_exomeseq.py variant --sub_command 'add_read_groups' \
+        --input_directory 'processed/gatk_merged_bam' \
+        --output_directory 'processed/gatk_merged_rg_bam' \
+        --walltime '04:00:00' --nodes 1 --cores 8
+
+# Create merged index files
+python pdx_exomeseq.py samtools --sub_command 'index_bam_gatk' \
+        --input_directory 'processed/gatk_merged_rg_bam' \
+        --output_directory 'processed/gatk_merged_rg_bam' \
+        --walltime '05:00:00' --nodes 1 --cores 8
+
+# Run MuTect2 on merged bams
+python pdx_exomeseq.py variant --sub_command 'mutect2' \
+        --input_directory 'processed/gatk_merged_rg_bam' \
+        --output_directory 'processed/gatk_merged_vcf' \
+        --walltime '10:00:00' --nodes 2 --cores 8
 
 ###################
 # STEP 6 - Annotate Variants
@@ -138,9 +156,6 @@ python pdx_exomeseq.py samtools --sub_command 'merge' \
 # The databases we will use are:
 # refGene,cosmic70,gnomad_exome,dbnsfp30a
 
-# First use `convert2annovar` to convert MuTect2 derived VCF files to annovar compatible files
-# and then, use `table_annovar` to add annotations as columns to the converted VCF
-# python scripts/7.annotate_variants.py
 # First use `convert2annovar` to convert MuTect2 derived VCF files to annovar
 # compatible files and then use `table_annovar` to add annotations as columns
 # to the converted VCF
