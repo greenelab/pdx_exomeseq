@@ -7,6 +7,7 @@ hgreference: /lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.fasta
 mmreference: /lorax/sanchezlab/shared/pdx_exomeseq/reference/mm9.fa
 combinedref: /lorax/sanchezlab/shared/pdx_exomeseq/reference/combined_g1k_v37_mm9.fasta
 dbsnp: /lorax/sanchezlab/shared/pdx_exomeseq/reference/dbsnp_138.b37.vcf
+exonbed: /lorax/sanchezlab/shared/pdx_exomeseq/reference/exon_data.bed
 directory: /lorax/sanchezlab/shared/pdx_exomeseq
 fastqc: /ihome/gway/.conda/envs/pdx-exomeseq/bin/fastqc
 multiqc: /ihome/gway/.conda/envs/pdx-exomeseq/bin/multiqc
