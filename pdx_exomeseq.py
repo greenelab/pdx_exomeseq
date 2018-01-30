@@ -76,6 +76,7 @@ samtools = config['samtools']
 picard = config['picard']
 gatk = config['gatk']
 disambiguate = config['disambiguate']
+mosdepth = config['mosdepth']
 
 ############################
 # Generate the commands
