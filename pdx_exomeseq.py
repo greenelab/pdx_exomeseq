@@ -65,6 +65,7 @@ elif genome == 'mm':
     genome_ref = config['mmreference']
 combined_ref = config['combinedref']
 dbsnp = config['dbsnp']
+exonbed = config['exonbed']
 base_dir = config['directory']
 fastqc = config['fastqc']
 multiqc = config['multiqc']
@@ -254,6 +255,14 @@ if command == 'variant':
 
         variant_com = conda_build + java_load + variant_com
         submit_commands[sample_id] = variant_com
+
+if command == 'mosdepth':
+    for sample_id in all_samples:
+        tumor_id = os.path.join(input_dir, sample_id)
+        output_prefix = os.path.join(output_dir, sample_id)
+
+        mosdepth_com = [mosdepth, '--by', exonbed, output_prefix, tumor_id]
+        submit_commands[sample_id] = conda_build + java_load + mosdepth_com
 
 if __name__ == '__main__':
     # Submit jobs to cluster
