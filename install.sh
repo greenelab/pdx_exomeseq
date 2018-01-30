@@ -36,3 +36,12 @@ python util/schedule.py \
         --command 'm load python/3.5-Anaconda && source activate pdx-exomeseq && picard CreateSequenceDictionary R=/lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.fasta O=/lorax/sanchezlab/shared/pdx_exomeseq/reference/human_g1k_v37.dict' \
         --name 'fastadict_hg19' --walltime '3:00:00' --nodes 2 --cores 12 --filename 'logs/fastadict_hg19.pbs'
 
+# Download exon data from UCSC table browser
+# Selections:
+# Assembly = Feb. 2009 (GRCh37/hg19)
+# Track = Ensembl Genes
+# Output Format = BED
+# Output = Coding Exons
+
+# Remove "chr" from the first column of the exon download
+# awk '{gsub("chr", "", $0)}1' exon_download.bed > exon_data.bed
