@@ -64,6 +64,10 @@ def get_args():
     parser_variant.add_argument('--min_confidence', default='20')
     parser_variant.add_argument('--min_base_quality_score', default='20')
     parser_variant.set_defaults(func=get_variant, which='variant')
+
+    parser_mosdepth = subparsers.add_parser('mosdepth', parents=[parser])
+    parser_mosdepth.set_defaults(func=get_mosdepth, which='mosdepth')
+
     args = parser.parse_args()
     return args
 
@@ -148,5 +152,14 @@ def get_variant(args):
     for path, subdirs, files in os.walk(args.input_directory):
         for name in files:
             if (any([x in name for x in check_suffix])) and ('.bai' not in name):
+                bam_files.append(name)
+    return bam_files
+
+
+def get_mosdepth(args):
+    bam_files = []
+    for path, subdirs, files in os.walk(args.input_directory):
+        for name in files:
+            if '.bai' not in name:
                 bam_files.append(name)
     return bam_files
