@@ -103,7 +103,7 @@ python pdx_exomeseq.py variant --sub_command 'add_read_groups' \
         --walltime '03:00:00' --nodes 1 --cores 8
 
 ###################
-# STEP 5- Variant Calling
+# STEP 5 - Variant Calling
 ###################
 # NOTE: Realigning around indels was NOT performed. They are legacy functions
 # that are no longer best-practices for GATK HaplotypeCaller pipelines
@@ -147,7 +147,15 @@ python pdx_exomeseq.py variant --sub_command 'mutect2' \
         --walltime '10:00:00' --nodes 2 --cores 8
 
 ###################
-# STEP 6 - Annotate Variants
+# Step 6 - Sequencing Summary Statistics
+###################
+python pdx_exomeseq.py mosdepth \
+        --input_directory 'processed/gatk_merged_rg_bam' \
+        --output_directory 'results/wes_stats' \
+        --walltime '5:00:00' --nodes 2 --cores 8
+
+###################
+# STEP 7 - Annotate Variants
 ###################
 # First, download ANNOVAR and associated databases
 # Guide: http://annovar.openbioinformatics.org/en/latest/user-guide/startup/
