@@ -18,3 +18,4 @@ samtools: /ihome/gway/.conda/envs/pdx-exomeseq/bin/samtools
 picard: /ihome/gway/.conda/envs/pdx-exomeseq/bin/picard
 gatk: /ihome/gway/.conda/envs/pdx-exomeseq/bin/gatk
 disambiguate: /ihome/gway/.conda/envs/pdx-exomeseq/bin/ngs_disambiguate
+mosdepth: /ihome/gway/.conda/envs/pdx-exomeseq/bin/mosdepth
