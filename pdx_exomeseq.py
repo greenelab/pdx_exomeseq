@@ -159,11 +159,13 @@ if command == 'samtools':
             samtools_com = [samtools, 'view', '-bS', input_samp, '|',
                             samtools, 'sort', '-n', '-',
                             sample_sort_bam]
+
         elif sub_command == 'fixmate':
             samtools_com = [samtools, 'fixmate',
                             os.path.join('processed', 'bam_disambiguate',
                                          sample_id),
                             sample_sorted_fixmate_bam]
+
         elif sub_command == 'sort_position':
             samtools_com = [samtools, 'sort',
                             os.path.join('processed', 'bam_fixmate',
@@ -184,6 +186,11 @@ if command == 'samtools':
             sample_file = os.path.join(input_dir, sample_id)
             sample_output_file = os.path.join(output_dir, '{}.bai'.format(sample_id))
             samtools_com = [samtools, 'index', sample_file, sample_output_file]
+
+        elif sub_command == 'flagstat':
+            sample_file = os.path.join(input_dir, sample_id)
+            sample_output_file = os.path.join(output_dir, '{}.flagstat.txt'.format(sample_id))
+            samtools_com = [samtools, 'flagstat', sample_file, '>', sample_output_file]
 
         elif sub_command == 'merge':
             sample_file = os.path.join(input_dir, sample_id)
