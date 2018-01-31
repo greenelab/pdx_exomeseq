@@ -154,6 +154,11 @@ python pdx_exomeseq.py mosdepth \
         --output_directory 'results/wes_stats' \
         --walltime '5:00:00' --nodes 2 --cores 8
 
+python pdx_exomeseq.py samtools --sub_command 'flagstat' \
+        --input_directory 'processed/gatk_merged_rg_bam' \
+        --output_directory 'results/read_counts' \
+        --walltime '1:00:00' --nodes 1 --cores 4
+
 ###################
 # STEP 7 - Annotate Variants
 ###################
