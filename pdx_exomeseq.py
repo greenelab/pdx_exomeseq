@@ -65,6 +65,7 @@ elif genome == 'mm':
     genome_ref = config['mmreference']
 combined_ref = config['combinedref']
 dbsnp = config['dbsnp']
+exonbed = config['exonbed']
 base_dir = config['directory']
 fastqc = config['fastqc']
 multiqc = config['multiqc']
@@ -75,6 +76,7 @@ samtools = config['samtools']
 picard = config['picard']
 gatk = config['gatk']
 disambiguate = config['disambiguate']
+mosdepth = config['mosdepth']
 
 ############################
 # Generate the commands
@@ -157,11 +159,13 @@ if command == 'samtools':
             samtools_com = [samtools, 'view', '-bS', input_samp, '|',
                             samtools, 'sort', '-n', '-',
                             sample_sort_bam]
+
         elif sub_command == 'fixmate':
             samtools_com = [samtools, 'fixmate',
                             os.path.join('processed', 'bam_disambiguate',
                                          sample_id),
                             sample_sorted_fixmate_bam]
+
         elif sub_command == 'sort_position':
             samtools_com = [samtools, 'sort',
                             os.path.join('processed', 'bam_fixmate',
@@ -182,6 +186,11 @@ if command == 'samtools':
             sample_file = os.path.join(input_dir, sample_id)
             sample_output_file = os.path.join(output_dir, '{}.bai'.format(sample_id))
             samtools_com = [samtools, 'index', sample_file, sample_output_file]
+
+        elif sub_command == 'flagstat':
+            sample_file = os.path.join(input_dir, sample_id)
+            sample_output_file = os.path.join(output_dir, '{}.flagstat.txt'.format(sample_id))
+            samtools_com = [samtools, 'flagstat', sample_file, '>', sample_output_file]
 
         elif sub_command == 'merge':
             sample_file = os.path.join(input_dir, sample_id)
@@ -254,6 +263,14 @@ if command == 'variant':
 
         variant_com = conda_build + java_load + variant_com
         submit_commands[sample_id] = variant_com
+
+if command == 'mosdepth':
+    for sample_id in all_samples:
+        tumor_id = os.path.join(input_dir, sample_id)
+        output_prefix = os.path.join(output_dir, sample_id)
+
+        mosdepth_com = [mosdepth, '--by', exonbed, output_prefix, tumor_id]
+        submit_commands[sample_id] = conda_build + java_load + mosdepth_com
 
 if __name__ == '__main__':
     # Submit jobs to cluster

@@ -24,3 +24,4 @@ dependencies:
 - bioconda::gatk=3.8
 - bioconda::fastqc=0.11.5
 - bioconda::multiqc=0.9
+- bioconda::mosdepth=0.2.1
