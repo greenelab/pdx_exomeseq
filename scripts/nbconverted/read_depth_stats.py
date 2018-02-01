@@ -98,7 +98,7 @@ mapped_read_counts = []
 for read_stat_file in read_stat_files:
     read_stat_file = os.path.join(read_stat_dir, read_stat_file)
 
-    with open(read_stat_file) as csvfile:
+    with open(read_stat_file, 'r') as csvfile:
         readstat_reader = csv.reader(csvfile, delimiter=' ')
         line_idx = 0
         for row in readstat_reader:
