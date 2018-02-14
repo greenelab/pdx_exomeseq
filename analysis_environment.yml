@@ -1,0 +1,17 @@
+name: pdx-exomeseq-analysis
+channels:
+- r
+- bioconda
+- conda-forge
+dependencies:
+- anaconda::pandas=0.22.0
+- anaconda::plotnine=0.3.0
+- conda-forge::seaborn=0.8.1
+- conda-forge::matplotlib=2.1.2
+- conda-forge::numpy=1.14.0
+- bioconda::bioconductor-complexheatmap=1.17.1
+- r::r-gplots=3.0.1
+- r::r-rcolorbrewer=1.1_2
+- r::r-dplyr=0.7.4
+- r::r-gridextra=2.3
+- conda-forge::ipykernel=4.8.1
