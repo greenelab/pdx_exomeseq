@@ -70,10 +70,26 @@ to current tools change.
 
 We use Jupyter notebooks and R scripts to visualize and summarize results.
 
+These analyses use a separate conda environment which is specified in
+[`analysis_environment.yml`](https://github.com/greenelab/pdx_exomeseq/blob/master/analysis_environment.yml).
+
+Follow these steps to install and begin using this conda environment:
+
+```bash
+conda env create --force --file analysis_environment.yml
+source activate pdx-exomeseq-analysis
+
+# Setup Jupyter kernel
+python -m ipykernel install --user --name pdx-exomeseq-analysis --display-name pdx-analysis
+```
+
+The following scripts describe our analysis and results:
+
 | Script | Output |
 | :----- | :----- |
 | [`disambiguate_reads.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/disambiguate_reads.ipynb) | separating mouse reads results |
 | [`filter_variants.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/filter_variants.ipynb) | filtration visualization process and filtered VCFs |
+| [`variant_allele_frequency.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/variant_allele_frequency.ipynb) | visualize gnomAD by SIFT scores for replicates and filtered merged files |
 | [`scripts/viz/variant_overlaps.R`](https://github.com/greenelab/pdx_exomeseq/blob/master/scripts/viz/variant_overlaps.R) | Venn diagrams of variant calling overlaps across replicates and passages |
 | [`scripts/viz/oncoprint_similarity.R`](https://github.com/greenelab/pdx_exomeseq/blob/master/scripts/viz/oncoprint_similarity.R) | Oncoprint diagrams and similarity matrices |
 
