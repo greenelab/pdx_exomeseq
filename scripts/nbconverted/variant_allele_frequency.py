@@ -39,7 +39,7 @@ phenotype_df.head(2)
 
 # Plot per replicate variants gnomAD vs. SIFT scores
 for unique_sample in set(phenotype_df['sample']):
-    phenotype_subset_df = phenotype_df[phenotype_df['sample'] == unique_sample]
+    phenotype_subset_df = phenotype_df.query('sample == @unique_sample')
     
     # generate filenames for each unique sample
     fig_name = os.path.join('figures', 'sift_gnomad', 'replicates',
@@ -53,8 +53,8 @@ for unique_sample in set(phenotype_df['sample']):
         variant_df = variant_df.assign(replicate = wes_id)
 
         # Subset variants
-        filtered_variant_df = variant_df[variant_df['SIFT_score'] != '.']
-        filtered_variant_df = filtered_variant_df[filtered_variant_df['gnomAD_exome_ALL'] != '.']
+        filtered_variant_df = variant_df.query('SIFT_score != "."')
+        filtered_variant_df = filtered_variant_df.query('gnomAD_exome_ALL != "."')
         multi_plots.append(filtered_variant_df)
         
     sample_results = pd.concat(multi_plots)
@@ -96,12 +96,12 @@ for unique_sample in sample_ids:
     processed_variant_df = pd.read_table(processed_variant_file)
 
     # Subset variants
-    filtered_variant_df = variant_df[variant_df['SIFT_score'] != '.']
-    filtered_variant_df = filtered_variant_df[filtered_variant_df['gnomAD_exome_ALL'] != '.']
+    filtered_variant_df = variant_df.query('SIFT_score != "."')
+    filtered_variant_df = filtered_variant_df.query('gnomAD_exome_ALL != "."')
     filtered_variant_df = filtered_variant_df.assign(variant_type='unfiltered')
 
-    processed_variant_df = processed_variant_df[processed_variant_df['SIFT_score'] != '.']
-    processed_variant_df = processed_variant_df[processed_variant_df['gnomAD_exome_ALL'] != '.']
+    processed_variant_df = processed_variant_df.query('SIFT_score != "."')
+    processed_variant_df = processed_variant_df.query('gnomAD_exome_ALL != "."')
     processed_variant_df = processed_variant_df.assign(variant_type='processed')
     
     variant_full_df = pd.concat([filtered_variant_df, processed_variant_df], axis=0)
