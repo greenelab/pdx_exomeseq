@@ -1,6 +1,10 @@
 
 # coding: utf-8
 
+# # Disambiguate Reads Summary
+# 
+# Visualizes the proportion of reads filtered to human, mouse, and ambiguous by the `disambiguate` tool. The notebook will output a figure describing these proportions across all replicates from all 30 samples.
+
 # In[1]:
 
 import os
