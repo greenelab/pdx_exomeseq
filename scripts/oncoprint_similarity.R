@@ -14,17 +14,17 @@ library(ComplexHeatmap)
 
 # Input Files
 replicate_oncoprint_file <- file.path("results", "oncoprint_replicates.tsv")
-consensus_oncoprint_file <- file.path("results", "oncoprint_consensus.tsv")
+merged_oncoprint_file <- file.path("results", "oncoprint_merged.tsv")
 
 replicate_sim_file <- file.path("results", "cosmic_similarity_replicates.tsv")
-consensus_sim_file <- file.path("results", "cosmic_similarity_consensus.tsv")
+merged_sim_file <- file.path("results", "cosmic_similarity_merged.tsv")
 
 # Output Files
 replicate_oncoprint_out <- file.path("figures", "oncoprint_replicates.pdf")
-consensus_oncoprint_out <- file.path("figures", "oncoprint_consensus.pdf")
+merged_oncoprint_out <- file.path("figures", "oncoprint_merged.pdf")
 
 replicate_sim_out <- file.path("figures", "cosmic_similarity_replicates.pdf")
-consensus_sim_out <- file.path("figures", "cosmic_similarity_consensus.pdf")
+merged_sim_out <- file.path("figures", "cosmic_similarity_merged.pdf")
 
 # Define Constants and Functions
 col <- c("MUT" = "#008000", "AMP" = "red", "HOMDEL" = "blue")
@@ -89,7 +89,7 @@ alter_fun = list(
 
 # Process input oncoprint matrices
 mat_rep <- process_oncoprint(replicate_oncoprint_file)
-mat_con <- process_oncoprint(consensus_oncoprint_file)
+mat_con <- process_oncoprint(merged_oncoprint_file)
  
 # Output OncoPrint Visualizations
 pdf(replicate_oncoprint_out, height = 10, width = 19)
@@ -106,13 +106,13 @@ oncoPrint(mat_rep,
                                                  "Deep deletion", "Mutation")))
 dev.off()
 
-pdf(consensus_oncoprint_out, height = 10, width = 14)
+pdf(merged_oncoprint_out, height = 10, width = 14)
 oncoPrint(mat_con,
           get_type = function(x) strsplit(x, ";")[[1]],
           alter_fun = alter_fun,
           col = col,
           show_column_names = TRUE,
-          column_title = "PDX WES Mutations (Consensus)",
+          column_title = "PDX WES Mutations (Merged)",
           axis_gp = gpar(fontsize = 4),
           heatmap_legend_param = list(title = "Alternations",
                                       at = c("AMP", "HOMDEL", "MUT"), 
@@ -122,7 +122,7 @@ dev.off()
 
 # Process similarity matrix data
 sim_rep <- process_similarity(replicate_sim_file)
-sim_con <- process_similarity(consensus_sim_file)
+sim_con <- process_similarity(merged_sim_file)
 
 # Output Similarity Matrix Visualizations
 pdf(replicate_sim_out, height = 8, width = 8)
@@ -135,7 +135,7 @@ heatmap.2(sim_rep,
           cexRow = 0.4)
 dev.off()
 
-pdf(consensus_sim_out, height = 8, width = 8)
+pdf(merged_sim_out, height = 8, width = 8)
 heatmap.2(sim_con,
           labCol = FALSE,
           trace = "none",
