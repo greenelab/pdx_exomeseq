@@ -76,11 +76,9 @@ These analyses use a separate conda environment which is specified in
 Follow these steps to install and begin using this conda environment:
 
 ```bash
+# Using conda version >= 4.4
 conda env create --force --file analysis_environment.yml
-source activate pdx-exomeseq-analysis
-
-# Setup Jupyter kernel
-python -m ipykernel install --user --name pdx-exomeseq-analysis --display-name pdx-analysis
+conda activate pdx-exomeseq-analysis
 ```
 
 The following scripts describe our analysis and results:
