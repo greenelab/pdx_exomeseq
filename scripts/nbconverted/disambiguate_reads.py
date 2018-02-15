@@ -39,7 +39,12 @@ summary_df = summary_df.assign(lane = [x[2] for x in summary_df['sample'].str.sp
 
 total_reads = summary_df['human'] + summary_df['mouse'] + summary_df['ambiguous']
 human_percent = (summary_df['human'] / total_reads) * 100
+mouse_percent = (summary_df['mouse'] / total_reads) * 100
+ambig_percent = (summary_df['ambiguous'] / total_reads) * 100
+
 summary_df = summary_df.assign(human_percent = human_percent.round(1))
+summary_df = summary_df.assign(mouse_percent = mouse_percent.round(1))
+summary_df = summary_df.assign(ambig_percent = ambig_percent.round(1))
 
 
 # In[7]:
@@ -50,7 +55,8 @@ summary_df.head()
 
 # In[8]:
 
-summary_melt_df = summary_df.melt(id_vars=['base_sample', 'lane', 'sample', 'human_percent'],
+summary_melt_df = summary_df.melt(id_vars=['base_sample', 'lane', 'sample', 'human_percent',
+                                           'mouse_percent', 'ambig_percent'],
                                   value_vars=['human', 'mouse', 'ambiguous'],
                                   var_name='species', value_name='pairs')
 summary_melt_df.head()
@@ -59,6 +65,8 @@ summary_melt_df.head()
 # In[9]:
 
 summary_melt_df.loc[summary_melt_df['species'] != 'human', 'human_percent'] = ''
+summary_melt_df.loc[summary_melt_df['species'] != 'mouse', 'mouse_percent'] = ''
+summary_melt_df.loc[summary_melt_df['species'] != 'ambiguous', 'ambig_percent'] = ''
 
 
 # In[10]:
@@ -66,7 +74,9 @@ summary_melt_df.loc[summary_melt_df['species'] != 'human', 'human_percent'] = ''
 p = (
     gg.ggplot(summary_melt_df, gg.aes(x='lane', y='pairs', fill='species')) +
     gg.geom_bar(stat='identity', position='stack') +
-    gg.geom_text(gg.aes(y=1.5e7, label='human_percent'), size=4.5) +
+    gg.geom_text(gg.aes(y=3.5e7, label='ambig_percent'), size=4.5) +
+    gg.geom_text(gg.aes(y=2.7e7, label='human_percent'), size=4.5) +
+    gg.geom_text(gg.aes(y=1.9e7, label='mouse_percent'), size=4.5) +
     gg.facet_wrap('~ base_sample') +
     gg.theme_bw() +
     gg.theme(axis_text_x=gg.element_text(angle='90'),
