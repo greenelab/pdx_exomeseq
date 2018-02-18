@@ -307,7 +307,7 @@ unique_gene_df = (
 
 
 # Save summary tables
-cosmic_passage_file = os.path.join('results', 'passage_cosmic_flow.tsv')
+cosmic_passage_file = os.path.join('results', 'passages_cosmic_flow.tsv')
 gene_passage_file = os.path.join('results', 'passages_gene_flow.tsv')
 
 unique_cosmic_df.to_csv(cosmic_passage_file, sep='\t')
