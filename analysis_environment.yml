@@ -8,11 +8,14 @@ dependencies:
 - conda-forge::plotnine=0.3.0
 - conda-forge::seaborn=0.8.1
 - conda-forge::matplotlib=2.1.2
+- conda-forge::matplotlib-venn=0.11.5
 - conda-forge::numpy=1.14.0
 - bioconda::bioconductor-complexheatmap=1.17.1
 - r::r-gplots=3.0.1
 - r::r-rcolorbrewer=1.1_2
 - r::r-dplyr=0.7.4
 - r::r-gridextra=2.3
+- conda-forge::r-circlize=0.4.1
+- conda-forge::r-irkernel=0.8.11
 - conda-forge::ipykernel=4.8.1
 - conda-forge::nb_conda_kernels=2.1.0
