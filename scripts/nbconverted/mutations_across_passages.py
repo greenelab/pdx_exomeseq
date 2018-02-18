@@ -86,7 +86,7 @@ def build_venn(df, sample_base, variant_type):
     plt.title('{} {}'.format(sample_base, variant_type))
     fig = plt.gcf()
     venn_fig = os.path.join('figures', 'venns',
-                            'venn_{}_{}.png'.format(sample_base, variant_type))
+                            'venn_{}_{}.pdf'.format(sample_base, variant_type))
     plt.tight_layout()
     plt.savefig(venn_fig)
     plt.show()
@@ -222,7 +222,6 @@ gene_depth_dict = {gene_id: [] for gene_id in set(unique_gene_df.index)}
 
 
 total_counts = {}
-venn_list = []
 for sample_base in ['004', '005', '001', '006', '029', '030', '032', '040']:
 
     # Subset the full cosmic dataframe to the base sample name
@@ -276,8 +275,6 @@ for sample_base in ['004', '005', '001', '006', '029', '030', '032', '040']:
         avg_depth = gene_sub['depth'].mean()
         gene_depth_dict[gene_id].append(avg_depth)
         unique_gene_df.loc[gene_id, passage] += 1
-    
-    venn_list.append((cosmic_venn, gene_venn))
 
 
 # In[12]:
