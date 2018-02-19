@@ -95,7 +95,13 @@ def build_venn(df, sample_base, variant_type):
 
 def classify_passage(variant_sub_df, cosmic_passages):
     """
-    Determine the pattern of the variants across passages
+    Determine the pattern of the variants across passages. The pattern
+    represents how the variants are observed across primary tumors, F0
+    mice or F5 mice. If a variant exists in a sample that has only F0
+    and F5 mice (no primary tumor), then the variant will get a `Both`
+    assignment. If the variant exists in F0, F5, and Primary (in the
+    two samples with Primary tumor data), then the variant will be
+    assigned `All`. 
     
     Arguments:
     cosmic_sub_df - where a specific variant is observed across samples
@@ -221,8 +227,16 @@ gene_depth_dict = {gene_id: [] for gene_id in set(unique_gene_df.index)}
 # In[11]:
 
 
+# These 8 samples have PDX passages of F0 and F5 mice.
+# Two (004 and 005) also have primary tumor data
+sample_ids = ['004', '005', '001', '006', '029', '030', '032', '040']
+
+
+# In[12]:
+
+
 total_counts = {}
-for sample_base in ['004', '005', '001', '006', '029', '030', '032', '040']:
+for sample_base in sample_ids:
 
     # Subset the full cosmic dataframe to the base sample name
     cosmic_sub_df = cosmic_df.query('sample_base == @sample_base')
@@ -277,7 +291,7 @@ for sample_base in ['004', '005', '001', '006', '029', '030', '032', '040']:
         unique_gene_df.loc[gene_id, passage] += 1
 
 
-# In[12]:
+# In[13]:
 
 
 # Add average depth calculations to output tables
@@ -300,7 +314,7 @@ unique_gene_df = (
 )
 
 
-# In[13]:
+# In[14]:
 
 
 # Save summary tables
