@@ -9,6 +9,7 @@
 
 # In[1]:
 
+
 import os
 import numpy as np
 import pandas as pd
@@ -21,11 +22,26 @@ import plotnine as gg
 
 # In[2]:
 
-get_ipython().magic('matplotlib inline')
+
+get_ipython().run_line_magic('matplotlib', 'inline')
 plt.style.use('seaborn-notebook')
 
 
 # In[3]:
+
+
+# Load Phenotype Data
+file = 'pdx_phenotype.csv'
+pheno_df = pd.read_table(file, sep=',')
+
+# Create variable for ID updating
+id_updater = dict(zip([x[0] for x in pheno_df.read_id.str.split('_')],
+                      pheno_df.final_id))
+id_updater
+
+
+# In[4]:
+
 
 class process_variants():
     """
@@ -41,19 +57,21 @@ class process_variants():
     the read depth summary, and mutation classification (e.g. frameshift)
     """
     
-    def __init__(self, variant_file, filter_min_depth=10, filter_max_depth=800,
+    def __init__(self, variant_file, id_updater, filter_min_depth=10, filter_max_depth=800,
                  filter_common_maf=0.05):
         """
         Initialize process_variants() class
         
         Arguments:
         variant_file - location of a variant file
+        id_updater - a dictionary mapping old to new sample ids
         filter_min_depth - in processed file output, remove all variants with depth below
         filter_max_depth - in processed file output, remove all variants with depth above
         filter_common_maf - in processed file output, remove all variants with MAF above
         """
         self.variant_file = variant_file
         self.sample_name = os.path.basename(self.variant_file).split('.')[0]
+        self.final_id = id_updater[self.sample_name.split('_')[0]]
         self.filter_min_depth = filter_min_depth
         self.filter_max_depth = filter_max_depth
         self.filter_common_maf = filter_common_maf
@@ -82,6 +100,12 @@ class process_variants():
             )
         self.filter_min_depth_count = self.variant_df.shape[0]
         
+        # Which variants are filtered by max depth?
+        self.filtered_max_variants = (
+            self.variant_df[self.variant_df['depth'].astype(int) > self.filter_max_depth]
+            )
+        self.filtered_max_variants = self.filtered_max_variants.assign(sample_id=self.final_id)
+    
         # Filter max depth
         self.variant_df = (
             self.variant_df[self.variant_df['depth'].astype(int) <= self.filter_max_depth]
@@ -99,14 +123,12 @@ class process_variants():
         Also stores the number of unknown variants and the number of common variants filtered.
         """
         # Filter common variation
-        #unknown_freq_df = self.variant_df[self.variant_df['gnomAD_exome_ALL'] == '.']
         unknown_freq_df = self.variant_df.query('gnomAD_exome_ALL == "."')
-        #other_freq_df = self.variant_df[self.variant_df['gnomAD_exome_ALL'] != '.']
         other_freq_df = self.variant_df.query('gnomAD_exome_ALL != "."')
         self.unknown_maf_count = unknown_freq_df.shape[0]
        
         # Filter common variants
-        other_freq_df = other_freq_df[other_freq_df['gnomAD_exome_ALL'].astype(float) <= filter_common_maf]
+        other_freq_df = other_freq_df[other_freq_df['gnomAD_exome_ALL'].astype(float) <= self.filter_common_maf]
         self.variant_df = pd.concat([other_freq_df, unknown_freq_df], axis=0)
         self.filter_common_var_count = self.variant_df.shape[0]
         
@@ -120,7 +142,7 @@ class process_variants():
         sns.set(font_scale=1.5)
         sns.set_style('whitegrid')
         g = sns.distplot(self.variant_df['depth'].astype(float), bins=bins)
-        g.set_title('Read Depth Distribution for {}'.format(self.sample_name))
+        g.set_title('Read Depth Distribution for {}'.format(self.final_id))
     
     def get_summary_statistics(self):
         """
@@ -146,7 +168,8 @@ class process_variants():
         
         # Get number of COSMIC curated events
         self.cosmic_variants = self.variant_df[self.variant_df['cosmic70'] != '.']
-        self.cosmic_variants = self.cosmic_variants.assign(sample_name = self.sample_name)
+        self.cosmic_variants = self.cosmic_variants.assign(sample_name = self.sample_name,
+                                                           final_id = self.final_id)
         self.cosmic_variant_counts = self.cosmic_variants.shape[0]
         
         # Get depth summary
@@ -160,7 +183,7 @@ class process_variants():
         Method to extract internal processed data
         """
         filter_list = [
-            self.sample_name, self.all_variant_count,
+            self.sample_name, self.final_id, self.all_variant_count,
             self.filter_min_depth_count, self.filter_max_depth_count,
             self.filter_common_var_count, self.log_mut_count,
             self.cosmic_variant_counts, self.unknown_maf_count
@@ -177,25 +200,27 @@ class process_variants():
         """
         if cosmic_file:
             out_file = os.path.join(out_dir,
-                                    '{}_cosmic_variants.tsv.bz2'.format(self.sample_name))
+                                    '{}_cosmic_variants.tsv.bz2'.format(self.final_id))
             self.cosmic_variants.to_csv(out_file, sep='\t', compression='bz2')
         else:
             out_file = os.path.join(out_dir,
-                                    '{}_processed_variants.tsv.bz2'.format(self.sample_name))
+                                    '{}_processed_variants.tsv.bz2'.format(self.final_id))
             self.variant_df.to_csv(out_file, sep='\t', compression='bz2')
         
 
 
 # ## Process Replicates - Four Technical Replicates per Sample
 
-# In[4]:
+# In[5]:
+
 
 filter_common_maf = 0.05
 replicate_filter_min_depth_count = 10
 replicate_filter_max_depth_count = 800
 
 
-# In[5]:
+# In[6]:
+
 
 # Process variant results
 variant_file_path = os.path.join('results', 'annotated_vcfs')
@@ -206,11 +231,13 @@ filter_info_all = []
 functional_counts_all = []
 mutational_counts_all = []
 depth_summary_all = []
+filtered_max_variants = []
 
 for variant_file in os.listdir(variant_file_path):
     full_variant_file = os.path.join(variant_file_path, variant_file)
 
-    variant_info = process_variants(full_variant_file,
+    variant_info = process_variants(variant_file=full_variant_file,
+                                    id_updater=id_updater,
                                     filter_min_depth=replicate_filter_min_depth_count,
                                     filter_max_depth=replicate_filter_max_depth_count,
                                     filter_common_maf=filter_common_maf)
@@ -224,7 +251,9 @@ for variant_file in os.listdir(variant_file_path):
     functional_counts_all.append(func_count)
     mutational_counts_all.append(mut_count)
     depth_summary_all.append(depth_summary)
+    filtered_max_variants.append(variant_info.filtered_max_variants)
     
+    # Note that these replicates are named by old sample name
     fig_file = os.path.join('figures', 'read_depth', 'replicates',
                             '{}_depth_distrib.pdf'.format(variant_info.sample_name))
     variant_info.plot_depth()
@@ -235,7 +264,8 @@ for variant_file in os.listdir(variant_file_path):
     variant_info.output_processed_data(out_dir=processed_file_path)
 
 
-# In[6]:
+# In[7]:
+
 
 # Save summary statistics for the replicate data
 
@@ -259,12 +289,27 @@ functional_counts_df = (
 functional_counts_df.to_csv(func_count_output_file, sep='\t')
 
 
-# In[7]:
+# In[8]:
+
+
+filtered_max_variants_df = pd.concat(filtered_max_variants)
+filtered_max_variants_df.sample_id.value_counts()
+
+
+# In[9]:
+
+
+# Where are the max filtered variants
+pd.crosstab(filtered_max_variants_df.Chr, filtered_max_variants_df['Func.refGene'])
+
+
+# In[10]:
+
 
 # Process functional filtration summary
 filter_count_output_file = os.path.join('results', 'replicates_filter_summary.tsv')
 filter_counts_df = pd.DataFrame(filter_info_all,
-                                columns=['sample_name', 'all_variant_count',
+                                columns=['sample_name', 'final_id', 'all_variant_count',
                                          'filter_min_depth_count', 'filter_max_depth_count',
                                          'filter_common_var_count','log_mut_count',
                                          'COSMIC_count', 'unknown_maf']).sort_values(by='sample_name')
@@ -283,10 +328,11 @@ filter_counts_df['log_mut_count'] = round(filter_counts_df['log_mut_count'], 2)
 filter_counts_df.to_csv(filter_count_output_file, sep='\t', index=False)
 
 
-# In[8]:
+# In[11]:
+
 
 filter_melt_df = (
-    filter_counts_df.melt(id_vars=['base_sample', 'lane', 'sample_name',
+    filter_counts_df.melt(id_vars=['base_sample', 'lane', 'sample_name', 'final_id',
                                    'log_mut_count', 'COSMIC_count'],
                           value_vars=['all_variant_count', 'filter_min_depth_count',
                                       'filter_max_depth_count', 'filter_common_var_count',
@@ -294,18 +340,19 @@ filter_melt_df = (
                           var_name='num_variants', value_name='filtration')
     )
 # Max and Min depth is nearly the same, filter max
-filter_melt_df = filter_melt_df.query('num_variants != "filter_max_depth_count"')
+filter_melt_df = filter_melt_df.query('num_variants != "unknown_maf"')
 filter_melt_df = filter_melt_df.sort_values(by='filtration')
 filter_melt_df.head(3)
 
 
 # ### Visualize summary statistics across replicates
 
-# In[9]:
+# In[12]:
+
 
 # Reorder plotting variables
 filter_list = ['all_variant_count', 'filter_common_var_count',
-               'unknown_maf', 'filter_min_depth_count']
+               'filter_min_depth_count', 'filter_max_depth_count']
 filter_list_cat = CategoricalDtype(categories=filter_list, ordered=True)
 filter_melt_df['num_variants_cat'] = (
     filter_melt_df['num_variants'].astype(str).astype(filter_list_cat)
@@ -315,13 +362,13 @@ p = (
     gg.ggplot(filter_melt_df,
               gg.aes(x='lane', y='filtration', fill='num_variants_cat')) +
     gg.geom_bar(stat='identity', position='dodge') +
-    gg.facet_wrap('~ base_sample') +
+    gg.facet_wrap('~ final_id') +
     gg.scale_fill_manual(name='Filtration Step',
                          values=['#1b9e77', '#d95f02', '#7570b3', '#e7298a'],
                          labels=['All Variants',
-                                 'Low Read Depth',
-                                 'Unknown MAF',
-                                 'Common Variants']) + 
+                                 'Common Variants',
+                                 'Depth (< 10 reads)',
+                                 'Depth (> 800 reads)']) + 
     gg.xlab('Sample') +
     gg.ylab('Final Number of Variants') +
     gg.theme_bw() +
@@ -332,13 +379,15 @@ p = (
 p
 
 
-# In[10]:
+# In[13]:
+
 
 figure_file = os.path.join('figures', 'replicates_filtration_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 
-# In[11]:
+# In[14]:
+
 
 p = (
     gg.ggplot(filter_counts_df,
@@ -346,7 +395,7 @@ p = (
     gg.geom_bar(stat='identity', position='dodge') +
     gg.geom_text(gg.aes(y=10, label='log_mut_count'), size=5, colour='white') +
     gg.scale_fill_gradient(low='blue', high='red', name='All Variants') + 
-    gg.facet_wrap('~ base_sample') +
+    gg.facet_wrap('~ final_id') +
     gg.xlab('Lane') +
     gg.ylab('Number of COSMIC Variants') +
     gg.theme_bw() +
@@ -357,7 +406,8 @@ p = (
 p
 
 
-# In[12]:
+# In[15]:
+
 
 figure_file = os.path.join('figures', 'replicates_cosmic_mutcount_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
@@ -365,14 +415,16 @@ gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 # ## Process Merged Files - These are the Final VCFs to Interpret
 
-# In[13]:
+# In[16]:
+
 
 filter_common_maf = 0.05
 merged_filter_min_depth_count = 15
 merged_filter_max_depth_count = 1000
 
 
-# In[14]:
+# In[17]:
+
 
 # Process variant results
 variant_file_path = os.path.join('results', 'annotated_merged_vcfs')
@@ -387,9 +439,10 @@ cosmic_dfs = []
 for variant_file in os.listdir(variant_file_path):
     full_variant_file = os.path.join(variant_file_path, variant_file)
 
-    variant_info = process_variants(full_variant_file,
-                                    filter_min_depth=merged_filter_min_depth_count,
-                                    filter_max_depth=merged_filter_max_depth_count,
+    variant_info = process_variants(variant_file=full_variant_file,
+                                    id_updater=id_updater,
+                                    filter_min_depth=replicate_filter_min_depth_count,
+                                    filter_max_depth=replicate_filter_max_depth_count,
                                     filter_common_maf=filter_common_maf)
 
     variant_info.filter_common_variation()
@@ -403,7 +456,7 @@ for variant_file in os.listdir(variant_file_path):
     depth_summary_all.append(depth_summary)
     
     fig_file = os.path.join('figures', 'read_depth',
-                            '{}_depth_distrib.pdf'.format(variant_info.sample_name))
+                            '{}_depth_distrib.pdf'.format(variant_info.final_id))
     variant_info.plot_depth()
     plt.savefig(fig_file)
     plt.close()
@@ -415,7 +468,8 @@ for variant_file in os.listdir(variant_file_path):
     cosmic_dfs.append(variant_info.cosmic_variants)
 
 
-# In[15]:
+# In[18]:
+
 
 # Save read depth summary results
 depth_output_file = os.path.join('results', 'merged_full_depth_summary.tsv')
@@ -423,7 +477,8 @@ depth_df = pd.concat(depth_summary_all, axis=1).fillna(0).astype(int).T.sort_ind
 depth_df.to_csv(depth_output_file, sep='\t')
 
 
-# In[16]:
+# In[19]:
+
 
 # Save mutation count summary results
 mut_count_output_file = os.path.join('results', 'merged_full_mutation_count_summary.tsv')
@@ -433,7 +488,8 @@ mutational_counts_df = (
 mutational_counts_df.to_csv(mut_count_output_file, sep='\t')
 
 
-# In[17]:
+# In[20]:
+
 
 # Save functional genomics summary results
 func_count_output_file = os.path.join('results', 'merged_full_functional_count_summary.tsv')
@@ -443,11 +499,12 @@ functional_counts_df = (
 functional_counts_df.to_csv(func_count_output_file, sep='\t')
 
 
-# In[18]:
+# In[21]:
+
 
 filter_count_output_file = os.path.join('results', 'merged_filter_summary.tsv')
 filter_counts_df = pd.DataFrame(filter_info_all,
-                                columns=['sample_name', 'all_variant_count',
+                                columns=['sample_name', 'final_id', 'all_variant_count',
                                          'filter_min_depth_count', 'filter_max_depth_count',
                                          'filter_common_var_count','log_mut_count',
                                          'COSMIC_count', 'unknown_maf']).sort_values(by='sample_name')
@@ -457,7 +514,8 @@ filter_counts_df['log_mut_count'] = round(filter_counts_df['log_mut_count'], 2)
 filter_counts_df.to_csv(filter_count_output_file, sep='\t', index=False)
 
 
-# In[19]:
+# In[22]:
+
 
 # Generate a dataframe of all observed COSMIC variants
 cosmic_output_file = os.path.join('results', 'all_cosmic_variants.tsv')
@@ -466,10 +524,11 @@ print(all_cosmic_dfs.shape)
 all_cosmic_dfs.to_csv(cosmic_output_file, sep='\t', index=False)
 
 
-# In[20]:
+# In[23]:
+
 
 filter_melt_df = (
-    filter_counts_df.melt(id_vars=['sample_name',
+    filter_counts_df.melt(id_vars=['sample_name', 'final_id',
                                    'log_mut_count', 'COSMIC_count'],
                           value_vars=['all_variant_count', 'filter_min_depth_count',
                                       'filter_max_depth_count', 'filter_common_var_count',
@@ -478,18 +537,19 @@ filter_melt_df = (
     )
 
 # Max and Min depth is nearly the same, filter max
-filter_melt_df = filter_melt_df.query('num_variants != "filter_max_depth_count"')
+filter_melt_df = filter_melt_df.query('num_variants != "unknown_maf"')
 filter_melt_df = filter_melt_df.sort_values(by='filtration')
 filter_melt_df.head()
 
 
 # ### Visualize summary statistics for merged data
 
-# In[21]:
+# In[24]:
+
 
 # Reorder Plotting Variables
 filter_list = ['all_variant_count', 'filter_common_var_count',
-               'unknown_maf', 'filter_min_depth_count']
+               'filter_min_depth_count', 'filter_max_depth_count']
 filter_list_cat = CategoricalDtype(categories=filter_list, ordered=True)
 filter_melt_df['num_variants_cat'] = (
     filter_melt_df['num_variants'].astype(str).astype(filter_list_cat)
@@ -497,15 +557,15 @@ filter_melt_df['num_variants_cat'] = (
 
 p = (
     gg.ggplot(filter_melt_df,
-              gg.aes(x='sample_name', y='filtration', fill='num_variants_cat')) +
+              gg.aes(x='final_id', y='filtration', fill='num_variants_cat')) +
     gg.geom_bar(stat='identity', position='dodge') +
     gg.theme_bw() +
     gg.scale_fill_manual(name='Filtration Step',
                          values=['#1b9e77', '#d95f02', '#7570b3', '#e7298a'],
                          labels=['All Variants',
-                                 'Low Read Depth',
-                                 'Unknown MAF',
-                                 'Common Variants']) + 
+                                 'Common Variants',
+                                 'Depth (< 15 reads)',
+                                 'Depth (> 800 reads)']) + 
     gg.xlab('Sample') +
     gg.ylab('Final Number of Variants') +
     gg.theme(axis_text_x=gg.element_text(angle='90'),
@@ -515,17 +575,19 @@ p = (
 p
 
 
-# In[22]:
+# In[25]:
+
 
 figure_file = os.path.join('figures', 'merged_filtration_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 
-# In[23]:
+# In[26]:
+
 
 p = (
     gg.ggplot(filter_counts_df,
-              gg.aes(x='sample_name', y='COSMIC_count', fill='filter_min_depth_count')) +
+              gg.aes(x='final_id', y='COSMIC_count', fill='filter_min_depth_count')) +
     gg.geom_bar(stat='identity', position='dodge') +
     # Note that the log mut count represents log10(total mutation count) in each sample
     gg.geom_text(gg.aes(y=45, label='log_mut_count', angle=90), size=9, colour='white') +
@@ -540,7 +602,8 @@ p = (
 p
 
 
-# In[24]:
+# In[27]:
+
 
 figure_file = os.path.join('figures', 'merged_cosmic_mutcount_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
