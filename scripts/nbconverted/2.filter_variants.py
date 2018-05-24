@@ -192,7 +192,7 @@ class process_variants():
         ]
         return filter_list
     
-    def output_processed_data(self, out_dir, cosmic_file=False):
+    def output_processed_data(self, out_dir, cosmic_file=False, replicates=False):
         """
         Method to write all processed variants to file (final variants to analyze downstream)
         
@@ -201,12 +201,17 @@ class process_variants():
         cosmic_file - boolean if file written is the cosmic variants. Will not write both files
         """
         if cosmic_file:
+            
             out_file = os.path.join(out_dir,
                                     '{}_cosmic_variants.tsv.bz2'.format(self.final_id))
             self.cosmic_variants.to_csv(out_file, sep='\t', compression='bz2')
         else:
+            if replicates:
+                output_id = self.sample_name.replace(self.sample_name.split('_')[0], self.final_id)
+            else:
+                output_id = self.final_id
             out_file = os.path.join(out_dir,
-                                    '{}_processed_variants.tsv.bz2'.format(self.final_id))
+                                    '{}_processed_variants.tsv.bz2'.format(output_id))
             self.variant_df.to_csv(out_file, sep='\t', compression='bz2')
         
 
@@ -263,7 +268,7 @@ for variant_file in os.listdir(variant_file_path):
     plt.close()
     
     # Save processed output file
-    variant_info.output_processed_data(out_dir=processed_file_path)
+    variant_info.output_processed_data(out_dir=processed_file_path, replicates=True)
 
 
 # In[7]:
