@@ -7,6 +7,7 @@
 
 # In[1]:
 
+
 import os
 import pandas as pd
 
@@ -15,31 +16,52 @@ import plotnine as gg
 
 # In[2]:
 
-get_ipython().magic('pylab inline')
+
+get_ipython().run_line_magic('pylab', 'inline')
 
 
 # In[3]:
+
+
+# Load Phenotype Data 
+file = 'pdx_phenotype.csv'
+pheno_df = pd.read_table(file, sep=',')
+
+# Create variable for ID updating
+id_updater = dict(zip([x[0] for x in pheno_df.read_id.str.split('_')],
+                      pheno_df.final_id))
+id_updater
+
+
+# In[4]:
+
 
 summary_dir = os.path.join('results', 'disambiguate_summary')
 summary_files = [os.path.join(summary_dir, x) for x in os.listdir(summary_dir)]
 
 
-# In[4]:
+# In[5]:
+
 
 summary_list = []
 for summary_file in summary_files:
     summary_list.append(pd.read_table(summary_file))
 
 
-# In[5]:
+# In[6]:
+
 
 summary_df = pd.concat(summary_list)
 summary_df.columns = ['sample', 'human', 'mouse', 'ambiguous']
-summary_df = summary_df.assign(base_sample = [x[0] for x in summary_df['sample'].str.split('_')])
+summary_df = summary_df.assign(base_sample = [id_updater[x[0]] for x in summary_df['sample'].str.split('_')])
+summary_df['sample'] = summary_df['sample'].replace(id_updater, regex=True)
 summary_df = summary_df.assign(lane = [x[2] for x in summary_df['sample'].str.split('_')])
 
+summary_df.head()
 
-# In[6]:
+
+# In[7]:
+
 
 total_reads = summary_df['human'] + summary_df['mouse'] + summary_df['ambiguous']
 human_percent = (summary_df['human'] / total_reads) * 100
@@ -51,13 +73,15 @@ summary_df = summary_df.assign(mouse_percent = mouse_percent.round(1))
 summary_df = summary_df.assign(ambig_percent = ambig_percent.round(1))
 
 
-# In[7]:
+# In[8]:
+
 
 summary_df.to_csv(os.path.join('results', 'full_disambiguate_summary.tsv'), sep='\t')
 summary_df.head()
 
 
-# In[8]:
+# In[9]:
+
 
 summary_melt_df = summary_df.melt(id_vars=['base_sample', 'lane', 'sample', 'human_percent',
                                            'mouse_percent', 'ambig_percent'],
@@ -66,14 +90,16 @@ summary_melt_df = summary_df.melt(id_vars=['base_sample', 'lane', 'sample', 'hum
 summary_melt_df.head()
 
 
-# In[9]:
+# In[10]:
+
 
 summary_melt_df.loc[summary_melt_df['species'] != 'human', 'human_percent'] = ''
 summary_melt_df.loc[summary_melt_df['species'] != 'mouse', 'mouse_percent'] = ''
 summary_melt_df.loc[summary_melt_df['species'] != 'ambiguous', 'ambig_percent'] = ''
 
 
-# In[10]:
+# In[11]:
+
 
 p = (
     gg.ggplot(summary_melt_df, gg.aes(x='lane', y='pairs', fill='species')) +
@@ -90,7 +116,8 @@ p = (
 p
 
 
-# In[11]:
+# In[12]:
+
 
 figure_file = os.path.join('figures', 'disambiguate_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
