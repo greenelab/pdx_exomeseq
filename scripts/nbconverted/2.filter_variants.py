@@ -43,12 +43,12 @@ id_updater
 # In[4]:
 
 
-class process_variants():
+class VariantProcessor():
     """
     Process summary statistics and filter variants for input file
     
     Usage:
-            variant_object = process_variants(<filename>)
+            variant_object = VariantProcessor(<filename>)
 
     Methods act on annotated variant dataframes
     
@@ -60,7 +60,7 @@ class process_variants():
     def __init__(self, variant_file, id_updater, filter_min_depth=10, filter_max_depth=800,
                  filter_common_maf=0.05):
         """
-        Initialize process_variants() class
+        Initialize VariantProcessor() class
         
         Arguments:
         variant_file - location of a variant file
@@ -243,7 +243,7 @@ filtered_max_variants = []
 for variant_file in os.listdir(variant_file_path):
     full_variant_file = os.path.join(variant_file_path, variant_file)
 
-    variant_info = process_variants(variant_file=full_variant_file,
+    variant_info = VariantProcessor(variant_file=full_variant_file,
                                     id_updater=id_updater,
                                     filter_min_depth=replicate_filter_min_depth_count,
                                     filter_max_depth=replicate_filter_max_depth_count,
@@ -447,7 +447,7 @@ precosmic_filter_dfs = []
 for variant_file in os.listdir(variant_file_path):
     full_variant_file = os.path.join(variant_file_path, variant_file)
 
-    variant_info = process_variants(variant_file=full_variant_file,
+    variant_info = VariantProcessor(variant_file=full_variant_file,
                                     id_updater=id_updater,
                                     filter_min_depth=replicate_filter_min_depth_count,
                                     filter_max_depth=replicate_filter_max_depth_count,
