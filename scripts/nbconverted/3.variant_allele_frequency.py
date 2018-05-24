@@ -12,6 +12,7 @@
 
 # In[1]:
 
+
 import os
 import pandas as pd
 
@@ -21,31 +22,46 @@ import seaborn as sns
 
 # In[2]:
 
-get_ipython().magic('matplotlib inline')
+
+get_ipython().run_line_magic('matplotlib', 'inline')
 plt.style.use('seaborn-notebook')
 
 
 # In[3]:
 
+
 # Load Phenotype Data
-phenotype_file = 'pdx_phenotype.csv'
-phenotype_df = pd.read_table(phenotype_file, sep=',')
-phenotype_df.head(2)
+file = 'pdx_phenotype.csv'
+pheno_df = pd.read_table(file, sep=',')
+pheno_df.head(2)
+
+
+# In[4]:
+
+
+id_updater = dict(zip([x[0] for x in pheno_df.read_id.str.split('_')],
+                      pheno_df.final_id))
+id_updater
 
 
 # ## Across four technical replicates
 
-# In[4]:
+# In[5]:
+
 
 # Plot per replicate variants gnomAD vs. SIFT scores
-for unique_sample in set(phenotype_df['sample']):
-    phenotype_subset_df = phenotype_df.query('sample == @unique_sample')
+for unique_sample in id_updater.keys():
+    
+    # Update sample name for publication
+    final_id = id_updater[unique_sample]
+    
+    pheno_subset_df = pheno_df.query('final_id == @final_id')
     
     # generate filenames for each unique sample
     fig_name = os.path.join('figures', 'sift_gnomad', 'replicates',
-                            '{}_sift_gnomad_kde.pdf'.format(unique_sample))
+                            '{}_sift_gnomad_kde.pdf'.format(final_id))
     multi_plots = []
-    for wes_id in phenotype_subset_df['wes_id']:
+    for wes_id in set(pheno_subset_df['wes_id']):
         variant_file = os.path.join('results', 'annotated_vcfs',
                                     '{}.annotated.hg19_multianno.csv'.format(wes_id))
         
@@ -59,32 +75,28 @@ for unique_sample in set(phenotype_df['sample']):
         
     sample_results = pd.concat(multi_plots)
     g = sns.FacetGrid(sample_results, col='replicate', col_wrap=2)
-    g = g.map(sns.kdeplot, 'SIFT_score', 'gnomAD_exome_ALL', shade=True)
+    g = (g.map(sns.kdeplot, 'SIFT_score', 'gnomAD_exome_ALL', shade=True)
+         .set_titles("{col_name}"))
     plt.subplots_adjust(top=0.9)
-    g.fig.suptitle('{} SIFT/gnomAD distributions'.format(unique_sample))
+    g.fig.suptitle('{} SIFT/gnomAD distributions'.format(final_id))
     plt.savefig(fig_name)
-    plt.show()
+    plt.close()
 
 
 # ## Pre- and post filtering of concatenated samples
 
-# In[5]:
-
-sample_ids = set()
-for unique_sample in set(phenotype_df['read_id']):
-    unique_sample = unique_sample.split('_')[0]
-    sample_ids.add(unique_sample)
-
-
 # In[6]:
 
+
 # Plot concatenated variants gnomAD vs. SIFT scores
-for unique_sample in sample_ids:
-    unique_sample = unique_sample.split('_')[0]
-    
+for unique_sample in id_updater.keys():
+
+    # Update sample name for publication
+    final_id = id_updater[unique_sample]
+
     # generate filenames for each unique sample
     fig_name = os.path.join('figures', 'sift_gnomad',
-                            'merged_{}_sift_gnomad_kde.pdf'.format(unique_sample))
+                            'merged_{}_sift_gnomad_kde.pdf'.format(final_id))
 
     # Read in file
     variant_file = os.path.join('results', 'annotated_merged_vcfs',
@@ -107,13 +119,14 @@ for unique_sample in sample_ids:
     variant_full_df = pd.concat([filtered_variant_df, processed_variant_df], axis=0)
 
     g = sns.FacetGrid(variant_full_df, col='variant_type', col_wrap=2, sharey=False)
-    g = g.map(sns.kdeplot, 'SIFT_score', 'gnomAD_exome_ALL', shade=True)
+    g = (g.map(sns.kdeplot, 'SIFT_score', 'gnomAD_exome_ALL', shade=True)
+         .set_titles("{col_name}"))
     g.axes[0].set_xlabel("SIFT score")
     g.axes[0].set_ylabel("gnomAD Minor Allele Freq")
     g.axes[1].set_xlabel("SIFT score")
     plt.subplots_adjust(top=0.8)
 
-    g.fig.suptitle('{} SIFT/gnomAD distributions'.format(unique_sample))
+    g.fig.suptitle('{} SIFT/gnomAD distributions'.format(final_id))
     plt.savefig(fig_name)
-    plt.show()
+    plt.close()
 
