@@ -76,6 +76,8 @@ class process_variants():
         self.filter_max_depth = filter_max_depth
         self.filter_common_maf = filter_common_maf
         self.variant_df = pd.read_csv(self.variant_file)
+        self.variant_df = self.variant_df.assign(sample_name = self.sample_name,
+                                                 final_id = self.final_id)
         self.all_variant_count = self.variant_df.shape[0]
         
     def _process_depth(self):
@@ -435,6 +437,7 @@ functional_counts_all = []
 mutational_counts_all = []
 depth_summary_all = []
 cosmic_dfs = []
+precosmic_filter_dfs = []
 
 for variant_file in os.listdir(variant_file_path):
     full_variant_file = os.path.join(variant_file_path, variant_file)
@@ -465,6 +468,7 @@ for variant_file in os.listdir(variant_file_path):
     variant_info.output_processed_data(out_dir=processed_file_path)
     
     # Build list of all cosmic variant dataframes
+    precosmic_filter_dfs.append(variant_info.variant_df)
     cosmic_dfs.append(variant_info.cosmic_variants)
 
 
@@ -527,6 +531,16 @@ all_cosmic_dfs.to_csv(cosmic_output_file, sep='\t', index=False)
 # In[23]:
 
 
+# Generate a dataframe of all variants pre-COSMIC filtering
+output_file = os.path.join('results', 'all_cosmic_prefiltered_variants.tsv')
+all_prefiltered_dfs = pd.concat(precosmic_filter_dfs, axis=0)
+print(all_prefiltered_dfs.shape)
+all_prefiltered_dfs.to_csv(output_file, sep='\t', index=False)
+
+
+# In[24]:
+
+
 filter_melt_df = (
     filter_counts_df.melt(id_vars=['sample_name', 'final_id',
                                    'log_mut_count', 'COSMIC_count'],
@@ -544,7 +558,7 @@ filter_melt_df.head()
 
 # ### Visualize summary statistics for merged data
 
-# In[24]:
+# In[25]:
 
 
 # Reorder Plotting Variables
@@ -575,14 +589,14 @@ p = (
 p
 
 
-# In[25]:
+# In[26]:
 
 
 figure_file = os.path.join('figures', 'merged_filtration_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 
-# In[26]:
+# In[27]:
 
 
 p = (
@@ -602,7 +616,7 @@ p = (
 p
 
 
-# In[27]:
+# In[28]:
 
 
 figure_file = os.path.join('figures', 'merged_cosmic_mutcount_results.pdf')
