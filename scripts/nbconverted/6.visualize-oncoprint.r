@@ -1,6 +1,7 @@
+
 # Gregory Way - 2017
 # pdx_exomeseq
-# scripts/viz/oncoprint_similarity.R
+# 6.visualize-oncoprint.ipynb
 #
 # Output:
 # Oncoprint diagrams and similarity heatmaps for all replicates and consensus
@@ -18,6 +19,7 @@ merged_oncoprint_file <- file.path("results", "oncoprint_merged.tsv")
 
 replicate_sim_file <- file.path("results", "cosmic_similarity_replicates.tsv")
 merged_sim_file <- file.path("results", "cosmic_similarity_merged.tsv")
+prefiltered_sim_file <- file.path("results", "cosmic_prefiltered_similarity_merged.tsv")
 
 # Output Files
 replicate_oncoprint_out <- file.path("figures", "oncoprint_replicates.pdf")
@@ -25,6 +27,7 @@ merged_oncoprint_out <- file.path("figures", "oncoprint_merged.pdf")
 
 replicate_sim_out <- file.path("figures", "cosmic_similarity_replicates.pdf")
 merged_sim_out <- file.path("figures", "cosmic_similarity_merged.pdf")
+prefiltered_sim_out <- file.path("figures", "cosmic_prefiltered_similarity_merged.pdf")
 
 # Define Constants and Functions
 col <- c("MUT" = "#008000", "AMP" = "red", "HOMDEL" = "blue")
@@ -87,42 +90,10 @@ alter_fun = list(
   }
 )
 
-# Process input oncoprint matrices
-mat_rep <- process_oncoprint(replicate_oncoprint_file)
-mat_con <- process_oncoprint(merged_oncoprint_file)
- 
-# Output OncoPrint Visualizations
-pdf(replicate_oncoprint_out, height = 10, width = 19)
-oncoPrint(mat_rep,
-          get_type = function(x) strsplit(x, ";")[[1]],
-          alter_fun = alter_fun,
-          col = col,
-          show_column_names = TRUE,
-          column_title = "PDX WES Mutations (Replicates)",
-          axis_gp = gpar(fontsize = 4),
-          heatmap_legend_param = list(title = "Alternations",
-                                      at = c("AMP", "HOMDEL", "MUT"), 
-                                      labels = c("Amplification",
-                                                 "Deep deletion", "Mutation")))
-dev.off()
-
-pdf(merged_oncoprint_out, height = 10, width = 14)
-oncoPrint(mat_con,
-          get_type = function(x) strsplit(x, ";")[[1]],
-          alter_fun = alter_fun,
-          col = col,
-          show_column_names = TRUE,
-          column_title = "PDX WES Mutations (Merged)",
-          axis_gp = gpar(fontsize = 4),
-          heatmap_legend_param = list(title = "Alternations",
-                                      at = c("AMP", "HOMDEL", "MUT"), 
-                                      labels = c("Amplification",
-                                                 "Deep deletion", "Mutation")))
-dev.off()
-
 # Process similarity matrix data
 sim_rep <- process_similarity(replicate_sim_file)
 sim_con <- process_similarity(merged_sim_file)
+sim_prefilter <- process_similarity(prefiltered_sim_file)
 
 # Output Similarity Matrix Visualizations
 pdf(replicate_sim_out, height = 8, width = 8)
@@ -135,6 +106,14 @@ heatmap.2(sim_rep,
           cexRow = 0.4)
 dev.off()
 
+heatmap.2(sim_rep,
+          labCol = FALSE,
+          trace = "none",
+          revC = TRUE,
+          col = colorRampPalette(c("red", "black", "green"))(n = 200),
+          main = "COSMIC Profile Similarity",
+          cexRow = 0.4)
+
 pdf(merged_sim_out, height = 8, width = 8)
 heatmap.2(sim_con,
           labCol = FALSE,
@@ -142,5 +121,77 @@ heatmap.2(sim_con,
           revC = TRUE,
           col = colorRampPalette(c("red", "black", "green"))(n = 200),
           main = "COSMIC Profile Similarity",
-          cexRow = 0.8)
+          cexRow = 0.75)
 dev.off()
+
+heatmap.2(sim_con,
+          labCol = FALSE,
+          trace = "none",
+          revC = TRUE,
+          col = colorRampPalette(c("red", "black", "green"))(n = 200),
+          main = "COSMIC Profile Similarity",
+          cexRow = 0.75)
+
+# Output Similarity Matrix Visualizations
+pdf(prefiltered_sim_out, height = 8, width = 8)
+heatmap.2(sim_prefilter,
+          labCol = FALSE,
+          trace = "none",
+          revC = TRUE,
+          col = colorRampPalette(c("red", "black", "green"))(n = 200),
+          main = "COSMIC Profile Similarity",
+          cexRow = 0.75)
+dev.off()
+
+heatmap.2(sim_prefilter,
+          labCol = FALSE,
+          trace = "none",
+          revC = TRUE,
+          col = colorRampPalette(c("red", "black", "green"))(n = 200),
+          main = "COSMIC Profile Similarity",
+          cexRow = 0.75)
+
+# Process input oncoprint matrices
+mat_rep <- process_oncoprint(replicate_oncoprint_file)
+mat_con <- process_oncoprint(merged_oncoprint_file)
+
+# Output OncoPrint Visualizations
+p <- oncoPrint(mat_rep,
+               get_type = function(x) strsplit(x, ";")[[1]],
+               alter_fun = alter_fun,
+               col = col,
+               show_column_names = TRUE,
+               column_title = "PDX WES Mutations (Replicates)",
+               axis_gp = gpar(fontsize = 4),
+               column_order = colnames(sim_rep)[hclust(dist(sim_rep))$order],
+               heatmap_legend_param = list(title = "Alterations",
+                                           at = c("AMP", "HOMDEL", "MUT"), 
+                                           labels = c("Amplification",
+                                                      "Deep deletion",
+                                                      "Mutation")))
+
+pdf(replicate_oncoprint_out, height = 10, width = 19)
+p
+dev.off()
+
+p
+
+p <- oncoPrint(mat_con,
+               get_type = function(x) strsplit(x, ";")[[1]],
+               alter_fun = alter_fun,
+               col = col,
+               show_column_names = TRUE,
+               column_title = "PDX WES Mutations (Merged)",
+               axis_gp = gpar(fontsize = 4),
+               column_order = colnames(sim_con)[hclust(dist(sim_con))$order],
+               heatmap_legend_param = list(title = "Alterations",
+                                           at = c("AMP", "HOMDEL", "MUT"), 
+                                           labels = c("Amplification",
+                                                      "Deep deletion",
+                                                      "Mutation")))
+
+pdf(merged_oncoprint_out, height = 10, width = 19)
+p
+dev.off()
+
+p
