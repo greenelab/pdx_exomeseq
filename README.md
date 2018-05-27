@@ -11,8 +11,7 @@ Patient derived xenograft (PDX) models were derived from primary and metastatic 
 The PDX models and tumor samples were whole exome sequenced (WES) to determine how the mutations from primary tissue and metastases propagate and evolve.
 The following repository outlines the wes and analysis pipelines.
 
-This is a tumor-only analysis; there were no pooled or patient-matched normal
-samples available.
+This is a tumor-only analysis; there were no pooled or patient-matched normal samples available.
 The following flowchart summarizes the wes pipeline.
 
 ![pdx wes flowchart](figures/pdx_wes_flowchart.png?raw=true)
@@ -59,7 +58,7 @@ bash wes_pipeline.sh
 Also note that the configuration file `discovery_variables.yml` includes absolute paths to each tool or resource.
 It is sufficient to update this file only if paths to current tools change.
 
-#### 3. Visualize and summarize results ([`analysis_pipelin.sh`](https://github.com/greenelab/pdx_exomeseq/blob/master/analysis_pipeline.sh))
+#### 3. Visualize and summarize results ([`analysis_pipeline.sh`](https://github.com/greenelab/pdx_exomeseq/blob/master/analysis_pipeline.sh))
 
 We use Jupyter notebooks and R scripts to visualize and summarize results.
 We describe the analysis in the next section.
