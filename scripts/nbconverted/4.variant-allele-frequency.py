@@ -104,7 +104,7 @@ for unique_sample in id_updater.keys():
     variant_df = pd.read_csv(variant_file)
 
     processed_variant_file = os.path.join('results', 'processed_merged_vcfs',
-                                '{}_processed_variants.tsv.bz2'.format(unique_sample))
+                                '{}_processed_variants.tsv.bz2'.format(final_id))
     processed_variant_df = pd.read_table(processed_variant_file)
 
     # Subset variants
