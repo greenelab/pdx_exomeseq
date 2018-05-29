@@ -4,6 +4,7 @@ logs/
 logs_bwa/
 *.gz
 *.zip
+*.DS_Store
 lib
 tools
 *trimming_report.txt
