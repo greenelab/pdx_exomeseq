@@ -5,7 +5,7 @@ I add figure legends as well.
 
 **Note:** All high resolution figures generated from this pipeline are available in the `figures/` folder.
 
-## Read Depth
+## Read Depth Estimation for All Samples
 
 ![read depth estimation](png_for_readme/mosdepth_estimation.png)
 
@@ -17,11 +17,12 @@ The dotted lines represent samples in the lower half of estimated sequencing dep
 
 ![disambiguate results](png_for_readme/disambiguate_results.png)
 
-**Figure Legend.** Summary of the proportion of reads assigned to mouse, human, or ambiguously mapped.
-Number of read pairs mapped (y axis) plotted against each replicate (x axis) for all samples.
-The height of the bars represent the number of reads.
+**Figure Legend.** Summary of the proportion of reads assigned to mouse, human, or "ambiguous".
+Ambiguous reads have the same mapping quality when aligned to both mouse and human genomes.
+The number of read pairs mapped (y axis) is plotted against each replicate (x axis) for all samples.
+The height of the bars represents the number of reads.
 The numbers within each plot represent the proportion of reads mapped to each species (ambiguous; top, human; middle, mouse; bottom).
-Disambiguation provided by the disambiguate software ([Ahdesmaki et al. 2017](https://doi.org/10.12688/f1000research.10082.2).
+Disambiguation provided by the disambiguate software ([Ahdesmaki et al. 2017](https://doi.org/10.12688/f1000research.10082.2)).
 
 ## Filtering and Merging Variants
 
@@ -29,15 +30,15 @@ Disambiguation provided by the disambiguate software ([Ahdesmaki et al. 2017](ht
 
 ![replicate filtration results](png_for_readme/replicates_filtration_results.png)
 
-**Figure Legend.** Number of variants after each filtration step.
-The number of variants filtered is given by the height of the bar _after_ the step is applied.
+**Figure Legend.** The number of variants after each filtration step.
+The number of variants filtered is given by the height of the bar _after_ the specific step is applied.
 Each filtration step is applied sequentially.
 First, common variation is filtered (gnomAD MAF > 0.05), then low read depth (< 10 reads), then high read depth (> 800 reads).
 Each replicate for all samples are shown.
 
 ![replicate cosmic variant results](png_for_readme/replicates_cosmic_mutcount_results.png)
 
-**Figure Legend.** Number of COSMIC variants observed in all replicates.
+**Figure Legend.** The number of COSMIC variants observed in all replicates.
 The color of the bars represent the number of _total_ variants in each replicate after filtration.
 The text represents the log10 total variant count.
 
@@ -45,14 +46,14 @@ The text represents the log10 total variant count.
 
 ![merged filtration results](png_for_readme/merged_filtration_results.png)
 
-**Figure Legend.** Number of variants after each filtration step after merging replicates.
-The number of variants filtered is given by the height of the bar _after_ the step is applied.
+**Figure Legend.** The number of variants after each filtration step after merging replicates.
+The number of variants filtered is given by the height of the bar _after_ the specific step is applied.
 Each filtration step is applied sequentially.
 First, common variation is filtered (gnomAD MAF > 0.05), then low read depth (<10 reads), then high read depth (> 800 reads).
 
 ![merged cosmic variant results](png_for_readme/merged_cosmic_mutcount_results.png)
 
-**Figure Legend.** Number of COSMIC variants observed after merging replicates.
+**Figure Legend.** The number of COSMIC variants observed after merging replicates.
 The color of the bars represent the number of _total_ variants in each replicate after filtration.
 The text represents the log10 total variant count.
 
@@ -60,13 +61,15 @@ The text represents the log10 total variant count.
 
 ![variant sift distributions](png_for_readme/merged_001-F0_sift_gnomad_kde.png)
 
-**Figure Legend.** Observations of the effect of filtering variants based on the removal of common variation and read depth.
+**Figure Legend.** Observing the effect of filtering variants based on the removal of common variation and read depth.
 The intensity of the color represents a higher density of variants.
-SIFT score ([Kumar et al. 2009](https://doi.org/10.1038/nprot.2009.86)) represents a prediction of how much the variant is predicted to impact protein function.
+The SIFT score ([Kumar et al. 2009](https://doi.org/10.1038/nprot.2009.86)) represents a prediction of how much the variant is predicted to impact protein function.
 
 **Note:** Plots for all samples (across replicates and merged variants) are located at https://github.com/greenelab/pdx_exomeseq/tree/master/figures/sift_gnomad.
 
 ## COSMIC Variants across PDX Passages
+
+### Simple Example
 
 ![simple upset sample](png_for_readme/upset_sample_001.png)
 
@@ -74,7 +77,7 @@ SIFT score ([Kumar et al. 2009](https://doi.org/10.1038/nprot.2009.86)) represen
 The UpSet plots ([Conway et al. 2017](https://doi.org/10.1093/bioinformatics/btx364)) depict the number of variants in different sets of the data.
 The total overlapping set is highlighted in orange.
 
-A more complicated upset plot is given below:
+### More Complex Example
 
 ![complex upset sample](png_for_readme/upset_sample_008.png)
 
@@ -90,7 +93,7 @@ The total overlapping set is highlighted in orange.
 
 ![cosmic similarity across replicates](png_for_readme/cosmic_similarity_replicates.png)
 
-**Figure Legend.** Displaying the COSMIC profile similarity across replicates.
+**Figure Legend.** Displaying the COSMIC profile similarity matrix across replicates.
 The Euclidean distance of each COSMIC profile is compared.
 High correlation is shown with increasing green intensity.
 
@@ -98,7 +101,7 @@ High correlation is shown with increasing green intensity.
 
 ![cosmic similarity merged](png_for_readme/cosmic_similarity_merged.png)
 
-**Figure Legend.** Displaying the COSMIC profile similarity across samples (replicates are merged).
+**Figure Legend.** Displaying the COSMIC profile similarity matrix across samples (replicates are merged).
 The Euclidean distance of each COSMIC profile is compared.
 High correlation is shown with increasing green intensity.
 
@@ -106,7 +109,7 @@ High correlation is shown with increasing green intensity.
 
 ![cosmic similarity merged before filtration](png_for_readme/cosmic_prefiltered_similarity_merged.png)
 
-**Figure Legend.** Displaying the COSMIC profile similarity across samples before filtration (replicates are merged).
+**Figure Legend.** Displaying the COSMIC profile similarity matrix across samples before filtration (replicates are merged).
 The Euclidean distance of each COSMIC profile is compared.
 High correlation is shown with increasing green intensity.
 
