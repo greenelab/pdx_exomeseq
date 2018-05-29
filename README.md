@@ -17,7 +17,7 @@ The following flowchart summarizes the wes pipeline.
 ![pdx wes flowchart](figures/pdx_wes_flowchart.png?raw=true)
 
 **Figure 1A** describes the technical replicates and data-types available across tumor and mouse passages.
-**Figure 1B** outlines our analysis pipeline from quality control processing raw reads, to alignment and removal of mouse reads, to calling and annotating variants.
+**Figure 1B** outlines our whole exome sequencing pipeline. We first apply quality control processing to raw reads, then align and remove mouse reads, and finally call and annotate variants.
 
 ## WES Pipeline
 
