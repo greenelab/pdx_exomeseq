@@ -39,11 +39,7 @@ jupyter nbconvert --to=html \
        --execute 4.variant-allele-frequency.ipynb
 
 # Notebook 5 - Visualize overlaps across patient sets (mutation passage flow)
-jupyter nbconvert --to=html \
-       --FilesWriter.build_directory=html \
-       --ExecutePreprocessor.kernel_name=python3 \
-       --ExecutePreprocessor.timeout=$execute_time \
-       --execute 5.upset-plots.ipynb
+Rscript --vanilla scripts/nbconverted/5.upset-plots.r
 
 # Notebook 6 - Generate data to visualize common mutations across samples
 jupyter nbconvert --to=html \
@@ -53,11 +49,7 @@ jupyter nbconvert --to=html \
        --execute 6.generate-oncoprint-data.ipynb
 
 # Notebook 7 - Visualize mutations across samples (oncoprint diagrams)
-jupyter nbconvert --to=html \
-       --FilesWriter.build_directory=html \
-       --ExecutePreprocessor.kernel_name=python3 \
-       --ExecutePreprocessor.timeout=$execute_time \
-       --execute 7.visualize-oncoprint.ipynb
+Rscript --vanilla scripts/nbconverted/7.visualize-oncoprint.r
 
 # Convert notebooks to scripts
 jupyter nbconvert --to=script --FilesWriter.build_directory=scripts/nbconverted *.ipynb
