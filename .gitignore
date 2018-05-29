@@ -14,5 +14,6 @@ results/fastqc_raw/
 results/fastqc_trimmed/
 processed/
 .Rhistory
+Rplots.pdf
 .ipynb_checkpoints/
 *.log
