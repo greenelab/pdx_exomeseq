@@ -61,10 +61,12 @@ for depth_file in depth_files:
     
     # Each line will be a different type if under a certain depth
     half_depth = depth_df.query('chrom == "total"').query('prop_cov >= 0.5').depth.max()
-    if half_depth < 78:
-        linestyle = 'dotted'
-    else:
+
+    # Ensure that the top half read depth estimations are solid lines
+    if half_depth > 78 or sample_id == '001-F5':
         linestyle = 'solid'
+    else:
+        linestyle = 'dotted'
 
     # Store order and half depth of samples (for plot labeling later)
     all_samples.append([sample_id, half_depth])
