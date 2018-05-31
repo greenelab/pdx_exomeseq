@@ -76,6 +76,8 @@ The SIFT score ([Kumar et al. 2009](https://doi.org/10.1038/nprot.2009.86)) repr
 **Figure Legend.** Exploring the overlap of COSMIC variants across PDX passages.
 The UpSet plots ([Conway et al. 2017](https://doi.org/10.1093/bioinformatics/btx364)) depict the number of variants in different sets of the data.
 The total overlapping set is highlighted in orange.
+The samples are shown on the bottom, with the disjoint and overlapping sets shown by filled circles.
+Lines connecting filled circles represent specific variant overlap counts.
 
 ### More Complex Example
 
@@ -84,6 +86,8 @@ The total overlapping set is highlighted in orange.
 **Figure Legend.** Exploring the overlap of COSMIC variants across PDX passages for sample 008.
 The UpSet plots ([Conway et al. 2017](https://doi.org/10.1093/bioinformatics/btx364)) depict the number of variants in different sets of the data.
 The total overlapping set is highlighted in orange.
+The samples are shown on the bottom, with the disjoint and overlapping sets shown by filled circles.
+Lines connecting filled circles represent specific variant overlap counts.
 
 **Note:** Plots for all samples (before and after filtration) are located at https://github.com/greenelab/pdx_exomeseq/tree/master/figures/upset.
 
