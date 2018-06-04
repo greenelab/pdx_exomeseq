@@ -374,8 +374,8 @@ p = (
                          values=['#1b9e77', '#d95f02', '#7570b3', '#e7298a'],
                          labels=['All Variants',
                                  'Common Variants',
-                                 'Depth (< 10 reads)',
-                                 'Depth (> 800 reads)']) + 
+                                 'Depth (< {} reads)'.format(replicate_filter_min_depth_count),
+                                 'Depth (> {} reads)'.format(replicate_filter_max_depth_count)]) + 
     gg.xlab('Sample') +
     gg.ylab('Final Number of Variants') +
     gg.theme_bw() +
@@ -449,8 +449,8 @@ for variant_file in os.listdir(variant_file_path):
 
     variant_info = VariantProcessor(variant_file=full_variant_file,
                                     id_updater=id_updater,
-                                    filter_min_depth=replicate_filter_min_depth_count,
-                                    filter_max_depth=replicate_filter_max_depth_count,
+                                    filter_min_depth=merged_filter_min_depth_count,
+                                    filter_max_depth=merged_filter_max_depth_count,
                                     filter_common_maf=filter_common_maf)
 
     variant_info.filter_common_variation()
@@ -583,8 +583,8 @@ p = (
                          values=['#1b9e77', '#d95f02', '#7570b3', '#e7298a'],
                          labels=['All Variants',
                                  'Common Variants',
-                                 'Depth (< 15 reads)',
-                                 'Depth (> 800 reads)']) + 
+                                 'Depth (< {} reads)'.format(merged_filter_min_depth_count),
+                                 'Depth (> {} reads)'.format(merged_filter_max_depth_count)]) + 
     gg.xlab('Sample') +
     gg.ylab('Final Number of Variants') +
     gg.theme(axis_text_x=gg.element_text(angle='90'),
