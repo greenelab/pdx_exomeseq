@@ -96,13 +96,13 @@ sim_con <- process_similarity(merged_sim_file)
 sim_prefilter <- process_similarity(prefiltered_sim_file)
 
 # Output Similarity Matrix Visualizations
-pdf(replicate_sim_out, height = 8, width = 8)
+pdf(replicate_sim_out, height = 10, width = 10)
 heatmap.2(sim_rep,
           labCol = FALSE,
           trace = "none",
           revC = TRUE,
           col = colorRampPalette(c("red", "black", "green"))(n = 200),
-          main = "COSMIC Profile Similarity",
+          main = "COSMIC Profile Similarity\nAll Replicates",
           cexRow = 0.4)
 dev.off()
 
@@ -111,7 +111,7 @@ heatmap.2(sim_rep,
           trace = "none",
           revC = TRUE,
           col = colorRampPalette(c("red", "black", "green"))(n = 200),
-          main = "COSMIC Profile Similarity",
+          main = "COSMIC Profile Similarity\nAll Replicates",
           cexRow = 0.4)
 
 pdf(merged_sim_out, height = 8, width = 8)
@@ -139,7 +139,7 @@ heatmap.2(sim_prefilter,
           trace = "none",
           revC = TRUE,
           col = colorRampPalette(c("red", "black", "green"))(n = 200),
-          main = "COSMIC Profile Similarity",
+          main = "COSMIC Profile Similarity\nPrefiltered Variants",
           cexRow = 0.75)
 dev.off()
 
@@ -148,7 +148,7 @@ heatmap.2(sim_prefilter,
           trace = "none",
           revC = TRUE,
           col = colorRampPalette(c("red", "black", "green"))(n = 200),
-          main = "COSMIC Profile Similarity",
+          main = "COSMIC Profile Similarity\nPrefiltered Variants",
           cexRow = 0.75)
 
 # Process input oncoprint matrices
