@@ -96,8 +96,8 @@ The following notebooks perform the analysis and obtain figures and results:
 | :----- | :----- |
 | [`1.read-depth-stats.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/1.read-depth-stats.ipynb) | Determine read depth against proportion of genome covered |
 | [`2.disambiguate-reads.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/2.disambiguate-reads.ipynb) | Visualizing the separation of mouse and human reads |
-| [`3.variant-allele-frequency.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/4.variant-allele-frequency.ipynb) | visualize gnomAD by SIFT scores for replicates and filtered merged files |
-| [`4.filter-variants.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/3.filter-variants.ipynb) | Visualize variant filtration and process filtered VCFs |
+| [`3.filter-variants.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/3.filter-variants.ipynb) | Visualize variant filtration and process filtered VCFs |
+| [`4.variant-allele-frequency.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/4.variant-allele-frequency.ipynb) | visualize gnomAD by SIFT scores for replicates and filtered merged files |
 |[`5.upset-plots.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/5.upset-plots.ipynb) | Generate UpSet plots to visualize variant overlaps across patient sets |
 |[`6.generate-oncoprint-data.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/5.generate-oncoprint-data.ipynb) | Wrangle variant calls to generate data for input into oncoprint visualization |
 | [`7.visualize-oncoprint.ipynb`](https://github.com/greenelab/pdx_exomeseq/blob/master/6.visualize-oncoprint.ipynb) | Visualize oncoprint diagrams and variant similarity matrices |
