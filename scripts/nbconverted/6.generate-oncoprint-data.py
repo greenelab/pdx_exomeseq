@@ -21,16 +21,64 @@ import pandas as pd
 # This file was generated in filter_variants.ipynb
 cosmic_all_file = os.path.join('results', 'all_cosmic_variants.tsv')
 cosmic_all_df = pd.read_table(cosmic_all_file)
-cosmic_all_df.head(3)
-
-
-# In[3]:
-
 
 # What are the 50 most commonly altered COSMIC genes?
 top_n = 50
 paad_genes = cosmic_all_df['Gene.refGene'].value_counts().head(top_n).index.tolist()
 cosmic_all_df['Gene.refGene'].value_counts().head(20)
+
+
+# ### Define Functions for Oncoprint Data Processing
+
+# In[3]:
+
+
+def process_variants(variant_dir, focus_variants, strip_text, process_cosmic=False,
+                     id_updater=None):
+    """
+    Retrieve VCF files from an input directory and determine membership
+    
+    Arguments:
+    variant_dir - the directory to search for variant files to load
+    focus_variants - a list of genes or variants to search for in samples
+    strip_text - a string of text to strip from variant files
+    process_cosmic - boolean to determine if cosmic variants are to be processed
+    id_updater - a dictionary of sample ID mappings (defaults to None)
+    
+    Output:
+    A dataframe that is ready for input into oncoprint function
+    """
+
+    variant_assign = []
+    case_ids = []
+    for variant_file in os.listdir(variant_dir):
+        # Load and subset file to only variants in the COSMIC db
+        variant_df = pd.read_table(os.path.join(variant_dir, variant_file), index_col=0)
+        variant_sub_df = variant_df[variant_df['cosmic70'] != '.']
+
+        # Define mutated genes or variants if they exist for the given sample
+        if process_cosmic:
+            variant_class = [1 if x in variant_sub_df['cosmic70'].tolist() else 0
+                             for x in focus_variants]
+        else:
+            variant_class = ['MUT;' if x in variant_sub_df['Gene.refGene'].tolist() else ''
+                             for x in focus_variants]
+
+        # Store results
+        sample_id = variant_file.replace(strip_text, '')
+        variant_assign.append(variant_class)
+        if id_updater is not None:
+            sample_id = variant_file.replace(variant_file.split('_')[0],
+                                             id_updater[variant_file.split('_')[0]])
+        case_ids.append(sample_id)
+    
+    # Process output variants
+    output_df = pd.DataFrame(variant_assign,
+                             index=case_ids,
+                             columns=focus_variants).sort_index()
+    output_df.index.name = 'Case.ID'
+
+    return output_df
 
 
 # ## Generate OncoPrint Data
@@ -40,73 +88,47 @@ cosmic_all_df['Gene.refGene'].value_counts().head(20)
 # In[4]:
 
 
-get_ipython().run_cell_magic('time', '', "\n# Process each replicate by observed COSMIC mutation# Proce \nvariant_file_path = os.path.join('results', 'processed_vcfs')\nvariant_assign = []\ncase_id = []\nfor variant_file in os.listdir(variant_file_path):\n    # Load and subset file to only variants in the COSMIC db\n    variant_df = pd.read_table(os.path.join(variant_file_path, variant_file), index_col=0)\n    variant_sub_df = variant_df[variant_df['cosmic70'] != '.']\n    \n    # Define mutated genes if they exist for the given variant\n    variant_class = ['MUT;' if x in variant_sub_df['Gene.refGene'].tolist() else ''\n                     for x in paad_genes]\n    \n    # Store results\n    variant_assign.append(variant_class)\n    case_id.append(variant_file.replace('_001_processed_variants.tsv.bz2', ''))")
+# Process each replicate by observed COSMIC mutation
+replicate_file_path = os.path.join('results', 'processed_vcfs')
+replicate_strip_text = '_001_processed_variants.tsv.bz2'
 
+replicate_oncoprint_df = process_variants(variant_dir=replicate_file_path,
+                                          focus_variants=paad_genes,
+                                          strip_text=replicate_strip_text,
+                                          process_cosmic=False,
+                                          id_updater=None)
+
+# Output file
+replicate_output_file = os.path.join('results', 'oncoprint_replicates.tsv')
+replicate_oncoprint_df.to_csv(replicate_output_file, sep='\t')
+
+
+# ### For Merged Samples
 
 # In[5]:
 
 
-# Generate and save oncoprint data for all replicates
-oncoprint_file = os.path.join('results', 'oncoprint_replicates.tsv')
-oncoprint_df = pd.DataFrame(variant_assign, index=case_id, columns=paad_genes).sort_index()
-oncoprint_df.index.name = 'Case.ID'
-oncoprint_df.to_csv(oncoprint_file, sep='\t')
+# Process each replicate by observed COSMIC mutation
+merged_file_path = os.path.join('results', 'processed_merged_vcfs')
+merged_strip_text = '_processed_variants.tsv.bz2'
 
+merged_oncoprint_df = process_variants(variant_dir=merged_file_path,
+                                       focus_variants=paad_genes,
+                                       strip_text=merged_strip_text,
+                                       process_cosmic=False,
+                                       id_updater=None)
 
-# In[6]:
-
-
-oncoprint_df.head(3)
-
-
-# ### Merged Samples
-
-# In[7]:
-
-
-variant_assign_consensus = []
-case_id_consensus = []
-for sample_id in set(cosmic_all_df['final_id']):
-    # Subset file to given sample ID
-    variant_sub_df = cosmic_all_df.query('final_id == @sample_id')
-    
-    # Define mutated genes if they exist for the given variant
-    variant_class = ['MUT;' if x in variant_sub_df['Gene.refGene'].tolist() else ''
-                     for x in paad_genes]
-    
-    # Store results
-    variant_assign_consensus.append(variant_class)
-    case_id_consensus.append(sample_id)
-
-
-# In[8]:
-
-
-# Generate and save oncoprint data for consensus samples
-oncoprint_consensus_file = os.path.join('results', 'oncoprint_merged.tsv')
-
-oncoprint_consensus_df = (
-    pd.DataFrame(variant_assign_consensus,
-                 index=case_id_consensus,
-                 columns=paad_genes)
-    )
-oncoprint_consensus_df.index.name = 'Case.ID'
-oncoprint_consensus_df.to_csv(oncoprint_consensus_file, sep='\t')
-
-
-# In[9]:
-
-
-oncoprint_consensus_df.head(3)
+# Output file
+merged_output_file = os.path.join('results', 'oncoprint_merged.tsv')
+merged_oncoprint_df.to_csv(merged_output_file, sep='\t')
 
 
 # ## COSMIC Mutational Similarity
 # 
-# Output mutational similarity data for all replicates and consensus samples. The COSMIC mutational similarity is built from a (0,1) sample by COSMIC mutation matrix.
-# 
-# ### For All Replicates
+# Output mutational similarity data for all replicates and consensus samples.
+# The COSMIC mutational similarity is built from a (0,1) sample by COSMIC mutation matrix.
 
-# In[10]:
+# In[6]:
 
 
 # How many COSMIC mutation IDs are in the entire set and how many are unique?
@@ -115,75 +137,43 @@ unique_cosmic_ids = set(cosmic_all_df['cosmic70'])
 print('Unique COSMIC mutations: {}'.format(len(unique_cosmic_ids)))
 
 
-# In[11]:
+# ### For All Replicates
+
+# In[7]:
 
 
-case_id = []
-cosmic_similarity_list = []
-for variant_file in os.listdir(variant_file_path):
-    # Load and subset file to only variants in the COSMIC db
-    variant_df = pd.read_table(os.path.join(variant_file_path, variant_file), index_col=0)
-    variant_sub_df = variant_df[variant_df['cosmic70'] != '.']
-    
-    # Define membership in COSMIC IDs
-    cosmic_class = [1 if x in variant_sub_df['cosmic70'].tolist() else 0
-                    for x in unique_cosmic_ids]
-    
-    # Store results
-    cosmic_similarity_list.append(cosmic_class)
-    case_id.append(variant_file.replace('_001_processed_variants.tsv.bz2', ''))
+# Obtain replicate cosmic similarity matrix
+replicate_cosmic_df = process_variants(variant_dir=replicate_file_path,
+                                       focus_variants=unique_cosmic_ids,
+                                       strip_text=replicate_strip_text,
+                                       process_cosmic=True,
+                                       id_updater=None)
 
-
-# In[12]:
-
-
-# Generate COSMIC id membership data (for downstream similarity matrix)
-cosmic_common_file = os.path.join('results', 'cosmic_similarity_replicates.tsv')
-cosmic_common_df = (
-    pd.DataFrame(cosmic_similarity_list,
-                 index=case_id,
-                 columns=unique_cosmic_ids)
-    )
-cosmic_common_df.index.name = 'Case.ID'
-cosmic_common_df.to_csv(cosmic_common_file, sep='\t')
+replicate_common_file = os.path.join('results', 'cosmic_similarity_replicates.tsv')
+replicate_cosmic_df.to_csv(replicate_common_file, sep='\t')
 
 
 # ### Consensus samples
 
-# In[13]:
+# In[8]:
 
 
-case_id_consensus = []
-cosmic_similarity_consensus_list = []
-for sample_id in set(cosmic_all_df['final_id']):
-    # Subset file to given sample ID
-    variant_sub_df = cosmic_all_df.query('final_id == @sample_id')
-    
-    # Define membership in COSMIC IDs
-    cosmic_class = [1 if x in variant_sub_df['cosmic70'].tolist() else 0
-                    for x in unique_cosmic_ids]
-    
-    # Store results
-    cosmic_similarity_consensus_list.append(cosmic_class)
-    case_id_consensus.append(sample_id)
+# Obtain consensus cosmic similarity matrix
+merged_cosmic_df = process_variants(variant_dir=merged_file_path,
+                                       focus_variants=unique_cosmic_ids,
+                                       strip_text=merged_strip_text,
+                                       process_cosmic=True,
+                                       id_updater=None)
 
-
-# In[14]:
-
-
-common_cosmic_consensus_file = os.path.join('results', 'cosmic_similarity_merged.tsv')
-cosmic_common_consensus_df = pd.DataFrame(cosmic_similarity_consensus_list,
-                                          index=case_id_consensus,
-                                          columns=unique_cosmic_ids)
-cosmic_common_consensus_df.index.name = 'Case.ID'
-cosmic_common_consensus_df.to_csv(common_cosmic_consensus_file, sep='\t')
+merged_common_file = os.path.join('results', 'cosmic_similarity_merged.tsv')
+merged_cosmic_df.to_csv(merged_common_file, sep='\t')
 
 
 # ## What about prefiltered variants (i.e. before COSMIC filtering)
 # 
 # Observed merged samples with cosmic similarity only
 
-# In[15]:
+# In[11]:
 
 
 # Load all prefiltered cosmic variants called in this dataset
@@ -193,21 +183,21 @@ cosmic_prefiltered_df = pd.read_table(file)
 cosmic_prefiltered_df.head(3)
 
 
-# In[16]:
+# In[12]:
 
 
 paad_prefiltered_genes = cosmic_prefiltered_df['Gene.refGene'].value_counts().head(top_n).index.tolist()
 cosmic_prefiltered_df['Gene.refGene'].value_counts().head(20)
 
 
-# In[28]:
+# In[13]:
 
 
 # Only consider mutations that change amino acid sequence
 cosmic_prefiltered_df = cosmic_prefiltered_df[cosmic_prefiltered_df['AAChange.refGene'] != '.']
 
 
-# In[29]:
+# In[14]:
 
 
 # How many prefiltered COSMIC mutation IDs are in the entire set and how many are unique?
@@ -216,7 +206,7 @@ unique_mutations = set(cosmic_prefiltered_df['AAChange.refGene'])
 print('Unique nonsilent mutations: {}'.format(len(unique_mutations)))
 
 
-# In[33]:
+# In[15]:
 
 
 case_id_consensus = []
@@ -234,7 +224,7 @@ for sample_id in set(cosmic_prefiltered_df['final_id']):
     case_id_consensus.append(sample_id)
 
 
-# In[34]:
+# In[16]:
 
 
 common_cosmic_consensus_file = os.path.join('results', 'cosmic_prefiltered_similarity_merged.tsv')
