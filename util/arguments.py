@@ -86,7 +86,7 @@ def schedule_job(command, name, python, nodes=1, cores=4, walltime='04:00:00'):
 
 
 def get_human_only(all_files):
-    human_samples = ['004-M', '005-M']
+    human_samples = ['004-primary', '005-primary']
     output_files = [x for x in all_files if
                     any(y for y in human_samples if y in x)]
 
