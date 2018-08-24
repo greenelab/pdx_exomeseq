@@ -70,7 +70,7 @@ python pdx_exomeseq.py disambiguate \
         --walltime '06:00:00' --nodes 2 --cores 8
 
 ###################
-# STEP 4 - Data Conversion and Processing
+# STEP 4A - Data Conversion and Processing (after disambiguation)
 ###################
 # Prep for duplicate removal by cleaning up readpair tags
 python pdx_exomeseq.py samtools --sub_command 'fixmate' \
@@ -100,6 +100,44 @@ python pdx_exomeseq.py samtools --sub_command 'index_bam' \
 python pdx_exomeseq.py variant --sub_command 'add_read_groups' \
         --input_directory 'processed/bam_rmdup' \
         --output_directory 'processed/gatk_bam' \
+        --walltime '03:00:00' --nodes 1 --cores 8
+
+###################
+# STEP 4B - Data Conversion and Processing (human only for 004-M and 005-M)
+###################
+# Prep for duplicate removal by cleaning up readpair tags
+python pdx_exomeseq.py samtools --sub_command 'fixmate' \
+        --human_only \
+        --input_directory 'processed/bam' \
+        --output_directory 'processed/bam_fixmate_humanonly' \
+        --walltime '02:30:00' --nodes 2 --cores 4
+
+# Prep for duplicate removal by sorting tagged bam files by position
+python pdx_exomeseq.py samtools --sub_command 'sort_position' \
+        --human_only \
+        --input_directory 'processed/bam_fixmate_humanonly' \
+        --output_directory 'processed/bam_sort_position_humanonly' \
+        --walltime '02:00:00' --nodes 2 --cores 8
+
+# Remove duplicate reads
+python pdx_exomeseq.py samtools --sub_command 'rmdup' \
+       --human_only \
+       --input_directory 'processed/bam_sort_position_humanonly' \
+       --output_directory 'processed/bam_rmdup_humanonly' \
+       --walltime '03:30:00' --nodes 1 --cores 4
+
+# Create BAM index for duplicate removal
+python pdx_exomeseq.py samtools --sub_command 'index_bam' \
+        --human_only \
+        --input_directory 'processed/bam_rmdup_humanonly' \
+        --output_directory 'processed/bam_rmdup_humanonly' \
+        --walltime '03:30:00' --nodes 1 --cores 4
+
+# Assign read groups
+python pdx_exomeseq.py variant --sub_command 'add_read_groups' \
+        --human_only \
+        --input_directory 'processed/bam_rmdup_humanonly' \
+        --output_directory 'processed/gatk_bam_humanonly' \
         --walltime '03:00:00' --nodes 1 --cores 8
 
 ###################

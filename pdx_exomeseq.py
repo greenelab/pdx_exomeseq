@@ -28,7 +28,8 @@ E.g.
             --output_directory 'processed/bam' \
             --walltime '06:00:00' \
             --nodes 2 \
-            --cores 12
+            --cores 12 \
+            --humanonly
 
 The specific pipeline using this script is given in `wes_pipeline.sh`
 """
@@ -278,4 +279,3 @@ if __name__ == '__main__':
         schedule_id = '{}_{}'.format(sample_id, command)
         arguments.schedule_job(command=com, name=schedule_id, python=python,
                                nodes=nodes, cores=cores, walltime=walltime)
-
