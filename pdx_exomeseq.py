@@ -167,8 +167,7 @@ if command == 'samtools':
 
         elif sub_command == 'fixmate':
             samtools_com = [samtools, 'fixmate',
-                            os.path.join('processed', 'bam_disambiguate',
-                                         sample_id),
+                            os.path.join(input_dir, sample_id),
                             sample_sorted_fixmate_bam]
 
         elif sub_command == 'sort_position':
