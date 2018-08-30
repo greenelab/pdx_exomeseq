@@ -107,38 +107,58 @@ python pdx_exomeseq.py variant --sub_command 'add_read_groups' \
 ###################
 # Prep for duplicate removal by cleaning up readpair tags
 python pdx_exomeseq.py samtools --sub_command 'fixmate' \
-        --human_only \
+        --humanonly \
         --input_directory 'processed/bam' \
         --output_directory 'processed/bam_fixmate_humanonly' \
         --walltime '02:30:00' --nodes 2 --cores 4
 
 # Prep for duplicate removal by sorting tagged bam files by position
 python pdx_exomeseq.py samtools --sub_command 'sort_position' \
-        --human_only \
+        --humanonly \
         --input_directory 'processed/bam_fixmate_humanonly' \
         --output_directory 'processed/bam_sort_position_humanonly' \
         --walltime '02:00:00' --nodes 2 --cores 8
 
 # Remove duplicate reads
 python pdx_exomeseq.py samtools --sub_command 'rmdup' \
-       --human_only \
+       --humanonly \
        --input_directory 'processed/bam_sort_position_humanonly' \
        --output_directory 'processed/bam_rmdup_humanonly' \
        --walltime '03:30:00' --nodes 1 --cores 4
 
 # Create BAM index for duplicate removal
 python pdx_exomeseq.py samtools --sub_command 'index_bam' \
-        --human_only \
+        --humanonly \
         --input_directory 'processed/bam_rmdup_humanonly' \
         --output_directory 'processed/bam_rmdup_humanonly' \
         --walltime '03:30:00' --nodes 1 --cores 4
 
+# Merge bam files
+python pdx_exomeseq.py samtools --sub_command 'merge' \
+        --humanonly \
+        --input_directory 'processed/bam_rmdup_humanonly' \
+        --output_directory 'processed/gatk_merged_bam_humanonly' \
+        --walltime '05:00:00' --nodes 1 --cores 8
+
 # Assign read groups
 python pdx_exomeseq.py variant --sub_command 'add_read_groups' \
-        --human_only \
-        --input_directory 'processed/bam_rmdup_humanonly' \
-        --output_directory 'processed/gatk_bam_humanonly' \
+        --humanonly \
+        --input_directory 'processed/gatk_merged_bam_humanonly' \
+        --output_directory 'processed/gatk_merged_rg_bam_humanonly' \
         --walltime '03:00:00' --nodes 1 --cores 8
+
+# Create merged index files
+python pdx_exomeseq.py samtools --sub_command 'index_bam_gatk' \
+        --humanonly \
+        --input_directory 'processed/gatk_merged_rg_bam_humanonly' \
+        --output_directory 'processed/gatk_merged_rg_bam_humanonly' \
+        --walltime '05:00:00' --nodes 1 --cores 8
+
+# Run MuTect2 on merged bams
+python pdx_exomeseq.py variant --sub_command 'mutect2' \
+        --input_directory 'processed/gatk_merged_rg_bam_humanonly' \
+        --output_directory 'processed/gatk_merged_vcf_humanonly' \
+        --walltime '10:00:00' --nodes 2 --cores 8
 
 ###################
 # STEP 5 - Variant Calling
