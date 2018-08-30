@@ -31,7 +31,7 @@ def get_args():
                         help='Configuration variables for input')
     parser.add_argument('-g', '--genome', default='hg',
                         help='name of the reference genome')
-    parser.add_argument('-u', '--humanonly', action='store_true',
+    parser.add_argument('-m', '--humanonly', action='store_true',
                         help='whether or not to send through human samples')
 
     # Create subcommands for specific pipeline functionality
