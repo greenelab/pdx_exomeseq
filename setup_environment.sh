@@ -16,7 +16,7 @@ source activate pdx-exomeseq
 # Step 3: Register GATK
 # MANUAL STEP: Download Gatk3.8-0 and move to `modules`
 # Download from: https://software.broadinstitute.org/gatk/download/
-gatk-register modules/GenomeAnalysisTK-3.8-0.tar.bz2
+gatk3-register modules/GenomeAnalysisTK-3.8-0.tar.bz2
 
 # NOTE: Once this script is run once, to recreate the computational environment, simply run:
 # source activate pdx-exomeseq
