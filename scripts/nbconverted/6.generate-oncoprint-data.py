@@ -25,6 +25,10 @@ cosmic_all_df = pd.read_table(cosmic_all_file)
 # What are the 50 most commonly altered COSMIC genes?
 top_n = 50
 paad_genes = cosmic_all_df['Gene.refGene'].value_counts().head(top_n).index.tolist()
+
+# Add in ATM and RNF43 (see https://github.com/greenelab/pdx_exomeseq/issues/68)
+paad_genes += ['ATM', 'RNF43']
+
 cosmic_all_df['Gene.refGene'].value_counts().head(20)
 
 
@@ -160,10 +164,10 @@ replicate_cosmic_df.to_csv(replicate_common_file, sep='\t')
 
 # Obtain consensus cosmic similarity matrix
 merged_cosmic_df = process_variants(variant_dir=merged_file_path,
-                                       focus_variants=unique_cosmic_ids,
-                                       strip_text=merged_strip_text,
-                                       process_cosmic=True,
-                                       id_updater=None)
+                                    focus_variants=unique_cosmic_ids,
+                                    strip_text=merged_strip_text,
+                                    process_cosmic=True,
+                                    id_updater=None)
 
 merged_common_file = os.path.join('results', 'cosmic_similarity_merged.tsv')
 merged_cosmic_df.to_csv(merged_common_file, sep='\t')
@@ -173,7 +177,7 @@ merged_cosmic_df.to_csv(merged_common_file, sep='\t')
 # 
 # Observed merged samples with cosmic similarity only
 
-# In[11]:
+# In[9]:
 
 
 # Load all prefiltered cosmic variants called in this dataset
@@ -183,21 +187,21 @@ cosmic_prefiltered_df = pd.read_table(file)
 cosmic_prefiltered_df.head(3)
 
 
-# In[12]:
+# In[10]:
 
 
 paad_prefiltered_genes = cosmic_prefiltered_df['Gene.refGene'].value_counts().head(top_n).index.tolist()
 cosmic_prefiltered_df['Gene.refGene'].value_counts().head(20)
 
 
-# In[13]:
+# In[11]:
 
 
 # Only consider mutations that change amino acid sequence
 cosmic_prefiltered_df = cosmic_prefiltered_df[cosmic_prefiltered_df['AAChange.refGene'] != '.']
 
 
-# In[14]:
+# In[12]:
 
 
 # How many prefiltered COSMIC mutation IDs are in the entire set and how many are unique?
@@ -206,7 +210,7 @@ unique_mutations = set(cosmic_prefiltered_df['AAChange.refGene'])
 print('Unique nonsilent mutations: {}'.format(len(unique_mutations)))
 
 
-# In[15]:
+# In[13]:
 
 
 case_id_consensus = []
@@ -224,7 +228,7 @@ for sample_id in set(cosmic_prefiltered_df['final_id']):
     case_id_consensus.append(sample_id)
 
 
-# In[16]:
+# In[14]:
 
 
 common_cosmic_consensus_file = os.path.join('results', 'cosmic_prefiltered_similarity_merged.tsv')
