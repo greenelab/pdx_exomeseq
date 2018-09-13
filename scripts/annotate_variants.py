@@ -12,9 +12,12 @@ import subprocess
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--merged', action='store_true',
                     help='use directory for merged VCFs')
+parser.add_argument('-u', '--humanonly', action='store_true',
+                    help='if the directory to be used is human only variants')
 args = parser.parse_args()
 
 merged = args.merged
+humanonly = args.humanonly
 
 if merged:
     vcf_file_dir = os.path.join('processed', 'gatk_merged_vcf')
@@ -24,6 +27,17 @@ else:
     vcf_file_dir = os.path.join('results', 'gatk_vcfs')
     annovar_file_dir = os.path.join('results', 'annovar_vcfs')
     annotated_file_dir = os.path.join('results', 'annotated_vcfs')
+
+if humanonly:
+    vcf_file_dir = '{}_humanonly'.format(vcf_file_dir)
+    annovar_file_dir = '{}_humanonly'.format(annovar_file_dir)
+    annotated_file_dir = '{}_humanonly'.format(annotated_file_dir)
+
+if not os.path.exists(annovar_file_dir):
+    os.makedirs(annovar_file_dir)
+
+if not os.path.exists(annotated_file_dir):
+    os.makedirs(annotated_file_dir)
 
 annovar_dir = os.path.join('modules', 'annovar')
 humandb_dir = os.path.join(annovar_dir, 'humandb/')
