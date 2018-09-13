@@ -85,7 +85,7 @@ for unique_sample in id_updater.keys():
 
 # ## Pre- and post filtering of concatenated samples
 
-# In[6]:
+# In[5]:
 
 
 # Plot concatenated variants gnomAD vs. SIFT scores
@@ -99,8 +99,13 @@ for unique_sample in id_updater.keys():
                             'merged_{}_sift_gnomad_kde.pdf'.format(final_id))
 
     # Read in file
-    variant_file = os.path.join('results', 'annotated_merged_vcfs',
-                                '{}.annotated.hg19_multianno.csv'.format(unique_sample))
+    if any(x in unique_sample for x in ['004-primary', '005-primary']):
+        variant_file = os.path.join('results', 'annotated_vcfs_humanonly',
+                                   '{}.annotated.hg19_multianno.csv'.format(unique_sample))
+    else:
+        variant_file = os.path.join('results', 'annotated_merged_vcfs',
+                                    '{}.annotated.hg19_multianno.csv'.format(unique_sample))
+
     variant_df = pd.read_csv(variant_file)
 
     processed_variant_file = os.path.join('results', 'processed_merged_vcfs',
