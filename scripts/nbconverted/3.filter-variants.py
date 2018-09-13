@@ -226,7 +226,7 @@ replicate_filter_min_depth_count = 10
 replicate_filter_max_depth_count = 800
 
 
-# In[6]:
+# In[7]:
 
 
 # Process variant results
@@ -422,7 +422,7 @@ gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 # ## Process Merged Files - These are the Final VCFs to Interpret
 
-# In[16]:
+# In[8]:
 
 
 filter_common_maf = 0.05
@@ -430,7 +430,7 @@ merged_filter_min_depth_count = 15
 merged_filter_max_depth_count = 1000
 
 
-# In[17]:
+# In[9]:
 
 
 # Process variant results
@@ -445,7 +445,12 @@ cosmic_dfs = []
 precosmic_filter_dfs = []
 
 for variant_file in os.listdir(variant_file_path):
-    full_variant_file = os.path.join(variant_file_path, variant_file)
+
+    if any(x in variant_file for x in ['004-primary', '005-primary']):
+        full_variant_file = os.path.join('results', 'annotated_vcfs_humanonly', variant_file)
+    else:
+        full_variant_file = os.path.join(variant_file_path, variant_file)
+    print(full_variant_file)
 
     variant_info = VariantProcessor(variant_file=full_variant_file,
                                     id_updater=id_updater,
@@ -477,7 +482,7 @@ for variant_file in os.listdir(variant_file_path):
     cosmic_dfs.append(variant_info.cosmic_variants)
 
 
-# In[18]:
+# In[10]:
 
 
 # Save read depth summary results
@@ -486,7 +491,7 @@ depth_df = pd.concat(depth_summary_all, axis=1).fillna(0).astype(int).T.sort_ind
 depth_df.to_csv(depth_output_file, sep='\t')
 
 
-# In[19]:
+# In[11]:
 
 
 # Save mutation count summary results
@@ -497,7 +502,7 @@ mutational_counts_df = (
 mutational_counts_df.to_csv(mut_count_output_file, sep='\t')
 
 
-# In[20]:
+# In[12]:
 
 
 # Save functional genomics summary results
@@ -508,7 +513,7 @@ functional_counts_df = (
 functional_counts_df.to_csv(func_count_output_file, sep='\t')
 
 
-# In[21]:
+# In[13]:
 
 
 filter_count_output_file = os.path.join('results', 'merged_filter_summary.tsv')
@@ -523,7 +528,7 @@ filter_counts_df['log_mut_count'] = round(filter_counts_df['log_mut_count'], 2)
 filter_counts_df.to_csv(filter_count_output_file, sep='\t', index=False)
 
 
-# In[22]:
+# In[14]:
 
 
 # Generate a dataframe of all observed COSMIC variants
@@ -533,7 +538,7 @@ print(all_cosmic_dfs.shape)
 all_cosmic_dfs.to_csv(cosmic_output_file, sep='\t', index=False)
 
 
-# In[23]:
+# In[15]:
 
 
 # Generate a dataframe of all variants pre-COSMIC filtering
@@ -543,7 +548,7 @@ print(all_prefiltered_dfs.shape)
 all_prefiltered_dfs.to_csv(output_file, sep='\t', index=False)
 
 
-# In[24]:
+# In[16]:
 
 
 filter_melt_df = (
@@ -563,7 +568,7 @@ filter_melt_df.head()
 
 # ### Visualize summary statistics for merged data
 
-# In[25]:
+# In[17]:
 
 
 # Reorder Plotting Variables
@@ -594,14 +599,14 @@ p = (
 p
 
 
-# In[26]:
+# In[18]:
 
 
 figure_file = os.path.join('figures', 'merged_filtration_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 
-# In[27]:
+# In[19]:
 
 
 p = (
@@ -621,7 +626,7 @@ p = (
 p
 
 
-# In[28]:
+# In[20]:
 
 
 figure_file = os.path.join('figures', 'merged_cosmic_mutcount_results.pdf')
