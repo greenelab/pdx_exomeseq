@@ -47,7 +47,6 @@ process_oncoprint <- function(onco_file) {
   onco_matrix[is.na(onco_matrix)] = ""
   rownames(onco_matrix) = onco_matrix[, 1]
   onco_matrix = onco_matrix[, -1]
-  onco_matrix = onco_matrix[, -ncol(onco_matrix)]
   onco_matrix = t(as.matrix(onco_matrix))
   return(onco_matrix)
 }
