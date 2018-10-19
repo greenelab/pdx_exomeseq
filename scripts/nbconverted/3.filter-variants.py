@@ -226,7 +226,7 @@ replicate_filter_min_depth_count = 10
 replicate_filter_max_depth_count = 800
 
 
-# In[7]:
+# In[6]:
 
 
 # Process variant results
@@ -422,7 +422,7 @@ gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 # ## Process Merged Files - These are the Final VCFs to Interpret
 
-# In[8]:
+# In[16]:
 
 
 filter_common_maf = 0.05
@@ -430,7 +430,7 @@ merged_filter_min_depth_count = 15
 merged_filter_max_depth_count = 1000
 
 
-# In[9]:
+# In[17]:
 
 
 # Process variant results
@@ -482,7 +482,7 @@ for variant_file in os.listdir(variant_file_path):
     cosmic_dfs.append(variant_info.cosmic_variants)
 
 
-# In[10]:
+# In[18]:
 
 
 # Save read depth summary results
@@ -491,7 +491,7 @@ depth_df = pd.concat(depth_summary_all, axis=1).fillna(0).astype(int).T.sort_ind
 depth_df.to_csv(depth_output_file, sep='\t')
 
 
-# In[11]:
+# In[19]:
 
 
 # Save mutation count summary results
@@ -502,7 +502,7 @@ mutational_counts_df = (
 mutational_counts_df.to_csv(mut_count_output_file, sep='\t')
 
 
-# In[12]:
+# In[20]:
 
 
 # Save functional genomics summary results
@@ -513,7 +513,7 @@ functional_counts_df = (
 functional_counts_df.to_csv(func_count_output_file, sep='\t')
 
 
-# In[13]:
+# In[21]:
 
 
 filter_count_output_file = os.path.join('results', 'merged_filter_summary.tsv')
@@ -528,7 +528,7 @@ filter_counts_df['log_mut_count'] = round(filter_counts_df['log_mut_count'], 2)
 filter_counts_df.to_csv(filter_count_output_file, sep='\t', index=False)
 
 
-# In[14]:
+# In[22]:
 
 
 # Generate a dataframe of all observed COSMIC variants
@@ -538,7 +538,7 @@ print(all_cosmic_dfs.shape)
 all_cosmic_dfs.to_csv(cosmic_output_file, sep='\t', index=False)
 
 
-# In[15]:
+# In[23]:
 
 
 # Generate a dataframe of all variants pre-COSMIC filtering
@@ -548,7 +548,7 @@ print(all_prefiltered_dfs.shape)
 all_prefiltered_dfs.to_csv(output_file, sep='\t', index=False)
 
 
-# In[16]:
+# In[24]:
 
 
 filter_melt_df = (
@@ -568,7 +568,7 @@ filter_melt_df.head()
 
 # ### Visualize summary statistics for merged data
 
-# In[17]:
+# In[25]:
 
 
 # Reorder Plotting Variables
@@ -599,14 +599,14 @@ p = (
 p
 
 
-# In[18]:
+# In[26]:
 
 
 figure_file = os.path.join('figures', 'merged_filtration_results.pdf')
 gg.ggsave(p, figure_file, height=5.5, width=6.5, dpi=500)
 
 
-# In[19]:
+# In[27]:
 
 
 p = (
@@ -626,7 +626,7 @@ p = (
 p
 
 
-# In[20]:
+# In[28]:
 
 
 figure_file = os.path.join('figures', 'merged_cosmic_mutcount_results.pdf')
