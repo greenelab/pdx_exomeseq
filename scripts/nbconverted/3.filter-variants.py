@@ -445,7 +445,12 @@ cosmic_dfs = []
 precosmic_filter_dfs = []
 
 for variant_file in os.listdir(variant_file_path):
-    full_variant_file = os.path.join(variant_file_path, variant_file)
+
+    if any(x in variant_file for x in ['004-primary', '005-primary']):
+        full_variant_file = os.path.join('results', 'annotated_vcfs_humanonly', variant_file)
+    else:
+        full_variant_file = os.path.join(variant_file_path, variant_file)
+    print(full_variant_file)
 
     variant_info = VariantProcessor(variant_file=full_variant_file,
                                     id_updater=id_updater,

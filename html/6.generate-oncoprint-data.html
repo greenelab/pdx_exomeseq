@@ -11804,7 +11804,15 @@ div#notebook {
 <span class="c1"># This file was generated in filter_variants.ipynb</span>
 <span class="n">cosmic_all_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;all_cosmic_variants.tsv&#39;</span><span class="p">)</span>
 <span class="n">cosmic_all_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">cosmic_all_file</span><span class="p">)</span>
-<span class="n">cosmic_all_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># What are the 50 most commonly altered COSMIC genes?</span>
+<span class="n">top_n</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">paad_genes</span> <span class="o">=</span> <span class="n">cosmic_all_df</span><span class="p">[</span><span class="s1">&#39;Gene.refGene&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="c1"># Add in ATM and RNF43 (see https://github.com/greenelab/pdx_exomeseq/issues/68)</span>
+<span class="n">paad_genes</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;ATM&#39;</span><span class="p">,</span> <span class="s1">&#39;RNF43&#39;</span><span class="p">]</span>
+
+<span class="n">cosmic_all_df</span><span class="p">[</span><span class="s1">&#39;Gene.refGene&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11821,125 +11829,29 @@ div#notebook {
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Chr</th>
-      <th>Start</th>
-      <th>End</th>
-      <th>Ref</th>
-      <th>Alt</th>
-      <th>Func.refGene</th>
-      <th>Gene.refGene</th>
-      <th>GeneDetail.refGene</th>
-      <th>ExonicFunc.refGene</th>
-      <th>AAChange.refGene</th>
-      <th>...</th>
-      <th>phyloP20way_mammalian</th>
-      <th>phastCons7way_vertebrate</th>
-      <th>phastCons20way_mammalian</th>
-      <th>SiPhy_29way_logOdds</th>
-      <th>Otherinfo</th>
-      <th>sample_name</th>
-      <th>final_id</th>
-      <th>het</th>
-      <th>quality</th>
-      <th>depth</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>874779</td>
-      <td>874826</td>
-      <td>CCTCCCCAGCCACGGTGAGGACCCACCCTGGCATGATCCCCCTCATCA</td>
-      <td>-</td>
-      <td>exonic</td>
-      <td>SAMD11</td>
-      <td>.</td>
-      <td>nonframeshift deletion</td>
-      <td>SAMD11:NM_152486:exon7:c.645_692del:p.G220Dfs*447</td>
-      <td>...</td>
-      <td>.</td>
-      <td>.</td>
-      <td>.</td>
-      <td>.</td>
-      <td>het\t.\t20</td>
-      <td>019-F0</td>
-      <td>008-M2-F0</td>
-      <td>het</td>
-      <td>.</td>
-      <td>20</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>26510311</td>
-      <td>26510311</td>
-      <td>C</td>
-      <td>-</td>
-      <td>exonic</td>
-      <td>CNKSR1</td>
-      <td>.</td>
-      <td>frameshift deletion</td>
-      <td>CNKSR1:NM_001297647:exon9:c.866delC:p.P291Hfs*...</td>
-      <td>...</td>
-      <td>.</td>
-      <td>.</td>
-      <td>.</td>
-      <td>.</td>
-      <td>het\t.\t31</td>
-      <td>019-F0</td>
-      <td>008-M2-F0</td>
-      <td>het</td>
-      <td>.</td>
-      <td>31</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>1</td>
-      <td>158576883</td>
-      <td>158576883</td>
-      <td>G</td>
-      <td>A</td>
-      <td>exonic</td>
-      <td>OR10Z1</td>
-      <td>.</td>
-      <td>nonsynonymous SNV</td>
-      <td>OR10Z1:NM_001004478:exon1:c.G655A:p.A219T</td>
-      <td>...</td>
-      <td>0.949</td>
-      <td>0.822</td>
-      <td>0.761</td>
-      <td>4.671</td>
-      <td>het\t.\t127</td>
-      <td>019-F0</td>
-      <td>008-M2-F0</td>
-      <td>het</td>
-      <td>.</td>
-      <td>127</td>
-    </tr>
-  </tbody>
-</table>
-<p>3 rows × 60 columns</p>
-</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>NCOR2                38
+OR11G2               29
+KRAS                 29
+MUC4;MUC4            28
+DNHD1                27
+CBWD1                25
+TSPYL1               25
+MARF1                24
+WDR66                24
+ARHGEF11;ETV3L       24
+LCE4A                23
+PHF2                 23
+GOLGA6D              22
+GOLGA8M              22
+KRTAP5-11;FAM86C1    21
+ACIN1                21
+POTEI                21
+BRCA1                20
+CGB8                 20
+MROH8;MROH8          19
+Name: Gene.refGene, dtype: int64</pre>
 </div>
 
 </div>
@@ -11947,59 +11859,69 @@ div#notebook {
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Define-Functions-for-Oncoprint-Data-Processing">Define Functions for Oncoprint Data Processing<a class="anchor-link" href="#Define-Functions-for-Oncoprint-Data-Processing">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># What are the 50 most commonly altered COSMIC genes?</span>
-<span class="n">top_n</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">paad_genes</span> <span class="o">=</span> <span class="n">cosmic_all_df</span><span class="p">[</span><span class="s1">&#39;Gene.refGene&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">cosmic_all_df</span><span class="p">[</span><span class="s1">&#39;Gene.refGene&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">process_variants</span><span class="p">(</span><span class="n">variant_dir</span><span class="p">,</span> <span class="n">focus_variants</span><span class="p">,</span> <span class="n">strip_text</span><span class="p">,</span> <span class="n">process_cosmic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">id_updater</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve VCF files from an input directory and determine membership</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">    variant_dir - the directory to search for variant files to load</span>
+<span class="sd">    focus_variants - a list of genes or variants to search for in samples</span>
+<span class="sd">    strip_text - a string of text to strip from variant files</span>
+<span class="sd">    process_cosmic - boolean to determine if cosmic variants are to be processed</span>
+<span class="sd">    id_updater - a dictionary of sample ID mappings (defaults to None)</span>
+<span class="sd">    </span>
+<span class="sd">    Output:</span>
+<span class="sd">    A dataframe that is ready for input into oncoprint function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">variant_assign</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">case_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">variant_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">variant_dir</span><span class="p">):</span>
+        <span class="c1"># Load and subset file to only variants in the COSMIC db</span>
+        <span class="n">variant_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variant_dir</span><span class="p">,</span> <span class="n">variant_file</span><span class="p">),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">variant_sub_df</span> <span class="o">=</span> <span class="n">variant_df</span><span class="p">[</span><span class="n">variant_df</span><span class="p">[</span><span class="s1">&#39;cosmic70&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;.&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Define mutated genes or variants if they exist for the given sample</span>
+        <span class="k">if</span> <span class="n">process_cosmic</span><span class="p">:</span>
+            <span class="n">variant_class</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">variant_sub_df</span><span class="p">[</span><span class="s1">&#39;cosmic70&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
+                             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">focus_variants</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">variant_class</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MUT;&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">variant_sub_df</span><span class="p">[</span><span class="s1">&#39;Gene.refGene&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+                             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">focus_variants</span><span class="p">]</span>
+
+        <span class="c1"># Store results</span>
+        <span class="n">sample_id</span> <span class="o">=</span> <span class="n">variant_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">strip_text</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">variant_assign</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variant_class</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">id_updater</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sample_id</span> <span class="o">=</span> <span class="n">variant_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">variant_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                                             <span class="n">id_updater</span><span class="p">[</span><span class="n">variant_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">case_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_id</span><span class="p">)</span>
+    
+    <span class="c1"># Process output variants</span>
+    <span class="n">output_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">variant_assign</span><span class="p">,</span>
+                             <span class="n">index</span><span class="o">=</span><span class="n">case_ids</span><span class="p">,</span>
+                             <span class="n">columns</span><span class="o">=</span><span class="n">focus_variants</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="n">output_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Case.ID&#39;</span>
+
+    <span class="k">return</span> <span class="n">output_df</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[3]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>NCOR2                39
-OR11G2               29
-KRAS                 29
-MUC4;MUC4            28
-DNHD1                27
-TSPYL1               26
-CBWD1                25
-MARF1                24
-ARHGEF11;ETV3L       24
-GOLGA8M              24
-WDR66                24
-PHF2                 24
-LCE4A                23
-GOLGA6D              22
-POTEI                21
-KRTAP5-11;FAM86C1    21
-CGB8                 21
-ACIN1                21
-MROH8;MROH8          20
-BRCA1                20
-Name: Gene.refGene, dtype: int64</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -12017,24 +11939,52 @@ Name: Gene.refGene, dtype: int64</pre>
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">time</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Process each replicate by observed COSMIC mutation</span>
+<span class="n">replicate_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;processed_vcfs&#39;</span><span class="p">)</span>
+<span class="n">replicate_strip_text</span> <span class="o">=</span> <span class="s1">&#39;_001_processed_variants.tsv.bz2&#39;</span>
 
-# Process each replicate by observed COSMIC mutation# Proce 
-variant_file_path = os.path.join(&#39;results&#39;, &#39;processed_vcfs&#39;)
-variant_assign = []
-case_id = []
-for variant_file in os.listdir(variant_file_path):
-    # Load and subset file to only variants in the COSMIC db
-    variant_df = pd.read_table(os.path.join(variant_file_path, variant_file), index_col=0)
-    variant_sub_df = variant_df[variant_df[&#39;cosmic70&#39;] != &#39;.&#39;]
-    
-    # Define mutated genes if they exist for the given variant
-    variant_class = [&#39;MUT;&#39; if x in variant_sub_df[&#39;Gene.refGene&#39;].tolist() else &#39;&#39;
-                     for x in paad_genes]
-    
-    # Store results
-    variant_assign.append(variant_class)
-    case_id.append(variant_file.replace(&#39;_001_processed_variants.tsv.bz2&#39;, &#39;&#39;))
+<span class="n">replicate_oncoprint_df</span> <span class="o">=</span> <span class="n">process_variants</span><span class="p">(</span><span class="n">variant_dir</span><span class="o">=</span><span class="n">replicate_file_path</span><span class="p">,</span>
+                                          <span class="n">focus_variants</span><span class="o">=</span><span class="n">paad_genes</span><span class="p">,</span>
+                                          <span class="n">strip_text</span><span class="o">=</span><span class="n">replicate_strip_text</span><span class="p">,</span>
+                                          <span class="n">process_cosmic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                          <span class="n">id_updater</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Output file</span>
+<span class="n">replicate_output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;oncoprint_replicates.tsv&#39;</span><span class="p">)</span>
+<span class="n">replicate_oncoprint_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">replicate_output_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="For-Merged-Samples">For Merged Samples<a class="anchor-link" href="#For-Merged-Samples">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Process each replicate by observed COSMIC mutation</span>
+<span class="n">merged_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;processed_merged_vcfs&#39;</span><span class="p">)</span>
+<span class="n">merged_strip_text</span> <span class="o">=</span> <span class="s1">&#39;_processed_variants.tsv.bz2&#39;</span>
+
+<span class="n">merged_oncoprint_df</span> <span class="o">=</span> <span class="n">process_variants</span><span class="p">(</span><span class="n">variant_dir</span><span class="o">=</span><span class="n">merged_file_path</span><span class="p">,</span>
+                                       <span class="n">focus_variants</span><span class="o">=</span><span class="n">paad_genes</span><span class="p">,</span>
+                                       <span class="n">strip_text</span><span class="o">=</span><span class="n">merged_strip_text</span><span class="p">,</span>
+                                       <span class="n">process_cosmic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                       <span class="n">id_updater</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Output file</span>
+<span class="n">merged_output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;oncoprint_merged.tsv&#39;</span><span class="p">)</span>
+<span class="n">merged_oncoprint_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">merged_output_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12050,9 +12000,9 @@ for variant_file in os.listdir(variant_file_path):
 <div class="prompt"></div>
 
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 20 s, sys: 600 ms, total: 20.6 s
-Wall time: 20.6 s
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/IPython/core/interactiveshell.py:2901: DtypeWarning: Columns (1) have mixed types. Specify dtype option on import or set low_memory=False.
+  if self.run_code(code, result):
 </pre>
 </div>
 </div>
@@ -12061,436 +12011,19 @@ Wall time: 20.6 s
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Generate and save oncoprint data for all replicates</span>
-<span class="n">oncoprint_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;oncoprint_replicates.tsv&#39;</span><span class="p">)</span>
-<span class="n">oncoprint_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">variant_assign</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">case_id</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">paad_genes</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
-<span class="n">oncoprint_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Case.ID&#39;</span>
-<span class="n">oncoprint_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">oncoprint_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="COSMIC-Mutational-Similarity">COSMIC Mutational Similarity<a class="anchor-link" href="#COSMIC-Mutational-Similarity">&#182;</a></h2><p>Output mutational similarity data for all replicates and consensus samples.
+The COSMIC mutational similarity is built from a (0,1) sample by COSMIC mutation matrix.</p>
 
 </div>
 </div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">oncoprint_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[6]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>NCOR2</th>
-      <th>OR11G2</th>
-      <th>KRAS</th>
-      <th>MUC4;MUC4</th>
-      <th>DNHD1</th>
-      <th>TSPYL1</th>
-      <th>CBWD1</th>
-      <th>MARF1</th>
-      <th>ARHGEF11;ETV3L</th>
-      <th>GOLGA8M</th>
-      <th>...</th>
-      <th>ZNF676</th>
-      <th>TP53</th>
-      <th>DPCR1</th>
-      <th>GNAS</th>
-      <th>FAM161B</th>
-      <th>AGFG1</th>
-      <th>RAD23B</th>
-      <th>SNAP47</th>
-      <th>SMAD4</th>
-      <th>PIK3CA</th>
-    </tr>
-    <tr>
-      <th>Case.ID</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>001-F0_S3_L001</th>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td></td>
-      <td>...</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <th>001-F0_S3_L002</th>
-      <td></td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td></td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td></td>
-      <td>...</td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-    </tr>
-    <tr>
-      <th>001-F0_S3_L003</th>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td></td>
-      <td>...</td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-<p>3 rows × 50 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Merged-Samples">Merged Samples<a class="anchor-link" href="#Merged-Samples">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">variant_assign_consensus</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">case_id_consensus</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">sample_id</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">cosmic_all_df</span><span class="p">[</span><span class="s1">&#39;final_id&#39;</span><span class="p">]):</span>
-    <span class="c1"># Subset file to given sample ID</span>
-    <span class="n">variant_sub_df</span> <span class="o">=</span> <span class="n">cosmic_all_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;final_id == @sample_id&#39;</span><span class="p">)</span>
-    
-    <span class="c1"># Define mutated genes if they exist for the given variant</span>
-    <span class="n">variant_class</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MUT;&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">variant_sub_df</span><span class="p">[</span><span class="s1">&#39;Gene.refGene&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-                     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">paad_genes</span><span class="p">]</span>
-    
-    <span class="c1"># Store results</span>
-    <span class="n">variant_assign_consensus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variant_class</span><span class="p">)</span>
-    <span class="n">case_id_consensus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_id</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Generate and save oncoprint data for consensus samples</span>
-<span class="n">oncoprint_consensus_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;oncoprint_merged.tsv&#39;</span><span class="p">)</span>
-
-<span class="n">oncoprint_consensus_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">variant_assign_consensus</span><span class="p">,</span>
-                 <span class="n">index</span><span class="o">=</span><span class="n">case_id_consensus</span><span class="p">,</span>
-                 <span class="n">columns</span><span class="o">=</span><span class="n">paad_genes</span><span class="p">)</span>
-    <span class="p">)</span>
-<span class="n">oncoprint_consensus_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Case.ID&#39;</span>
-<span class="n">oncoprint_consensus_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">oncoprint_consensus_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">oncoprint_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[9]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>NCOR2</th>
-      <th>OR11G2</th>
-      <th>KRAS</th>
-      <th>MUC4;MUC4</th>
-      <th>DNHD1</th>
-      <th>TSPYL1</th>
-      <th>CBWD1</th>
-      <th>MARF1</th>
-      <th>ARHGEF11;ETV3L</th>
-      <th>GOLGA8M</th>
-      <th>...</th>
-      <th>ZNF676</th>
-      <th>TP53</th>
-      <th>DPCR1</th>
-      <th>GNAS</th>
-      <th>FAM161B</th>
-      <th>AGFG1</th>
-      <th>RAD23B</th>
-      <th>SNAP47</th>
-      <th>SMAD4</th>
-      <th>PIK3CA</th>
-    </tr>
-    <tr>
-      <th>Case.ID</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>030-F5</th>
-      <td>MUT;</td>
-      <td></td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td></td>
-      <td>...</td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <th>005-M-F5</th>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td></td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>...</td>
-      <td>MUT;</td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-    </tr>
-    <tr>
-      <th>008-M2-F0</th>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td></td>
-      <td>MUT;</td>
-      <td></td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>...</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td>MUT;</td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-<p>3 rows × 50 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="COSMIC-Mutational-Similarity">COSMIC Mutational Similarity<a class="anchor-link" href="#COSMIC-Mutational-Similarity">&#182;</a></h2><p>Output mutational similarity data for all replicates and consensus samples. The COSMIC mutational similarity is built from a (0,1) sample by COSMIC mutation matrix.</p>
-<h3 id="For-All-Replicates">For All Replicates<a class="anchor-link" href="#For-All-Replicates">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># How many COSMIC mutation IDs are in the entire set and how many are unique?</span>
@@ -12513,8 +12046,8 @@ Wall time: 20.6 s
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>All COSMIC mutations: 3259
-Unique COSMIC mutations: 1141
+<pre>All COSMIC mutations: 3116
+Unique COSMIC mutations: 1113
 </pre>
 </div>
 </div>
@@ -12523,46 +12056,28 @@ Unique COSMIC mutations: 1141
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">case_id</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">cosmic_similarity_list</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">variant_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">variant_file_path</span><span class="p">):</span>
-    <span class="c1"># Load and subset file to only variants in the COSMIC db</span>
-    <span class="n">variant_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variant_file_path</span><span class="p">,</span> <span class="n">variant_file</span><span class="p">),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">variant_sub_df</span> <span class="o">=</span> <span class="n">variant_df</span><span class="p">[</span><span class="n">variant_df</span><span class="p">[</span><span class="s1">&#39;cosmic70&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;.&#39;</span><span class="p">]</span>
-    
-    <span class="c1"># Define membership in COSMIC IDs</span>
-    <span class="n">cosmic_class</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">variant_sub_df</span><span class="p">[</span><span class="s1">&#39;cosmic70&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
-                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">unique_cosmic_ids</span><span class="p">]</span>
-    
-    <span class="c1"># Store results</span>
-    <span class="n">cosmic_similarity_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cosmic_class</span><span class="p">)</span>
-    <span class="n">case_id</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variant_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_001_processed_variants.tsv.bz2&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-</pre></div>
-
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="For-All-Replicates">For All Replicates<a class="anchor-link" href="#For-All-Replicates">&#182;</a></h3>
 </div>
 </div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Generate COSMIC id membership data (for downstream similarity matrix)</span>
-<span class="n">cosmic_common_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;cosmic_similarity_replicates.tsv&#39;</span><span class="p">)</span>
-<span class="n">cosmic_common_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cosmic_similarity_list</span><span class="p">,</span>
-                 <span class="n">index</span><span class="o">=</span><span class="n">case_id</span><span class="p">,</span>
-                 <span class="n">columns</span><span class="o">=</span><span class="n">unique_cosmic_ids</span><span class="p">)</span>
-    <span class="p">)</span>
-<span class="n">cosmic_common_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Case.ID&#39;</span>
-<span class="n">cosmic_common_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">cosmic_common_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Obtain replicate cosmic similarity matrix</span>
+<span class="n">replicate_cosmic_df</span> <span class="o">=</span> <span class="n">process_variants</span><span class="p">(</span><span class="n">variant_dir</span><span class="o">=</span><span class="n">replicate_file_path</span><span class="p">,</span>
+                                       <span class="n">focus_variants</span><span class="o">=</span><span class="n">unique_cosmic_ids</span><span class="p">,</span>
+                                       <span class="n">strip_text</span><span class="o">=</span><span class="n">replicate_strip_text</span><span class="p">,</span>
+                                       <span class="n">process_cosmic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                       <span class="n">id_updater</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="n">replicate_common_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;cosmic_similarity_replicates.tsv&#39;</span><span class="p">)</span>
+<span class="n">replicate_cosmic_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">replicate_common_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12580,43 +12095,40 @@ Unique COSMIC mutations: 1141
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">case_id_consensus</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">cosmic_similarity_consensus_list</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">sample_id</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">cosmic_all_df</span><span class="p">[</span><span class="s1">&#39;final_id&#39;</span><span class="p">]):</span>
-    <span class="c1"># Subset file to given sample ID</span>
-    <span class="n">variant_sub_df</span> <span class="o">=</span> <span class="n">cosmic_all_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;final_id == @sample_id&#39;</span><span class="p">)</span>
-    
-    <span class="c1"># Define membership in COSMIC IDs</span>
-    <span class="n">cosmic_class</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">variant_sub_df</span><span class="p">[</span><span class="s1">&#39;cosmic70&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
-                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">unique_cosmic_ids</span><span class="p">]</span>
-    
-    <span class="c1"># Store results</span>
-    <span class="n">cosmic_similarity_consensus_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cosmic_class</span><span class="p">)</span>
-    <span class="n">case_id_consensus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_id</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Obtain consensus cosmic similarity matrix</span>
+<span class="n">merged_cosmic_df</span> <span class="o">=</span> <span class="n">process_variants</span><span class="p">(</span><span class="n">variant_dir</span><span class="o">=</span><span class="n">merged_file_path</span><span class="p">,</span>
+                                    <span class="n">focus_variants</span><span class="o">=</span><span class="n">unique_cosmic_ids</span><span class="p">,</span>
+                                    <span class="n">strip_text</span><span class="o">=</span><span class="n">merged_strip_text</span><span class="p">,</span>
+                                    <span class="n">process_cosmic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">id_updater</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="n">merged_common_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;cosmic_similarity_merged.tsv&#39;</span><span class="p">)</span>
+<span class="n">merged_cosmic_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">merged_common_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">common_cosmic_consensus_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;cosmic_similarity_merged.tsv&#39;</span><span class="p">)</span>
-<span class="n">cosmic_common_consensus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cosmic_similarity_consensus_list</span><span class="p">,</span>
-                                          <span class="n">index</span><span class="o">=</span><span class="n">case_id_consensus</span><span class="p">,</span>
-                                          <span class="n">columns</span><span class="o">=</span><span class="n">unique_cosmic_ids</span><span class="p">)</span>
-<span class="n">cosmic_common_consensus_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Case.ID&#39;</span>
-<span class="n">cosmic_common_consensus_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">common_cosmic_consensus_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
+<div class="output_wrapper">
+<div class="output">
 
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/IPython/core/interactiveshell.py:2901: DtypeWarning: Columns (1) have mixed types. Specify dtype option on import or set low_memory=False.
+  if self.run_code(code, result):
+</pre>
 </div>
+</div>
+
 </div>
 </div>
 
@@ -12632,7 +12144,7 @@ Unique COSMIC mutations: 1141
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load all prefiltered cosmic variants called in this dataset</span>
@@ -12664,7 +12176,7 @@ Unique COSMIC mutations: 1141
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[15]:</div>
+<div class="prompt output_prompt">Out[9]:</div>
 
 
 
@@ -12762,26 +12274,26 @@ Unique COSMIC mutations: 1141
     <tr>
       <th>2</th>
       <td>1</td>
-      <td>664844</td>
-      <td>664844</td>
-      <td>T</td>
-      <td>C</td>
-      <td>ncRNA_exonic</td>
-      <td>LOC100133331</td>
+      <td>874779</td>
+      <td>874826</td>
+      <td>CCTCCCCAGCCACGGTGAGGACCCACCCTGGCATGATCCCCCTCATCA</td>
+      <td>-</td>
+      <td>exonic</td>
+      <td>SAMD11</td>
       <td>.</td>
-      <td>.</td>
-      <td>.</td>
+      <td>nonframeshift deletion</td>
+      <td>SAMD11:NM_152486:exon7:c.645_692del:p.G220Dfs*447</td>
       <td>...</td>
       <td>.</td>
       <td>.</td>
       <td>.</td>
       <td>.</td>
-      <td>het\t.\t14</td>
+      <td>het\t.\t20</td>
       <td>019-F0</td>
       <td>008-M2-F0</td>
       <td>het</td>
       <td>.</td>
-      <td>14</td>
+      <td>20</td>
     </tr>
   </tbody>
 </table>
@@ -12797,7 +12309,7 @@ Unique COSMIC mutations: 1141
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">paad_prefiltered_genes</span> <span class="o">=</span> <span class="n">cosmic_prefiltered_df</span><span class="p">[</span><span class="s1">&#39;Gene.refGene&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -12814,32 +12326,32 @@ Unique COSMIC mutations: 1141
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[16]:</div>
+<div class="prompt output_prompt">Out[10]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>NONE;NONE                5484
-NBPF25P                   963
-OR4E1;LINC02332           938
-DNAH5                     858
-RYR2                      732
-SYNE2                     719
-MIR1268A                  696
-PIKFYVE                   685
-TG                        651
-CUBN                      621
-LRP1B                     618
-CNTNAP3P2;XLOC_007697     614
-LOC100996724              600
-OR4A47;TRIM49B            586
-CSMD3                     584
-NONE;LOC654342            581
-RYR3                      577
-SYNE1                     571
-LOC440040;OR4C13          563
-NONE;CHEK2P2              560
+<pre>NONE;NONE                4005
+NBPF25P                   782
+DNAH5                     748
+OR4E1;LINC02332           710
+SYNE2                     612
+RYR2                      575
+PIKFYVE                   566
+CNTNAP3P2;XLOC_007697     537
+CUBN                      511
+TG                        507
+MIR1268A                  491
+OR4A47;TRIM49B            489
+TTN                       487
+CSMD3                     476
+LOC390705;ENPP7P13        473
+LOC440040;OR4C13          468
+LRRK2                     466
+SYNE1                     462
+NBPF1                     448
+HMCN1                     447
 Name: Gene.refGene, dtype: int64</pre>
 </div>
 
@@ -12851,7 +12363,7 @@ Name: Gene.refGene, dtype: int64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Only consider mutations that change amino acid sequence</span>
@@ -12865,7 +12377,7 @@ Name: Gene.refGene, dtype: int64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># How many prefiltered COSMIC mutation IDs are in the entire set and how many are unique?</span>
@@ -12888,8 +12400,8 @@ Name: Gene.refGene, dtype: int64</pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>All prefiltered COSMIC mutations: 56516
-Unique nonsilent mutations: 29191
+<pre>All prefiltered COSMIC mutations: 54841
+Unique nonsilent mutations: 28744
 </pre>
 </div>
 </div>
@@ -12900,7 +12412,7 @@ Unique nonsilent mutations: 29191
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">case_id_consensus</span> <span class="o">=</span> <span class="p">[]</span>
@@ -12925,7 +12437,7 @@ Unique nonsilent mutations: 29191
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">common_cosmic_consensus_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;cosmic_prefiltered_similarity_merged.tsv&#39;</span><span class="p">)</span>

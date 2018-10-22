@@ -9,9 +9,9 @@
 # Data processing and specific plotting functions modified from vignette:
 # https://bioconductor.org/packages/3.7/bioc/vignettes/ComplexHeatmap/inst/doc/s8.oncoprint.html
 
-library(gplots)
-library(RColorBrewer)
-library(ComplexHeatmap)
+suppressPackageStartupMessages(library(gplots))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(ComplexHeatmap))
 
 # Input Files
 replicate_oncoprint_file <- file.path("results", "oncoprint_replicates.tsv")
@@ -47,7 +47,6 @@ process_oncoprint <- function(onco_file) {
   onco_matrix[is.na(onco_matrix)] = ""
   rownames(onco_matrix) = onco_matrix[, 1]
   onco_matrix = onco_matrix[, -1]
-  onco_matrix = onco_matrix[, -ncol(onco_matrix)]
   onco_matrix = t(as.matrix(onco_matrix))
   return(onco_matrix)
 }
@@ -61,7 +60,11 @@ process_similarity <- function(sim_file) {
   # Output:
   #     correlation matrix for heatmap plotting
 
-  cosmic_sim_df <- readr::read_tsv(sim_file)
+  cosmic_sim_df <- readr::read_tsv(sim_file,
+                                  col_types = readr::cols(
+                                      .default = readr::col_integer(),
+                                      Case.ID = readr::col_character()
+                                  ))
   cosmic_dist_df <- data.matrix(dist(cosmic_sim_df, diag = TRUE, upper = TRUE))
   cosmic_dist_df <- data.matrix(cor(t(cosmic_sim_df[, 2:ncol(cosmic_sim_df)])))
   rownames(cosmic_dist_df) <- colnames(cosmic_dist_df) <- cosmic_sim_df$Case.ID

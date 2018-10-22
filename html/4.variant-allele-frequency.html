@@ -12327,8 +12327,13 @@ div#notebook {
                             <span class="s1">&#39;merged_</span><span class="si">{}</span><span class="s1">_sift_gnomad_kde.pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">final_id</span><span class="p">))</span>
 
     <span class="c1"># Read in file</span>
-    <span class="n">variant_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;annotated_merged_vcfs&#39;</span><span class="p">,</span>
-                                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.annotated.hg19_multianno.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unique_sample</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">unique_sample</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;004-primary&#39;</span><span class="p">,</span> <span class="s1">&#39;005-primary&#39;</span><span class="p">]):</span>
+        <span class="n">variant_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;annotated_vcfs_humanonly&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.annotated.hg19_multianno.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unique_sample</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">variant_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;annotated_merged_vcfs&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.annotated.hg19_multianno.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unique_sample</span><span class="p">))</span>
+
     <span class="n">variant_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">variant_file</span><span class="p">)</span>
 
     <span class="n">processed_variant_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;processed_merged_vcfs&#39;</span><span class="p">,</span>
@@ -12383,44 +12388,44 @@ div#notebook {
   s)
 /home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
   s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
+/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
+  s)
 /home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/IPython/core/interactiveshell.py:2785: DtypeWarning: Columns (1) have mixed types. Specify dtype option on import or set low_memory=False.
   interactivity=interactivity, compiler=compiler, result=result)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
-/home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
-  s)
 /home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;
   s)
 /home/gway/anaconda3/envs/pdx-exomeseq-analysis/lib/python3.6/site-packages/matplotlib/contour.py:967: UserWarning: The following kwargs were not used by contour: &#39;color&#39;

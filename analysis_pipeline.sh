@@ -9,6 +9,9 @@ set -o errexit
 
 execute_time=10000000
 
+# Convert notebooks to scripts
+jupyter nbconvert --to=script --FilesWriter.build_directory=scripts/nbconverted *.ipynb
+
 # Run all files in order
 # Notebook 1 - Visualize read depth across the genome
 jupyter nbconvert --to=html \
@@ -29,14 +32,14 @@ jupyter nbconvert --to=html \
        --FilesWriter.build_directory=html \
        --ExecutePreprocessor.kernel_name=python3 \
        --ExecutePreprocessor.timeout=$execute_time \
-       --execute 3.variant-allele-frequency.ipynb
+       --execute 3.filter-variants.ipynb
 
 # Notebook 4 - Process the variant calls to output final VCF files
 jupyter nbconvert --to=html \
        --FilesWriter.build_directory=html \
        --ExecutePreprocessor.kernel_name=python3 \
        --ExecutePreprocessor.timeout=$execute_time \
-       --execute 4.filter-variants.ipynb
+       --execute 4.variant-allele-frequency.ipynb
 
 # Notebook 5 - Visualize overlaps across patient sets (mutation passage flow)
 Rscript --vanilla scripts/nbconverted/5.upset-plots.r
@@ -50,6 +53,3 @@ jupyter nbconvert --to=html \
 
 # Notebook 7 - Visualize mutations across samples (oncoprint diagrams)
 Rscript --vanilla scripts/nbconverted/7.visualize-oncoprint.r
-
-# Convert notebooks to scripts
-jupyter nbconvert --to=script --FilesWriter.build_directory=scripts/nbconverted *.ipynb

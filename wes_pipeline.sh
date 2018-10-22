@@ -234,3 +234,6 @@ python scripts/annotate_variants.py
 
 # Annotate variants in merged vcf files
 python scripts/annotate_variants.py --merged
+
+# Also, make sure to run ANNOVAR on the human only samples
+python scripts/annotate_variants.py --humanonly
