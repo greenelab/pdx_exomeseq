@@ -31,6 +31,8 @@ def get_args():
                         help='Configuration variables for input')
     parser.add_argument('-g', '--genome', default='hg',
                         help='name of the reference genome')
+    parser.add_argument('-m', '--humanonly', action='store_true',
+                        help='whether or not to send through human samples')
 
     # Create subcommands for specific pipeline functionality
     parser_fastqc = subparsers.add_parser('fastqc', parents=[parser])
@@ -83,6 +85,14 @@ def schedule_job(command, name, python, nodes=1, cores=4, walltime='04:00:00'):
     return subprocess.call(output_com)
 
 
+def get_human_only(all_files):
+    human_samples = ['004-primary', '005-primary']
+    output_files = [x for x in all_files if
+                    any(y for y in human_samples if y in x)]
+
+    return output_files
+
+
 def get_fastqc(args):
     wes_files = []
     for path, subdirs, files in os.walk(args.input_directory):
@@ -90,6 +100,10 @@ def get_fastqc(args):
             if re.match(r'(fasta|fq|fastq)\.gz$', name):
                 full_name = os.path.join(path, name)
                 wes_files.append(full_name)
+
+    if args.humanonly:
+        wes_files = get_human_only(wes_files)
+
     return wes_files
 
 
@@ -106,6 +120,10 @@ def get_trimgalore(args):
             read_1 = name
             read_2 = name.replace('_R1_', '_R2_')
             paired_reads.append([read_1, read_2])
+
+    if args.humanonly:
+        paired_reads = get_human_only(paired_reads)
+
     return paired_reads
 
 
@@ -123,6 +141,10 @@ def get_bwa(args):
             read_2 = name.replace('_R1_', '_R2_')
             read_2 = read_2.replace('val_1', 'val_2')
             paired_reads.append([read_1, read_2])
+
+    if args.humanonly:
+        paired_reads = get_human_only(paired_reads)
+
     return paired_reads
 
 
@@ -134,6 +156,10 @@ def get_samtools(args):
         for name in files:
             if (any([x in name for x in check_suffix])) and ('.bai' not in name):
                 sam_files.append(name)
+
+    if args.humanonly:
+        sam_files = get_human_only(sam_files)
+
     return sam_files
 
 
@@ -143,6 +169,10 @@ def get_disambiguate(args):
         for name in files:
             sample_id = name.split('.')[0]  # This extracts the sample ID
             sample_files.append(sample_id)
+
+    if args.humanonly:
+        sample_files = get_human_only(sample_files)
+
     return sample_files
 
 
@@ -153,6 +183,10 @@ def get_variant(args):
         for name in files:
             if (any([x in name for x in check_suffix])) and ('.bai' not in name):
                 bam_files.append(name)
+
+    if args.humanonly:
+        bam_files = get_human_only(bam_files)
+
     return bam_files
 
 
@@ -162,4 +196,8 @@ def get_mosdepth(args):
         for name in files:
             if '.bai' not in name:
                 bam_files.append(name)
+
+    if args.humanonly:
+        bam_files = get_human_only(bam_files)
+
     return bam_files

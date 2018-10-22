@@ -28,7 +28,8 @@ E.g.
             --output_directory 'processed/bam' \
             --walltime '06:00:00' \
             --nodes 2 \
-            --cores 12
+            --cores 12 \
+            --humanonly
 
 The specific pipeline using this script is given in `wes_pipeline.sh`
 """
@@ -41,7 +42,6 @@ import util.arguments as arguments
 # Load command arguments
 args = arguments.get_args()
 command = args.which
-
 genome = args.genome
 input_dir = args.input_directory
 output_dir = args.output_directory
@@ -77,6 +77,10 @@ picard = config['picard']
 gatk = config['gatk']
 disambiguate = config['disambiguate']
 mosdepth = config['mosdepth']
+
+# Ensure the output directory exists
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
 ############################
 # Generate the commands
@@ -162,24 +166,21 @@ if command == 'samtools':
 
         elif sub_command == 'fixmate':
             samtools_com = [samtools, 'fixmate',
-                            os.path.join('processed', 'bam_disambiguate',
-                                         sample_id),
+                            os.path.join(input_dir, sample_id),
                             sample_sorted_fixmate_bam]
 
         elif sub_command == 'sort_position':
             samtools_com = [samtools, 'sort',
-                            os.path.join('processed', 'bam_fixmate',
-                                         sample_id),
+                            os.path.join(input_dir, sample_id),
                             sample_sorted_position_bam]
 
         elif sub_command == 'rmdup':
             samtools_com = [samtools, 'rmdup',
-                            os.path.join('processed', 'bam_sort_position',
-                                         sample_id),
+                            os.path.join(input_dir, sample_id),
                             sample_markdup_bam]
 
         elif sub_command == 'index_bam':
-            sample_file = os.path.join('processed', 'bam_rmdup', sample_id)
+            sample_file = os.path.join(input_dir, sample_id)
             samtools_com = [samtools, 'index', sample_file, sample_markdup_bai]
 
         elif sub_command == 'index_bam_gatk':
@@ -278,4 +279,3 @@ if __name__ == '__main__':
         schedule_id = '{}_{}'.format(sample_id, command)
         arguments.schedule_job(command=com, name=schedule_id, python=python,
                                nodes=nodes, cores=cores, walltime=walltime)
-
