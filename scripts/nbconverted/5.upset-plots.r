@@ -1,11 +1,18 @@
 
-library(UpSetR)
-library(reshape2)
-library(dplyr)
+suppressPackageStartupMessages(library(UpSetR))
+suppressPackageStartupMessages(library(reshape2))
+suppressPackageStartupMessages(library(dplyr))
 
 cosmic_file <- file.path('results', 'all_cosmic_variants.tsv')
-cosmic_df <- readr::read_tsv(cosmic_file) %>%
+cosmic_df <- readr::read_tsv(cosmic_file,
+                             col_types = readr::cols(
+                                 .default = readr::col_character(),
+                                 Start = readr::col_integer(),
+                                 End = readr::col_integer(),
+                                 depth = readr::col_integer()
+                             )) %>%
     dplyr::mutate(base_sample_id = sapply(final_id, function(x) unlist(strsplit(x, '-'))[1]))
+
 head(cosmic_df)
 
 for (sample_group in unique(cosmic_df$base_sample_id)) {
@@ -30,8 +37,16 @@ for (sample_group in unique(cosmic_df$base_sample_id)) {
 }
 
 file = file.path('results', 'all_cosmic_prefiltered_variants.tsv')
-prefiltered_cosmic_df <- readr::read_tsv(file) %>%
+prefiltered_cosmic_df <- readr::read_tsv(file,
+                                         col_types = readr::cols(
+                                             .default = readr::col_character(),
+                                             Chr = readr::col_character(),
+                                             Start = readr::col_integer(),
+                                             End = readr::col_integer(),
+                                             depth = readr::col_integer()
+                             )) %>%
     dplyr::mutate(base_sample_id = sapply(final_id, function(x) unlist(strsplit(x, '-'))[1]))
+
 head(prefiltered_cosmic_df)
 
 for (sample_group in unique(prefiltered_cosmic_df$base_sample_id)) {
